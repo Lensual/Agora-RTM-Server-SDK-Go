@@ -7,8 +7,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Lensual/agora_rtm_sdk_cgo/pkg/agora"
-	agoraBridge "github.com/Lensual/agora_rtm_sdk_cgo/pkg/agora/bridge"
+	agrtm "github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/pkg/agora"
 )
 
 func main() {
@@ -40,13 +39,13 @@ func main() {
 	}
 	// 适用于没有token的情况
 
-	rtmClient := agora.CreateAgoraRtmClient()
+	rtmClient := agrtm.CreateAgoraRtmClient()
 	fmt.Printf("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
 
-	rtmEventHandler := agoraBridge.NewRtmEventHandlerBridge(&MyRtmEventHandler{})
+	rtmEventHandler := agrtm.NewRtmEventHandlerBridge(&MyRtmEventHandler{})
 	fmt.Printf("NewRtmEventHandlerBridge: %p\n", rtmEventHandler) //DEBUG
 
-	rtmConfig := agora.NewRtmConfig()
+	rtmConfig := agrtm.NewRtmConfig()
 	defer rtmConfig.Delete()
 	rtmConfig.SetAppId(appId)
 	rtmConfig.SetUserId(userId)
@@ -67,7 +66,7 @@ func main() {
 	time.Sleep(time.Second * 3) //等登录完成，正常情况需要收到OnLoginResult后再Subscribe，这里方便测试用了sleep
 
 	var reqId uint64
-	opt := agora.NewSubscribeOptions()
+	opt := agrtm.NewSubscribeOptions()
 	fmt.Printf("NewSubscribeOptions: %p\n", opt) //DEBUG
 
 	ret = rtmClient.Subscribe(channelName, opt, &reqId)
@@ -100,6 +99,7 @@ waitSignal:
 	}
 
 	//clean
+	/*
 	message.Release()
 	errcode = channel.Leave()
 	fmt.Printf("channel.Leave:%v\n", errcode) //DEBUG
@@ -110,4 +110,5 @@ waitSignal:
 	fmt.Printf("rtmService.Logout:%v\n", errcode) //DEBUG
 	rtmService.Release(true)
 	rtmService = nil
+	*/
 }
