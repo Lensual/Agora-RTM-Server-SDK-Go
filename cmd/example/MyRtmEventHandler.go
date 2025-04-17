@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/Lensual/agora_rtm_sdk_cgo/pkg/agora"
+	"github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/pkg/agora"
 )
 
 type MyRtmEventHandler struct{}
