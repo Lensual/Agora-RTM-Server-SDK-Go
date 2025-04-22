@@ -66,9 +66,9 @@ func (h *MyRtmEventHandler) OnPublishResult(requestId uint64, errorCode agora.RT
 	fmt.Printf("OnPublishResult requestId:%v errorCode:%v\n",
 		requestId, errorCode) //DEBUG
 }
-func (h *MyRtmEventHandler) OnLoginResult(errorCode agora.RTM_ERROR_CODE) {
-	fmt.Printf("OnLoginResult errorCode:%v\n",
-		errorCode) //DEBUG
+func (h *MyRtmEventHandler) OnLoginResult(requestId uint64, errorCode agora.RTM_ERROR_CODE) {
+	fmt.Printf("OnLoginResult requestId:%v errorCode:%v\n",
+		requestId, errorCode) //DEBUG
 }
 func (h *MyRtmEventHandler) OnSetChannelMetadataResult(requestId uint64, channelName string, channelType agora.RTM_CHANNEL_TYPE, errorCode agora.RTM_ERROR_CODE) {
 	fmt.Printf("OnSetChannelMetadataResult requestId:%v channelName:%v channelType:%v errorCode:%v\n",

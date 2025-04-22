@@ -494,7 +494,7 @@ extern "C"
    *
    * @param errorCode The error code.
    */
-  void C_IRtmEventHandler_onLoginResult(C_IRtmEventHandler *this_, enum C_RTM_ERROR_CODE errorCode);
+  void C_IRtmEventHandler_onLoginResult(C_IRtmEventHandler *this_, const uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
 
   /**
    * Occurs when user setting the channel metadata

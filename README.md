@@ -7,8 +7,10 @@
 export LD_LIBRARY_PATH=./third_party/agora_rtm_sdk_c/agora_rtm_sdk/
 
 编译过程：
+手动编译：
 go build -o ./bin/ ./cmd/example/
 
+脚本编译：
 ./scripts/build.sh
 
 执行: 

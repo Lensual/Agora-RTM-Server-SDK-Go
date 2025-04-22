@@ -54,7 +54,7 @@ void cgo_RtmEventHandlerBridge_onPublishResult(C_RtmEventHandlerBridge *this_, v
 	uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onLoginResult(C_RtmEventHandlerBridge *this_, void *userData,
-	enum C_RTM_ERROR_CODE errorCode);
+	uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onSetChannelMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
 	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, enum C_RTM_ERROR_CODE errorCode);
@@ -146,7 +146,7 @@ type IRtmEventHandlerBridgeHandler interface {
 	OnTokenPrivilegeWillExpire(channelName string)
 	OnSubscribeResult(requestId uint64, channelName string, errorCode  RTM_ERROR_CODE)
 	OnPublishResult(requestId uint64, errorCode  RTM_ERROR_CODE)
-	OnLoginResult(errorCode  RTM_ERROR_CODE)
+	OnLoginResult(requestId uint64, errorCode  RTM_ERROR_CODE)
 	OnSetChannelMetadataResult(requestId uint64, channelName string, channelType  RTM_CHANNEL_TYPE, errorCode  RTM_ERROR_CODE)
 	OnUpdateChannelMetadataResult(requestId uint64, channelName string, channelType  RTM_CHANNEL_TYPE, errorCode  RTM_ERROR_CODE)
 	OnRemoveChannelMetadataResult(requestId uint64, channelName string, channelType  RTM_CHANNEL_TYPE, errorCode  RTM_ERROR_CODE)
@@ -446,7 +446,7 @@ func cgo_RtmEventHandlerBridge_onPublishResult(_ *C.C_RtmEventHandlerBridge, use
 
 //export cgo_RtmEventHandlerBridge_onLoginResult
 func cgo_RtmEventHandlerBridge_onLoginResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return
@@ -454,6 +454,7 @@ func cgo_RtmEventHandlerBridge_onLoginResult(_ *C.C_RtmEventHandlerBridge, userD
 
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnLoginResult(
+		uint64(requestId),
 		 RTM_ERROR_CODE(errorCode),
 	)
 }

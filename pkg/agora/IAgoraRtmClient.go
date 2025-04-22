@@ -1074,8 +1074,11 @@ func (this_ *IRtmEventHandler) OnPublishResult(requestId uint64, errorCode RTM_E
  *
  * @param errorCode The error code.
  */
-func (this_ *IRtmEventHandler) OnLoginResult(errorCode RTM_ERROR_CODE) {
+func (this_ *IRtmEventHandler) OnLoginResult(requestId uint64,errorCode RTM_ERROR_CODE) {
+	
+	
 	C.C_IRtmEventHandler_onLoginResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
 		C.enum_C_RTM_ERROR_CODE(errorCode),
 	)
 }
