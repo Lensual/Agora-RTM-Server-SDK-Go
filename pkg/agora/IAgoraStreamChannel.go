@@ -7,7 +7,7 @@ package agora
 
 //链接AgoraRTM SDK
 #cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk -lagora_rtm_sdk
+#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk -lagora_rtm_sdk -laosl
 
 #include "C_IAgoraStreamChannel.h"
 #include <stdlib.h>
@@ -266,7 +266,9 @@ func (this_ *TopicOptions) Delete() {
 *
 * This class provides the stream channel methods that can be invoked by your app.
  */
-type IStreamChannel C.C_IStreamChannel
+type IStreamChannel struct {
+	ptr *C.C_IStreamChannel //same to void*  in c
+}
 
 // #region IStreamChannel
 
@@ -279,11 +281,11 @@ type IStreamChannel C.C_IStreamChannel
 * - < 0: Failure.
  */
 func (this_ *IStreamChannel) Join(options *JoinChannelOptions, requestId *uint64) int {
-	ret := int(C.C_IStreamChannel_join(unsafe.Pointer(this_),
+	C.agora_rtm_stream_channel_join(unsafe.Pointer(this_),
 		(*C.struct_C_JoinChannelOptions)(options),
 		(*C.uint64_t)(requestId),
-	))
-	return ret
+	)
+	return 0
 }
 
 /**
@@ -296,11 +298,13 @@ func (this_ *IStreamChannel) Join(options *JoinChannelOptions, requestId *uint64
  */
 func (this_ *IStreamChannel) RenewToken(token string) int {
 	cToken := C.CString(token)
-	ret := int(C.C_IStreamChannel_renewToken(unsafe.Pointer(this_),
+	var requestId uint64
+	C.agora_rtm_stream_channel_renew_token(unsafe.Pointer(this_),
 		cToken,
-	))
+		(*C.uint64_t)(&requestId),
+	)
 	C.free(unsafe.Pointer(cToken))
-	return ret
+	return 0
 }
 
 /**
@@ -311,10 +315,10 @@ func (this_ *IStreamChannel) RenewToken(token string) int {
 * - < 0: Failure.
  */
 func (this_ *IStreamChannel) Leave(requestId *uint64) int {
-	ret := int(C.C_IStreamChannel_leave(unsafe.Pointer(this_),
+	C.agora_rtm_stream_channel_leave(unsafe.Pointer(this_),
 		(*C.uint64_t)(requestId),
-	))
-	return ret
+	)
+	return 0
 }
 
 /**
@@ -323,7 +327,7 @@ func (this_ *IStreamChannel) Leave(requestId *uint64) int {
 * @return The channel name.
  */
 func (this_ *IStreamChannel) GetChannelName() string {
-	ret := C.GoString(C.C_IStreamChannel_getChannelName(unsafe.Pointer(this_)))
+	ret := C.GoString(C.agora_rtm_stream_channel_get_channel_name(unsafe.Pointer(this_)))
 	return ret
 }
 
@@ -338,13 +342,13 @@ func (this_ *IStreamChannel) GetChannelName() string {
  */
 func (this_ *IStreamChannel) JoinTopic(topic string, options *JoinTopicOptions, requestId *uint64) int {
 	cTopic := C.CString(topic)
-	ret := int(C.C_IStreamChannel_joinTopic(unsafe.Pointer(this_),
+	C.agora_rtm_stream_channel_join_topic(unsafe.Pointer(this_),
 		cTopic,
 		(*C.struct_C_JoinTopicOptions)(options),
 		(*C.uint64_t)(requestId),
-	))
+	)
 	C.free(unsafe.Pointer(cTopic))
-	return ret
+	return 0
 }
 
 /**
@@ -361,15 +365,17 @@ func (this_ *IStreamChannel) JoinTopic(topic string, options *JoinTopicOptions, 
 func (this_ *IStreamChannel) PublishTopicMessage(topic string, message string, length uint, option *TopicMessageOptions) int {
 	cTopic := C.CString(topic)
 	cMessage := C.CString(message)
-	ret := int(C.C_IStreamChannel_publishTopicMessage(unsafe.Pointer(this_),
+	var requestId uint64
+	C.agora_rtm_stream_channel_publish_topic_message(unsafe.Pointer(this_),
 		cTopic,
 		cMessage,
 		C.size_t(length),
 		(*C.struct_C_TopicMessageOptions)(option),
-	))
+		(*C.uint64_t)(&requestId),
+	)
 	C.free(unsafe.Pointer(cTopic))
 	C.free(unsafe.Pointer(cMessage))
-	return ret
+	return 0
 }
 
 /**
@@ -382,12 +388,12 @@ func (this_ *IStreamChannel) PublishTopicMessage(topic string, message string, l
  */
 func (this_ *IStreamChannel) LeaveTopic(topic string, requestId *uint64) int {
 	cTopic := C.CString(topic)
-	ret := int(C.C_IStreamChannel_leaveTopic(unsafe.Pointer(this_),
+	C.agora_rtm_stream_channel_leave_topic(unsafe.Pointer(this_),
 		cTopic,
 		(*C.uint64_t)(requestId),
-	))
+	)
 	C.free(unsafe.Pointer(cTopic))
-	return ret
+	return 0
 }
 
 /**
@@ -401,13 +407,13 @@ func (this_ *IStreamChannel) LeaveTopic(topic string, requestId *uint64) int {
  */
 func (this_ *IStreamChannel) SubscribeTopic(topic string, options *TopicOptions, requestId *uint64) int {
 	cTopic := C.CString(topic)
-	ret := int(C.C_IStreamChannel_subscribeTopic(unsafe.Pointer(this_),
+	C.agora_rtm_stream_channel_subscribe_topic(unsafe.Pointer(this_),
 		cTopic,
 		(*C.struct_C_TopicOptions)(options),
 		(*C.uint64_t)(requestId),
-	))
+	)
 	C.free(unsafe.Pointer(cTopic))
-	return ret
+	return 0
 }
 
 /**
@@ -420,12 +426,14 @@ func (this_ *IStreamChannel) SubscribeTopic(topic string, options *TopicOptions,
  */
 func (this_ *IStreamChannel) UnsubscribeTopic(topic string, options *TopicOptions) int {
 	cTopic := C.CString(topic)
-	ret := int(C.C_IStreamChannel_unsubscribeTopic(unsafe.Pointer(this_),
+	var requestId uint64
+	C.agora_rtm_stream_channel_unsubscribe_topic(unsafe.Pointer(this_),
 		cTopic,
 		(*C.struct_C_TopicOptions)(options),
-	))
+		(*C.uint64_t)(&requestId),
+	)
 	C.free(unsafe.Pointer(cTopic))
-	return ret
+	return 0
 }
 
 /**
@@ -437,14 +445,15 @@ func (this_ *IStreamChannel) UnsubscribeTopic(topic string, options *TopicOption
 * - 0: Success.
 * - < 0: Failure.
  */
-func (this_ *IStreamChannel) GetSubscribedUserList(topic string, users *UserList) int {
+func (this_ *IStreamChannel) GetSubscribedUserList(topic string) int {
 	cTopic := C.CString(topic)
-	ret := int(C.C_IStreamChannel_getSubscribedUserList(unsafe.Pointer(this_),
+	var requestId uint64
+	C.agora_rtm_stream_channel_get_subscribed_user_list(unsafe.Pointer(this_),
 		cTopic,
-		(*C.struct_C_UserList)(users),
-	))
+		(*C.uint64_t)(&requestId),
+	)
 	C.free(unsafe.Pointer(cTopic))
-	return ret
+	return 0
 }
 
 /**
@@ -455,7 +464,8 @@ func (this_ *IStreamChannel) GetSubscribedUserList(topic string, users *UserList
 * - < 0: Failure.
  */
 func (this_ *IStreamChannel) Release() int {
-	return int(C.C_IStreamChannel_release(unsafe.Pointer(this_)))
+	C.agora_rtm_stream_channel_release(unsafe.Pointer(this_))
+	return 0
 }
 
 // #endregion IStreamChannel

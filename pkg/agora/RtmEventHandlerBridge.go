@@ -7,7 +7,7 @@ package agora
 
 //链接AgoraRTM SDK
 #cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk -lagora_rtm_sdk
+#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk -lagora_rtm_sdk -laosl
 
 #include "bridge/C_RtmEventHandlerBridge.h"
 
@@ -66,7 +66,7 @@ void cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult(C_RtmEventHandlerBr
 	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onGetChannelMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
-	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onSetUserMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
 	uint64_t requestId, char *userId, enum C_RTM_ERROR_CODE errorCode);
@@ -78,7 +78,7 @@ void cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult(C_RtmEventHandlerBridg
 	uint64_t requestId, char *userId, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onGetUserMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
-	uint64_t requestId, char *userId, C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+	uint64_t requestId, char *userId, struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onSubscribeUserMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
 	uint64_t requestId, char *userId, enum C_RTM_ERROR_CODE errorCode);
@@ -511,7 +511,7 @@ func cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult(_ *C.C_RtmEventHand
 
 //export cgo_RtmEventHandlerBridge_onGetChannelMetadataResult
 func cgo_RtmEventHandlerBridge_onGetChannelMetadataResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	requestId C.uint64_t, channelName *C.char, channelType C.enum_C_RTM_CHANNEL_TYPE, data *C.C_IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, channelName *C.char, channelType C.enum_C_RTM_CHANNEL_TYPE, data *IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return
@@ -577,7 +577,7 @@ func cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult(_ *C.C_RtmEventHandler
 
 //export cgo_RtmEventHandlerBridge_onGetUserMetadataResult
 func cgo_RtmEventHandlerBridge_onGetUserMetadataResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	requestId C.uint64_t, userId *C.char, data *C.C_IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, userId *C.char, data *IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return

@@ -37,11 +37,8 @@ func main() {
 		fmt.Println("参数错误")
 		os.Exit(1)
 	}
+	ret := 0
 	// 适用于没有token的情况
-
-	rtmClient := agrtm.CreateAgoraRtmClient()
-	fmt.Printf("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
-
 	rtmEventHandler := agrtm.NewRtmEventHandlerBridge(&MyRtmEventHandler{})
 	fmt.Printf("NewRtmEventHandlerBridge: %p\n", rtmEventHandler) //DEBUG
 
@@ -52,11 +49,13 @@ func main() {
 	rtmConfig.SetEventHandler(rtmEventHandler.ToAgoraEventHandler())
 	fmt.Printf("NewRtmConfig: %+v\n", rtmConfig) //DEBUG
 
-	ret := rtmClient.Initialize(rtmConfig)
-	fmt.Printf("Initialize: %d\n", ret)
-	if ret != 0 {
-		panic(ret)
-	}
+	rtmClient := agrtm.CreateAgoraRtmClient(rtmConfig)
+	fmt.Printf("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
+
+	
+	
+
+
 
 	ret = rtmClient.Login(token)
 	fmt.Printf("Login: %d\n", ret)

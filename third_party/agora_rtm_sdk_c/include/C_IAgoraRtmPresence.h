@@ -1,6 +1,7 @@
 #ifndef C_I_AGORA_RTM_PRESENCE_H
 #define C_I_AGORA_RTM_PRESENCE_H
 
+#include "agora_api.h"
 #include "C_AgoraRtmBase.h"
 
 #ifdef __cplusplus
@@ -30,7 +31,7 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmPresence_whoNow(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_PresenceOptions *options, uint64_t *requestId);
+  int agora_rtm_presence_who_now(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_PresenceOptions *options, uint64_t *requestId);
 
   /**
    * To query which channels the user joined
@@ -41,7 +42,7 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmPresence_whereNow(C_IRtmPresence *this_, const char *userId, uint64_t *requestId);
+  int agora_rtm_presence_where_now(C_IRtmPresence *this_, const char *userId, uint64_t *requestId);
 
   /**
    * Set user state
@@ -55,7 +56,7 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmPresence_setState(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_StateItem *items, size_t count, uint64_t *requestId);
+  int agora_rtm_presence_set_state(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_StateItem *items, size_t count, uint64_t *requestId);
 
   /**
    * Delete user state
@@ -69,7 +70,7 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmPresence_removeState(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const char **keys, size_t count, uint64_t *requestId);
+  int agora_rtm_presence_remove_state(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const char **keys, size_t count, uint64_t *requestId);
 
   /**
    * Get user state
@@ -82,7 +83,7 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmPresence_getState(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const char *userId, uint64_t *requestId);
+  int agora_rtm_presence_get_state(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const char *userId, uint64_t *requestId);
 
   /**
    * To query who joined this channel
@@ -95,7 +96,7 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmPresence_getOnlineUsers(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_GetOnlineUsersOptions *options, uint64_t *requestId);
+  int agora_rtm_presence_get_online_users(C_IRtmPresence *this_, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_GetOnlineUsersOptions *options, uint64_t *requestId);
 
   /**
    * To query which channels the user joined
@@ -106,7 +107,7 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmPresence_getUserChannels(C_IRtmPresence *this_, const char *userId, uint64_t *requestId);
+  int agora_rtm_presence_get_user_channels(C_IRtmPresence *this_, const char *userId, uint64_t *requestId);
 #pragma endregion C_IRtmPresence
 
 #pragma endregion agora::rtm
