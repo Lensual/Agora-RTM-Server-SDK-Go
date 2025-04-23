@@ -492,6 +492,7 @@ extern "C"
   /**
    * Occurs when user login.
    *
+   * @param requestId The related request id when user perform this operation
    * @param errorCode The error code.
    */
   void C_IRtmEventHandler_onLoginResult(C_IRtmEventHandler *this_, const uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
@@ -734,6 +735,64 @@ extern "C"
    */
   void C_IRtmEventHandler_onGetHistoryMessagesResult(C_IRtmEventHandler *this_, const uint64_t requestId, const struct C_HistoryMessage *messageList, const size_t count, const uint64_t newStart, enum C_RTM_ERROR_CODE errorCode);
 
+  /**
+   * Occurs when user logout
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onLogoutResult(C_IRtmEventHandler *this_, const uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user renew token
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param serverType The type of server.
+   * @param channelName The name of the channel.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onRenewTokenResult(C_IRtmEventHandler *this_, const uint64_t requestId, enum C_RTM_SERVICE_TYPE serverType, const char *channelName, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user publish topic message
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param channelName The name of the channel.
+   * @param topic The name of the topic.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onPublishTopicMessageResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *channelName, const char *topic, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user unsubscribe topic
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param channelName The name of the channel.
+   * @param topic The name of the topic.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onUnsubscribeTopicResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *channelName, const char *topic, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user get subscribed user list
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param channelName The name of the channel.
+   * @param topic The name of the topic.
+   * @param users The subscribed user list.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onGetSubscribedUserListResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *channelName, const char *topic, struct C_UserList users, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user unsubscribe user metadata
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param userId The id of the user.
+   * @param errorCode The error code.
+   */ 
+  void C_IRtmEventHandler_onUnsubscribeUserMetadataResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *userId, enum C_RTM_ERROR_CODE errorCode);
+  
 #pragma endregion C_IRtmEventHandler
 
   /**

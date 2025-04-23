@@ -6,11 +6,20 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"net/http"
+	_ "net/http/pprof"
 
 	agrtm "github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/pkg/agora"
 )
 
 func main() {
+	// start pprof
+	go func() {
+		// listen on all interfaces, if you want to listen on localhost, use http.ListenAndServe("localhost:6060", nil)
+		// but local host is not accessible from outside!!
+		http.ListenAndServe("0.0.0.0:6060", nil)
+	}()
+	// rtm start 
 	appId := os.Getenv("APPID")
 	userId := os.Getenv("USER_ID")
 	token := os.Getenv("TOKEN")
@@ -41,9 +50,10 @@ func main() {
 	// 适用于没有token的情况
 	rtmEventHandler := agrtm.NewRtmEventHandlerBridge(&MyRtmEventHandler{})
 	fmt.Printf("NewRtmEventHandlerBridge: %p\n", rtmEventHandler) //DEBUG
+	//defer rtmEventHandler.Delete()
 
 	rtmConfig := agrtm.NewRtmConfig()
-	defer rtmConfig.Delete()
+	//defer rtmConfig.Delete()
 	rtmConfig.SetAppId(appId)
 	rtmConfig.SetUserId(userId)
 	rtmConfig.SetEventHandler(rtmEventHandler.ToAgoraEventHandler())
@@ -98,16 +108,19 @@ waitSignal:
 	}
 
 	//clean
-	/*
-	message.Release()
-	errcode = channel.Leave()
-	fmt.Printf("channel.Leave:%v\n", errcode) //DEBUG
-	channel.Release()
-	channel = nil
-	channelEventHandler.Delete()
-	errcode = rtmService.Logout()
-	fmt.Printf("rtmService.Logout:%v\n", errcode) //DEBUG
-	rtmService.Release(true)
-	rtmService = nil
-	*/
+	rtmClient.Logout()
+	// wait for logout
+//	time.Sleep(time.Second * 3)
+	//unregister event handler
+	
+	//release
+	rtmClient.Release()
+	rtmClient = nil
+
+	// release rtmEventHandler
+	rtmEventHandler.Delete()
+	rtmEventHandler = nil
+	// release rtmConfig
+	rtmConfig.Delete()
+	rtmConfig = nil
 }

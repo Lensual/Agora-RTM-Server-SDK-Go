@@ -1870,6 +1870,18 @@ func (this_ *RtmEncryptionConfig) Delete() {
 	C.C_RtmEncryptionConfig_Delete((*C.struct_C_RtmEncryptionConfig)(this_))
 }
 
+// link state event
+type LinkStateEvent C.struct_C_LinkStateEvent
+type RTM_SERVICE_TYPE C.enum_C_RTM_SERVICE_TYPE
+
+// #region LinkStateEvent
+
+type HistoryMessage C.struct_C_HistoryMessage
+
+
+
+// #endregion LinkStateEvent
+
 // #endregion RtmEncryptionConfig
 
 // #endregion agora::rtm

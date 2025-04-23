@@ -150,6 +150,7 @@ extern "C"
     /**
      * Occurs when user login.
      *
+     * @param requestId The related request id when user perform this operation
      * @param errorCode The error code.
      */
     typedef void (*C_RtmEventHandlerBridge_onLoginResult)(C_RtmEventHandlerBridge *this_, void *userData,

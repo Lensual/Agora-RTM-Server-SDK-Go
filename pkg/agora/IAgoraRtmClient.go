@@ -1497,6 +1497,128 @@ func (this_ *IRtmEventHandler) OnPresenceGetStateResult(requestId uint64, state 
 	)
 }
 
+/**
+ * Occurs when user logout
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param errorCode The error code.
+ */
+func (this_ *IRtmEventHandler) OnLogoutResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onLogoutResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user renew token
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param serverType The type of server.
+ * @param channelName The name of the channel.
+ * @param errorCode The error code.
+ */	
+func (this_ *IRtmEventHandler) OnRenewTokenResult(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onRenewTokenResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.enum_C_RTM_SERVICE_TYPE(serverType),
+		C.CString(channelName),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user publish topic message
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param channelName The name of the channel.
+ * @param topic The name of the topic.
+ * @param errorCode The error code.
+ */
+func (this_ *IRtmEventHandler) OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onPublishTopicMessageResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(channelName),
+		C.CString(topic),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user unsubscribe topic
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param channelName The name of the channel.
+ * @param topic The name of the topic.
+ * @param errorCode The error code.
+ */	
+
+func (this_ *IRtmEventHandler) OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onUnsubscribeTopicResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(channelName),
+		C.CString(topic),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user get subscribed user list
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param channelName The name of the channel.
+ * @param topic The name of the topic.
+ * @param users The subscribed user list.
+ * @param errorCode The error code.
+ */
+func (this_ *IRtmEventHandler) OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user UserList, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onGetSubscribedUserListResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(channelName),
+		C.CString(topic),
+		(C.struct_C_UserList)(user),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user get history messages
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param errorCode The error code.
+ * @param messageList The history message list.	
+ * @param count The message count.
+ * @param newStart The timestamp of next history message. If newStart is 0, means there are no more history messages
+ */	
+
+func (this_ *IRtmEventHandler) OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, count uint, newStart uint64, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onGetHistoryMessagesResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		(*C.struct_C_HistoryMessage)(unsafe.SliceData(messageList)),	
+		C.size_t(count),
+		C.uint64_t(newStart),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user unsubscribe user metadata
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param userId The id of the user.
+ * @param errorCode The error code.	
+ */
+func (this_ *IRtmEventHandler) OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onUnsubscribeUserMetadataResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(userId),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+
+
+
 // #endregion IRtmEventHandler
 
 /**
