@@ -21,7 +21,7 @@ ChangeLog:
 
 ## ChangeLog
 
-### 20250422
+### 20250424
 
 *   Release 0.0.2
 
@@ -36,6 +36,9 @@ The library files have been updated to use `.so` files instead of `.a` files.
 ## Library File Location
 
 All `.so` files are now located in a single directory.
+## add 8 callback for logout etc
+## add pushmessage in demo to do like echo server
+## add chan in demo to get time for each step
 
 
 

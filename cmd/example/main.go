@@ -28,6 +28,7 @@ func main() {
 	if lenArgs < 4 {
 		fmt.Println("Usage: process <appid> <channelname> <userid> <token_optional>")
 		os.Exit(1)
+		logWithTime("Usage: process <appid> <channelname> <userid> <token_optional>")
 	}
 
 	appId = os.Args[1]
@@ -39,7 +40,7 @@ func main() {
 	} else {
 		token = appId
 	}
-	fmt.Printf("appId: %s, channelName: %s, userId: %s, token: %s\n", appId, channelName, userId, token)
+	logWithTime("appId: %s, channelName: %s, userId: %s, token: %s\n", appId, channelName, userId, token)
 
 	// 检查参数
 	if appId == "" || channelName == "" || userId == "" || token == "" {
@@ -48,7 +49,8 @@ func main() {
 	}
 	ret := 0
 	// 适用于没有token的情况
-	rtmEventHandler := agrtm.NewRtmEventHandlerBridge(&MyRtmEventHandler{})
+	myEventHandler := &MyRtmEventHandler{}
+	rtmEventHandler := agrtm.NewRtmEventHandlerBridge(myEventHandler)
 	fmt.Printf("NewRtmEventHandlerBridge: %p\n", rtmEventHandler) //DEBUG
 	//defer rtmEventHandler.Delete()
 
@@ -60,34 +62,55 @@ func main() {
 	fmt.Printf("NewRtmConfig: %+v\n", rtmConfig) //DEBUG
 
 	rtmClient := agrtm.CreateAgoraRtmClient(rtmConfig)
-	fmt.Printf("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
+	logWithTime("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
 
+	// set user channel info to event handler
+	sign := make(chan struct{})
+	myEventHandler.ChannelName = channelName
+	myEventHandler.UserId = userId	
+	myEventHandler.RtmClient = rtmClient
+	myEventHandler.Sign = sign
 	
-	
 
 
-
+	logWithTime("Login Start: %d\n", ret)
 	ret = rtmClient.Login(token)
-	fmt.Printf("Login: %d\n", ret)
+	
 	if ret != 0 {
 		panic(ret)
 	}
-	time.Sleep(time.Second * 3) //等登录完成，正常情况需要收到OnLoginResult后再Subscribe，这里方便测试用了sleep
+	// wait for login result and timedout to 3 seconds
+	select {
+	case <-sign:
+	case <-time.After(time.Second * 3):
+		panic("login timeout")
+	}
+	logWithTime("login success")
 
 	var reqId uint64
 	opt := agrtm.NewSubscribeOptions()
-	fmt.Printf("NewSubscribeOptions: %p\n", opt) //DEBUG
+	
 
+	logWithTime("Subscribe start: %d\n", ret)
 	ret = rtmClient.Subscribe(channelName, opt, &reqId)
-	fmt.Printf("Subscribe: %d\n", ret)
+
 	if ret != 0 {
 		panic(ret)
 	}
+	// wait for subscribe result and timedout to 3 seconds
+	select {
+	case <-sign:
+	case <-time.After(time.Second * 3):
+		panic("subscribe timeout")
+	}
+	logWithTime("subscribe success")
+
+	
 
 	//阻塞直到有信号传入
 	c := make(chan os.Signal, 1)
 	signal.Notify(c)
-	fmt.Println("启动")
+	logWithTime("rtm client start to work")
 
 waitSignal:
 	for {
@@ -97,12 +120,10 @@ waitSignal:
 				signal == os.Kill ||
 				signal == syscall.SIGABRT ||
 				signal == syscall.SIGTERM {
-				fmt.Println("退出信号", signal)
+				logWithTime("exit signal: %v", signal)
 				break waitSignal
 			}
 		default:
-			// errcode = channel.SendMessage(message)
-			// fmt.Printf("channel.SendMessage:%v\n", errcode) //DEBUG
 			time.Sleep(time.Second)
 		}
 	}
