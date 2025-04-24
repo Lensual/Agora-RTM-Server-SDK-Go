@@ -1,10 +1,21 @@
 # agora-rtm-sdk go
 
+支持的os：
+linux + mac
+
+备注： mac下建议只做为开发环境，不做运行环境
+
+使用事项：
+[x]不要在回调函数中，调用sdk的api
+[x]不要在回调中，做耗时的操作
 
 
 需要设置：
 在项目目录下面：
+for Linux:
 export LD_LIBRARY_PATH=./third_party/agora_rtm_sdk_c/
+for mac:
+export DYLD_LIBRARY_PATH=./third_party/agora_rtm_sdk_c/
 
 编译过程：
 手动编译：
@@ -16,14 +27,13 @@ go build -o ./bin/ ./cmd/example/
 执行: 
 ./bin/example <appid> <channelname> <usid> <token_option>
 
-ChangeLog:
-20250422 release 0.0.2
+版本历史记录：
+20250424 release 0.0.3
+-- Add:
+   - 增加对mac的支持
 
-## ChangeLog
 
-### 20250424
-
-*   Release 0.0.2
+20250424 release 0.0.2
 
 ## RTM SDK Version
 
