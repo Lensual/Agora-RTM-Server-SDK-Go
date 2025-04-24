@@ -1,10 +1,13 @@
 #ifndef C_I_AGORA_RTM_CLIENT_H
 #define C_I_AGORA_RTM_CLIENT_H
 
+#include "agora_api.h"
+
 #include "C_IAgoraStreamChannel.h"
 #include "C_IAgoraRtmStorage.h"
 #include "C_IAgoraRtmPresence.h"
 #include "C_IAgoraRtmLock.h"
+#include "C_IAgoraRtmHistory.h"
 #include "C_AgoraRtmBase.h"
 
 #ifdef __cplusplus
@@ -45,10 +48,21 @@ extern "C"
     enum C_RTM_AREA_CODE areaCode;
 
     /**
+     * The protocol used for connecting to the Agora RTM service.
+     */
+    enum C_RTM_PROTOCOL_TYPE protocolType;
+
+    /**
      * Presence timeout in seconds, specify the timeout value when you lost connection between sdk
      * and rtm service.
      */
     uint32_t presenceTimeout;
+
+    /**
+     * Heartbeat interval in seconds, specify the interval value of sending heartbeat between sdk
+     * and rtm service.
+     */
+    uint32_t heartbeatInterval;
 
     /**
      * - For Android, it is the context of Activity or Application.
@@ -62,6 +76,11 @@ extern "C"
      * set this value as 'false'. Otherwise errors might occur.
      */
     bool useStringUserId;
+
+    /**
+     * Whether to enable multipath, introduced from 2.2.0, for now , only effect on stream channel.
+     */
+    bool multipath;
 
     /**
      * The callbacks handler
@@ -82,20 +101,79 @@ extern "C"
      * The config for encryption setting
      */
     struct C_RtmEncryptionConfig encryptionConfig;
+
+    /**
+     * The config for private setting
+     */
+    struct C_RtmPrivateConfig privateConfig;
   };
   struct C_RtmConfig *C_RtmConfig_New();
   void C_RtmConfig_Delete(struct C_RtmConfig *this_);
 
-/**
- * The IRtmEventHandler class.
- *
- * The SDK uses this class to send callback event notifications to the app, and the app inherits
- * the methods in this class to retrieve these event notifications.
- *
- * All methods in this class have their default (empty)  implementations, and the app can inherit
- * only some of the required events instead of all. In the callback methods, the app should avoid
- * time-consuming tasks or calling blocking APIs, otherwise the SDK may not work properly.
- */
+  struct C_LinkStateEvent
+  {
+    /**
+     * The current link state
+     */
+    enum C_RTM_LINK_STATE currentState;
+    /**
+     * The previous link state
+     */
+    enum C_RTM_LINK_STATE previousState;
+    /**
+     * The service type
+     */
+    enum C_RTM_SERVICE_TYPE serviceType;
+    /**
+     * The operation which trigger this event
+     */
+    enum C_RTM_LINK_OPERATION operation;
+    /**
+     * The reason code of this state change event
+     */
+    enum C_RTM_LINK_STATE_CHANGE_REASON reasonCode;
+    /**
+     * The reason of this state change event
+     */
+    const char *reason;
+    /**
+     * The affected channels
+     */
+    const char **affectedChannels;
+    /**
+     * The affected channel count
+     */
+    size_t affectedChannelCount;
+    /**
+     * The unrestored channels
+     */
+    const char **unrestoredChannels;
+    /**
+     * The unrestored channel count
+     */
+    size_t unrestoredChannelCount;
+    /**
+     * Is resumed from disconnected state
+     */
+    bool isResumed;
+    /**
+     * RTM server UTC time
+     */
+    uint64_t timestamp;
+  };
+  struct C_LinkStateEvent *C_LinkStateEvent_New();
+  void C_LinkStateEvent_Delete(struct C_LinkStateEvent *this_);
+
+  /**
+   * The IRtmEventHandler class.
+   *
+   * The SDK uses this class to send callback event notifications to the app, and the app inherits
+   * the methods in this class to retrieve these event notifications.
+   *
+   * All methods in this class have their default (empty)  implementations, and the app can inherit
+   * only some of the required events instead of all. In the callback methods, the app should avoid
+   * time-consuming tasks or calling blocking APIs, otherwise the SDK may not work properly.
+   */
 #pragma region C_IRtmEventHandler
   struct C_MessageEvent
   {
@@ -286,7 +364,7 @@ extern "C"
     /**
      * The metadata information
      */
-    C_IMetadata *data;
+    struct C_Metadata *data;
   };
   struct C_StorageEvent *C_StorageEvent_New();
   void C_StorageEvent_Delete(struct C_StorageEvent *this_);
@@ -414,9 +492,10 @@ extern "C"
   /**
    * Occurs when user login.
    *
+   * @param requestId The related request id when user perform this operation
    * @param errorCode The error code.
    */
-  void C_IRtmEventHandler_onLoginResult(C_IRtmEventHandler *this_, enum C_RTM_ERROR_CODE errorCode);
+  void C_IRtmEventHandler_onLoginResult(C_IRtmEventHandler *this_, const uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
 
   /**
    * Occurs when user setting the channel metadata
@@ -461,7 +540,7 @@ extern "C"
    * @param errorCode The error code.
    */
   void C_IRtmEventHandler_onGetChannelMetadataResult(C_IRtmEventHandler *this_,
-                                                     const uint64_t requestId, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+                                                     const uint64_t requestId, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
   /**
    * Occurs when user setting the user metadata
@@ -502,7 +581,7 @@ extern "C"
    * @param errorCode The error code.
    */
   void C_IRtmEventHandler_onGetUserMetadataResult(C_IRtmEventHandler *this_,
-                                                  const uint64_t requestId, const char *userId, const C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+                                                  const uint64_t requestId, const char *userId, const struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
   /**
    * Occurs when user subscribe a user metadata
@@ -638,6 +717,82 @@ extern "C"
    */
   void C_IRtmEventHandler_onPresenceGetStateResult(C_IRtmEventHandler *this_, const uint64_t requestId, const struct C_UserState *state, enum C_RTM_ERROR_CODE errorCode);
 
+  /**
+   * Occurs when link state change
+   *
+   * @param event details of link state event
+   */
+  void C_IRtmEventHandler_onLinkStateEvent(C_IRtmEventHandler *this_, const struct C_LinkStateEvent *event);
+
+  /**
+   * Occurs when get history messages
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param messageList The history message list.
+   * @param count The message count.
+   * @param newStart The timestamp of next history message. If newStart is 0, means there are no more history messages
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onGetHistoryMessagesResult(C_IRtmEventHandler *this_, const uint64_t requestId, const struct C_HistoryMessage *messageList, const size_t count, const uint64_t newStart, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user logout
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onLogoutResult(C_IRtmEventHandler *this_, const uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user renew token
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param serverType The type of server.
+   * @param channelName The name of the channel.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onRenewTokenResult(C_IRtmEventHandler *this_, const uint64_t requestId, enum C_RTM_SERVICE_TYPE serverType, const char *channelName, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user publish topic message
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param channelName The name of the channel.
+   * @param topic The name of the topic.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onPublishTopicMessageResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *channelName, const char *topic, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user unsubscribe topic
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param channelName The name of the channel.
+   * @param topic The name of the topic.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onUnsubscribeTopicResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *channelName, const char *topic, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user get subscribed user list
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param channelName The name of the channel.
+   * @param topic The name of the topic.
+   * @param users The subscribed user list.
+   * @param errorCode The error code.
+   */
+  void C_IRtmEventHandler_onGetSubscribedUserListResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *channelName, const char *topic, struct C_UserList users, enum C_RTM_ERROR_CODE errorCode);
+
+  /**
+   * Occurs when user unsubscribe user metadata
+   *
+   * @param requestId The related request id when user perform this operation
+   * @param userId The id of the user.
+   * @param errorCode The error code.
+   */ 
+  void C_IRtmEventHandler_onUnsubscribeUserMetadataResult(C_IRtmEventHandler *this_, const uint64_t requestId, const char *userId, enum C_RTM_ERROR_CODE errorCode);
+  
 #pragma endregion C_IRtmEventHandler
 
   /**
@@ -651,16 +806,6 @@ extern "C"
    */
   typedef void C_IRtmClient;
 #pragma region C_IRtmClient
-  /**
-   * Initializes the rtm client instance.
-   *
-   * @param [in] config The configurations for RTM Client.
-   * @param [in] eventHandler .
-   * @return
-   * - 0: Success.
-   * - < 0: Failure.
-   */
-  int C_IRtmClient_initialize(C_IRtmClient *this_, const struct C_RtmConfig *config);
 
   /**
    * Release the rtm client instance.
@@ -669,26 +814,28 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_release(C_IRtmClient *this_);
+  int agora_rtm_client_release(C_IRtmClient *this_);
 
   /**
-   * Login the Agora RTM service. The operation result will be notified by \ref agora::rtm::IRtmEventHandler::onLoginResult callback.
+   * Login the Agora RTM service.
    *
    * @param [in] token Token used to login RTM service.
+   * @param [out] requestId The related request id of this operation.
    * @return
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_login(C_IRtmClient *this_, const char *token);
+  int agora_rtm_client_login(C_IRtmClient *this_, const char *token, uint64_t *requestId);
 
   /**
-   * Logout the Agora RTM service. Be noticed that this method will break the rtm service including storage/lock/presence.
+   * Logout the Agora RTM service.
    *
+   * @param [out] requestId The related request id of this operation.
    * @return
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_logout(C_IRtmClient *this_);
+  int agora_rtm_client_logout(C_IRtmClient *this_, uint64_t *requestId);
 
   /**
    * Get the storage instance.
@@ -696,7 +843,7 @@ extern "C"
    * @return
    * - return NULL if error occurred
    */
-  C_IRtmStorage *C_IRtmClient_getStorage(C_IRtmClient *this_);
+  C_IRtmStorage *agora_rtm_client_get_storage(C_IRtmClient *this_);
 
   /**
    * Get the lock instance.
@@ -704,7 +851,7 @@ extern "C"
    * @return
    * - return NULL if error occurred
    */
-  C_IRtmLock *C_IRtmClient_getLock(C_IRtmClient *this_);
+  C_IRtmLock *agora_rtm_client_get_lock(C_IRtmClient *this_);
 
   /**
    * Get the presence instance.
@@ -712,17 +859,26 @@ extern "C"
    * @return
    * - return NULL if error occurred
    */
-  C_IRtmPresence *C_IRtmClient_getPresence(C_IRtmClient *this_);
+  C_IRtmPresence *agora_rtm_client_get_presence(C_IRtmClient *this_);
 
   /**
-   * Renews the token. Once a token is enabled and used, it expires after a certain period of time.
-   * You should generate a new token on your server, call this method to renew it.
+   * Get the history instance.
+   *
+   * @return
+   * - return NULL if error occurred
+   */
+  C_IRtmHistory *agora_rtm_client_get_history(C_IRtmClient *this_);
+
+  /**
+   * Renews the token.
    *
    * @param [in] token Token used renew.
+   * @param [out] requestId The related request id of this operation.
+   * @return
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_renewToken(C_IRtmClient *this_, const char *token);
+  int agora_rtm_client_renew_token(C_IRtmClient *this_, const char *token, uint64_t *requestId);
 
   /**
    * Publish a message in the channel.
@@ -736,37 +892,40 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_publish(C_IRtmClient *this_, const char *channelName, const char *message, const size_t length, const struct C_PublishOptions *option, uint64_t *requestId);
+  int agora_rtm_client_publish(C_IRtmClient *this_, const char *channelName, const char *message, const size_t length, const struct C_PublishOptions *option, uint64_t *requestId);
 
   /**
    * Subscribe a channel.
    *
    * @param [in] channelName The name of the channel.
    * @param [in] options The options of subscribe the channel.
+   * @param [out] requestId The related request id of this operation.
    * @return
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_subscribe(C_IRtmClient *this_, const char *channelName, const struct C_SubscribeOptions *options, uint64_t *requestId);
+  int agora_rtm_client_subscribe(C_IRtmClient *this_, const char *channelName, const struct C_SubscribeOptions *options, uint64_t *requestId);
 
   /**
    * Unsubscribe a channel.
    *
    * @param [in] channelName The name of the channel.
+   * @param [out] requestId The related request id of this operation.
    * @return
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_unsubscribe(C_IRtmClient *this_, const char *channelName);
+  int agora_rtm_client_unsubscribe(C_IRtmClient *this_, const char *channelName, uint64_t *requestId);
 
   /**
    * Create a stream channel instance.
    *
    * @param [in] channelName The Name of the channel.
+   * @param [out] errorCode The error code.
    * @return
    * - return NULL if error occurred
    */
-  C_IStreamChannel *C_IRtmClient_createStreamChannel(C_IRtmClient *this_, const char *channelName);
+  C_IStreamChannel *agora_rtm_client_create_stream_channel(C_IRtmClient *this_, const char *channelName, int *errorCode);
 
   /**
    * Set parameters of the sdk or engine
@@ -776,15 +935,17 @@ extern "C"
    * - 0: Success.
    * - < 0: Failure.
    */
-  int C_IRtmClient_setParameters(C_IRtmClient *this_, const char *parameters);
+  int agora_rtm_client_set_parameters(C_IRtmClient *this_, const char *parameters);
 #pragma endregion C_IRtmClient
 
   /**
    * Creates the rtm client object and returns the pointer.
    *
+   * @param [in] config The configuration of the rtm client.
+   * @param [out] errorCode The error code.
    * @return Pointer of the rtm client object.
    */
-  C_IRtmClient *C_createAgoraRtmClient();
+  C_IRtmClient *agora_rtm_client_create(const struct C_RtmConfig *config, int *errorCode);
 
   /**
    * Convert error code to error string
@@ -792,14 +953,14 @@ extern "C"
    * @param [in] errorCode Received error code
    * @return The error reason
    */
-  const char *C_getErrorReason(int errorCode);
+  const char *agora_rtm_client_get_error_reason(int errorCode);
 
   /**
    * Get the version info of the Agora RTM SDK.
    *
    * @return The version info of the Agora RTM SDK.
    */
-  const char *C_getVersion();
+  const char *agora_rtm_client_get_version();
 
 #pragma endregion agora::rtm
 

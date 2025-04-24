@@ -4,17 +4,56 @@
 
 需要设置：
 在项目目录下面：
-export LD_LIBRARY_PATH=./third_party/agora_rtm_sdk_c/agora_rtm_sdk/
+export LD_LIBRARY_PATH=./third_party/agora_rtm_sdk_c/
 
 编译过程：
+手动编译：
 go build -o ./bin/ ./cmd/example/
 
+脚本编译：
 ./scripts/build.sh
 
 执行: 
 ./bin/example <appid> <channelname> <usid> <token_option>
 
+ChangeLog:
+20250422 release 0.0.2
+
+## ChangeLog
+
+### 20250424
+
+*   Release 0.0.2
+
+## RTM SDK Version
+
+The RTM SDK version has been updated from 2.1.x to 2.2.x.
+
+## Library Files
+
+The library files have been updated to use `.so` files instead of `.a` files.
+
+## Library File Location
+
+All `.so` files are now located in a single directory.
+## add 8 callback for logout etc
+## add pushmessage in demo to do like echo server
+## add chan in demo to get time for each step
+
+
+
+
 Todo list
+-[]回调中，缺少logout的callback
+-[]cmd/sample中需要做释放
+-[]需要做pprof测试，
+   -[]验证cpu、内存耗费
+   -[]验证释放有内存泄漏？
+-[] 需要修改rtmclient的对象，变更为go中的对象，否则会引起多次销毁
+-[] 对mac的支持
+-[] 所有的void 都用handle来定义，不要定义各种不同的c_Ixx ,太难理解了
+-[] eventhandler: 需要提供一个unreg 方法，或者就是在client的logout的时候，自动来处理？？需要查看rtm c++是否有unreg event handler
+
 - [x] 将github 去掉，或者是替换为agora io，看看是否能编译通过？
 - [x] 包命令为agrtm
 - [x] 将bridge 迁移到agora，不需要bridage，并修改main.go

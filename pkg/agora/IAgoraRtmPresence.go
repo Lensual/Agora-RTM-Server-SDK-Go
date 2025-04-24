@@ -7,7 +7,7 @@ package agora
 
 //链接AgoraRTM SDK
 #cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk -lagora_rtm_sdk
+#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk -laosl
 
 #include "C_IAgoraRtmPresence.h"
 #include <stdlib.h>
@@ -42,7 +42,7 @@ type IRtmPresence C.C_IRtmPresence
  */
 func (this_ *IRtmPresence) WhoNow(channelName string, channelType RTM_CHANNEL_TYPE, options *PresenceOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
-	ret := int(C.C_IRtmPresence_whoNow(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_presence_who_now(unsafe.Pointer(this_),
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		(*C.struct_C_PresenceOptions)(options),
@@ -63,7 +63,7 @@ func (this_ *IRtmPresence) WhoNow(channelName string, channelType RTM_CHANNEL_TY
  */
 func (this_ *IRtmPresence) WhereNow(userId string, requestId *uint64) int {
 	cUserId := C.CString(userId)
-	ret := int(C.C_IRtmPresence_whereNow(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_presence_where_now(unsafe.Pointer(this_),
 		cUserId,
 		(*C.uint64_t)(requestId),
 	))
@@ -85,7 +85,7 @@ func (this_ *IRtmPresence) WhereNow(userId string, requestId *uint64) int {
  */
 func (this_ *IRtmPresence) SetState(channelName string, channelType RTM_CHANNEL_TYPE, items []StateItem, count uint, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
-	ret := int(C.C_IRtmPresence_setState(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_presence_set_state(unsafe.Pointer(this_),
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		(*C.struct_C_StateItem)(unsafe.SliceData(items)),
@@ -114,7 +114,7 @@ func (this_ *IRtmPresence) RemoveState(channelName string, channelType RTM_CHANN
 	for i, key := range keys {
 		cKeysArr[i] = C.CString(key)
 	}
-	ret := int(C.C_IRtmPresence_removeState(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_presence_remove_state(unsafe.Pointer(this_),
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		unsafe.SliceData(cKeysArr),
@@ -142,7 +142,7 @@ func (this_ *IRtmPresence) RemoveState(channelName string, channelType RTM_CHANN
 func (this_ *IRtmPresence) GetState(channelName string, channelType RTM_CHANNEL_TYPE, userId string, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	cUserId := C.CString(userId)
-	ret := int(C.C_IRtmPresence_getState(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_presence_get_state(unsafe.Pointer(this_),
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cUserId,
@@ -166,7 +166,7 @@ func (this_ *IRtmPresence) GetState(channelName string, channelType RTM_CHANNEL_
  */
 func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RTM_CHANNEL_TYPE, options *GetOnlineUsersOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
-	ret := int(C.C_IRtmPresence_getOnlineUsers(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_presence_get_online_users(unsafe.Pointer(this_),
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		(*C.struct_C_GetOnlineUsersOptions)(options),
@@ -187,7 +187,7 @@ func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RTM_CH
  */
 func (this_ *IRtmPresence) GetUserChannels(userId string, requestId *uint64) int {
 	cUserId := C.CString(userId)
-	ret := int(C.C_IRtmPresence_getUserChannels(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_presence_get_user_channels(unsafe.Pointer(this_),
 		cUserId,
 		(*C.uint64_t)(requestId),
 	))

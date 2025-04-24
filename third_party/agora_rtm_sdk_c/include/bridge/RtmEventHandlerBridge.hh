@@ -15,6 +15,13 @@ public:
     ~RtmEventHandlerBridge(){};
 
     /**
+     * Occurs when link state change
+     *
+     * @param event details of link state event
+     */
+    void onLinkStateEvent(const LinkStateEvent &event) override;
+
+    /**
      * Occurs when receive a message.
      *
      * @param event details of message event.
@@ -53,6 +60,7 @@ public:
     /**
      * Occurs when user join a stream channel.
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param userId The id of the user.
      * @param errorCode The error code.
@@ -62,6 +70,7 @@ public:
     /**
      * Occurs when user leave a stream channel.
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param userId The id of the user.
      * @param errorCode The error code.
@@ -69,8 +78,19 @@ public:
     void onLeaveResult(const uint64_t requestId, const char *channelName, const char *userId, RTM_ERROR_CODE errorCode) override;
 
     /**
+     * Occurs when user publish topic message.
+     *
+     * @param requestId The related request id when user perform this operation
+     * @param channelName The name of the channel.
+     * @param topic The name of the topic.
+     * @param errorCode The error code.
+     */
+    void onPublishTopicMessageResult(const uint64_t requestId, const char *channelName, const char *topic, RTM_ERROR_CODE errorCode) override;
+
+    /**
      * Occurs when user join topic.
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param userId The id of the user.
      * @param topic The name of the topic.
@@ -82,6 +102,7 @@ public:
     /**
      * Occurs when user leave topic.
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param userId The id of the user.
      * @param topic The name of the topic.
@@ -93,6 +114,7 @@ public:
     /**
      * Occurs when user subscribe topic.
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param userId The id of the user.
      * @param topic The name of the topic.
@@ -103,6 +125,28 @@ public:
     void onSubscribeTopicResult(const uint64_t requestId, const char *channelName, const char *userId, const char *topic, UserList succeedUsers, UserList failedUsers, RTM_ERROR_CODE errorCode) override;
 
     /**
+     * Occurs when user call unsubscribe topic.
+     * 
+     * @param requestId The related request id when user perform this operation
+     * @param channelName The name of the channel.
+     * @param topic The name of the topic.
+     * @param errorCode The error code.
+     */
+    void onUnsubscribeTopicResult(const uint64_t requestId, const char *channelName, const char *topic, RTM_ERROR_CODE errorCode) override;
+
+    /**
+     * Occurs when user call get subscribe user list.
+     * 
+     * @param requestId The related request id when user perform this operation
+     * @param channelName The name of the channel.
+     * @param topic The name of the topic.
+     * @param users The subscribed user list.
+     * @param errorCode The error code.
+     */
+    void onGetSubscribedUserListResult(const uint64_t requestId, const char *channelName, const char *topic, UserList users, RTM_ERROR_CODE errorCode) override;
+
+    /**
+     * @deprecated This callback is deprecated. Use LinkStateEvent instead.
      * Occurs when the connection state changes between rtm sdk and agora service.
      *
      * @param channelName The name of the channel.
@@ -121,6 +165,7 @@ public:
     /**
      * Occurs when subscribe a channel
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param errorCode The error code.
      */
@@ -137,9 +182,28 @@ public:
     /**
      * Occurs when user login.
      *
+     * @param requestId The related request id when user perform this operation
      * @param errorCode The error code.
      */
-    void onLoginResult(RTM_ERROR_CODE errorCode) override;
+    void onLoginResult(const uint64_t requestId, RTM_ERROR_CODE errorCode) override;
+
+    /**
+     * Occurs when user logout.
+     *
+     * @param requestId The related request id when user perform this operation.
+     * @param errorCode The error code.
+     */
+    void onLogoutResult(const uint64_t requestId, RTM_ERROR_CODE errorCode) override;
+
+    /**
+     * Occurs when user renew token.
+     *
+     * @param requestId The related request id when user renew token.
+     * @param serverType The type of server.
+     * @param channelName The name of the channel.
+     * @param errorCode The error code.
+     */
+    void onRenewTokenResult(const uint64_t requestId, RTM_SERVICE_TYPE serverType, const char *channelName, RTM_ERROR_CODE errorCode) override;
 
     /**
      * Occurs when user setting the channel metadata
@@ -180,7 +244,7 @@ public:
      * @param data The result metadata of getting operation.
      * @param errorCode The error code.
      */
-    void onGetChannelMetadataResult(const uint64_t requestId, const char *channelName, RTM_CHANNEL_TYPE channelType, const IMetadata &data, RTM_ERROR_CODE errorCode) override;
+    void onGetChannelMetadataResult(const uint64_t requestId, const char *channelName, RTM_CHANNEL_TYPE channelType, const Metadata &data, RTM_ERROR_CODE errorCode) override;
 
     /**
      * Occurs when user setting the user metadata
@@ -217,19 +281,30 @@ public:
      * @param data The result metadata of getting operation.
      * @param errorCode The error code.
      */
-    void onGetUserMetadataResult(const uint64_t requestId, const char *userId, const IMetadata &data, RTM_ERROR_CODE errorCode) override;
+    void onGetUserMetadataResult(const uint64_t requestId, const char *userId, const Metadata &data, RTM_ERROR_CODE errorCode) override;
 
     /**
      * Occurs when user subscribe a user metadata
      *
+     * @param requestId The related request id when user perform this operation
      * @param userId The id of the user.
      * @param errorCode The error code.
      */
     void onSubscribeUserMetadataResult(const uint64_t requestId, const char *userId, RTM_ERROR_CODE errorCode) override;
 
     /**
+     * Occurs when user unsubscribe a user metadata
+     *
+     * @param requestId The related request id when user perform this operation
+     * @param userId The id of the user.
+     * @param errorCode The error code.
+     */
+    void onUnsubscribeUserMetadataResult(const uint64_t requestId, const char *userId, RTM_ERROR_CODE errorCode) override;
+
+    /**
      * Occurs when user set a lock
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param channelType The type of the channel.
      * @param lockName The name of the lock.
@@ -240,6 +315,7 @@ public:
     /**
      * Occurs when user delete a lock
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param channelType The type of the channel.
      * @param lockName The name of the lock.
@@ -250,6 +326,7 @@ public:
     /**
      * Occurs when user release a lock
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param channelType The type of the channel.
      * @param lockName The name of the lock.
@@ -260,16 +337,19 @@ public:
     /**
      * Occurs when user acquire a lock
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param channelType The type of the channel.
      * @param lockName The name of the lock.
      * @param errorCode The error code.
+     * @param errorDetails The details of error.
      */
     void onAcquireLockResult(const uint64_t requestId, const char *channelName, RTM_CHANNEL_TYPE channelType, const char *lockName, RTM_ERROR_CODE errorCode, const char *errorDetails) override;
 
     /**
      * Occurs when user revoke a lock
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param channelType The type of the channel.
      * @param lockName The name of the lock.
@@ -280,6 +360,7 @@ public:
     /**
      * Occurs when user try to get locks from the channel
      *
+     * @param requestId The related request id when user perform this operation
      * @param channelName The name of the channel.
      * @param channelType The type of the channel.
      * @param lockDetailList The details of the locks.
@@ -294,6 +375,7 @@ public:
      * @param requestId The related request id when user perform this operation
      * @param userStatesList The states the users.
      * @param count The user count.
+     * @param nextPage The next page.
      * @param errorCode The error code.
      */
     void onWhoNowResult(const uint64_t requestId, const UserState *userStateList, const size_t count, const char *nextPage, RTM_ERROR_CODE errorCode) override;
@@ -304,6 +386,7 @@ public:
      * @param requestId The related request id when user perform this operation
      * @param userStatesList The states the users.
      * @param count The user count.
+     * @param nextPage The next page.
      * @param errorCode The error code.
      */
     void onGetOnlineUsersResult(const uint64_t requestId, const UserState *userStateList, const size_t count, const char *nextPage, RTM_ERROR_CODE errorCode) override;
@@ -352,6 +435,17 @@ public:
      * @param errorCode The error code.
      */
     void onPresenceGetStateResult(const uint64_t requestId, const UserState &state, RTM_ERROR_CODE errorCode) override;
+
+    /**
+     * Occurs when get history messages
+     *
+     * @param requestId The related request id when user perform this operation
+     * @param messageList The history message list.
+     * @param count The message count.
+     * @param newStart The timestamp of next history message.
+     * @param errorCode The error code.
+     */
+    void onGetHistoryMessagesResult(const uint64_t requestId, const HistoryMessage *messageList, const size_t count, const uint64_t newStart, RTM_ERROR_CODE errorCode) override;
 
 private:
     C_RtmEventHandlerBridge_Callbacks cbs_;

@@ -150,10 +150,11 @@ extern "C"
     /**
      * Occurs when user login.
      *
+     * @param requestId The related request id when user perform this operation
      * @param errorCode The error code.
      */
     typedef void (*C_RtmEventHandlerBridge_onLoginResult)(C_RtmEventHandlerBridge *this_, void *userData,
-                                                          enum C_RTM_ERROR_CODE errorCode);
+                                                          const uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
 
     /**
      * Occurs when user setting the channel metadata
@@ -198,7 +199,7 @@ extern "C"
      * @param errorCode The error code.
      */
     typedef void (*C_RtmEventHandlerBridge_onGetChannelMetadataResult)(C_RtmEventHandlerBridge *this_, void *userData,
-                                                                       const uint64_t requestId, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+                                                                       const uint64_t requestId, const char *channelName, enum C_RTM_CHANNEL_TYPE channelType, const struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
     /**
      * Occurs when user setting the user metadata
@@ -239,7 +240,7 @@ extern "C"
      * @param errorCode The error code.
      */
     typedef void (*C_RtmEventHandlerBridge_onGetUserMetadataResult)(C_RtmEventHandlerBridge *this_, void *userData,
-                                                                    const uint64_t requestId, const char *userId, const C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+                                                                    const uint64_t requestId, const char *userId, const struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
     /**
      * Occurs when user subscribe a user metadata
@@ -389,6 +390,90 @@ extern "C"
     typedef void (*C_RtmEventHandlerBridge_onPresenceGetStateResult)(C_RtmEventHandlerBridge *this_, void *userData,
                                                                      const uint64_t requestId, const struct C_UserState *state, enum C_RTM_ERROR_CODE errorCode);
 
+    /**
+     * Occurs when link state change
+     *
+     * @param event details of link state event
+     */
+    typedef void (*C_RtmEventHandlerBridge_onLinkStateEvent)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                             const struct C_LinkStateEvent *event);
+
+    /**
+     * Occurs when user logout.
+     *
+     * @param requestId The related request id when user perform this operation.
+     * @param errorCode The error code.
+     */
+    typedef void (*C_RtmEventHandlerBridge_onLogoutResult)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                           const uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
+
+    /**
+     * Occurs when user renew token.
+     *
+     * @param requestId The related request id when user renew token.
+     * @param serverType The type of server.
+     * @param channelName The name of the channel.
+     * @param errorCode The error code.
+     */
+    typedef void (*C_RtmEventHandlerBridge_onRenewTokenResult)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                               const uint64_t requestId, enum C_RTM_SERVICE_TYPE serverType, const char *channelName, enum C_RTM_ERROR_CODE errorCode);
+
+    /**
+     * Occurs when user publish topic message.
+     *
+     * @param requestId The related request id when user perform this operation
+     * @param channelName The name of the channel.
+     * @param topic The name of the topic.
+     * @param errorCode The error code.
+     */
+    typedef void (*C_RtmEventHandlerBridge_onPublishTopicMessageResult)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                                      const uint64_t requestId, const char *channelName, const char *topic, enum C_RTM_ERROR_CODE errorCode);
+
+    /**
+     * Occurs when user call unsubscribe topic.
+     * 
+     * @param requestId The related request id when user perform this operation
+     * @param channelName The name of the channel.
+     * @param topic The name of the topic.
+     * @param errorCode The error code.
+     */
+    typedef void (*C_RtmEventHandlerBridge_onUnsubscribeTopicResult)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                                    const uint64_t requestId, const char *channelName, const char *topic, enum C_RTM_ERROR_CODE errorCode);
+
+    /**
+     * Occurs when user call get subscribe user list.
+     * 
+     * @param requestId The related request id when user perform this operation
+     * @param channelName The name of the channel.
+     * @param topic The name of the topic.
+     * @param users The subscribed user list.
+     * @param errorCode The error code.
+     */
+    typedef void (*C_RtmEventHandlerBridge_onGetSubscribedUserListResult)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                                         const uint64_t requestId, const char *channelName, const char *topic, struct C_UserList users, enum C_RTM_ERROR_CODE errorCode);
+
+    /**
+     * Occurs when query history messages
+     *
+     * @param requestId The related request id when user perform this operation
+     * @param messageList The history messages.
+     * @param count The message count.
+     * @param newStart New starting position for the next query.
+     * @param errorCode The error code.
+     */
+    typedef void (*C_RtmEventHandlerBridge_onGetHistoryMessagesResult)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                                      const uint64_t requestId, const struct C_HistoryMessage *messageList, const size_t count, const uint64_t newStart, enum C_RTM_ERROR_CODE errorCode);
+
+    /**
+     * Occurs when user unsubscribe a user metadata
+     *
+     * @param requestId The related request id when user perform this operation
+     * @param userId The id of the user.
+     * @param errorCode The error code.
+     */
+    typedef void (*C_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult)(C_RtmEventHandlerBridge *this_, void *userData,
+                                                                           const uint64_t requestId, const char *userId, enum C_RTM_ERROR_CODE errorCode);
+
     typedef struct C_RtmEventHandlerBridge_Callbacks
     {
         C_RtmEventHandlerBridge_onMessageEvent onMessageEvent;
@@ -428,6 +513,16 @@ extern "C"
         C_RtmEventHandlerBridge_onPresenceSetStateResult onPresenceSetStateResult;
         C_RtmEventHandlerBridge_onPresenceRemoveStateResult onPresenceRemoveStateResult;
         C_RtmEventHandlerBridge_onPresenceGetStateResult onPresenceGetStateResult;
+
+        // 新增的回调函数
+        C_RtmEventHandlerBridge_onLinkStateEvent onLinkStateEvent;
+        C_RtmEventHandlerBridge_onLogoutResult onLogoutResult;
+        C_RtmEventHandlerBridge_onRenewTokenResult onRenewTokenResult;
+        C_RtmEventHandlerBridge_onPublishTopicMessageResult onPublishTopicMessageResult;
+        C_RtmEventHandlerBridge_onUnsubscribeTopicResult onUnsubscribeTopicResult;
+        C_RtmEventHandlerBridge_onGetSubscribedUserListResult onGetSubscribedUserListResult;
+        C_RtmEventHandlerBridge_onGetHistoryMessagesResult onGetHistoryMessagesResult;
+        C_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult onUnsubscribeUserMetadataResult;
     } C_RtmEventHandlerBridge_Callbacks;
 
     C_RtmEventHandlerBridge *C_RtmEventHandlerBridge_New(C_RtmEventHandlerBridge_Callbacks cbs, void *userData);

@@ -7,7 +7,7 @@ package agora
 
 //链接AgoraRTM SDK
 #cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk -lagora_rtm_sdk
+#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk -laosl
 
 #include "bridge/C_RtmEventHandlerBridge.h"
 
@@ -54,7 +54,7 @@ void cgo_RtmEventHandlerBridge_onPublishResult(C_RtmEventHandlerBridge *this_, v
 	uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onLoginResult(C_RtmEventHandlerBridge *this_, void *userData,
-	enum C_RTM_ERROR_CODE errorCode);
+	uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onSetChannelMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
 	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, enum C_RTM_ERROR_CODE errorCode);
@@ -66,7 +66,7 @@ void cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult(C_RtmEventHandlerBr
 	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onGetChannelMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
-	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+	uint64_t requestId, char *channelName, enum C_RTM_CHANNEL_TYPE channelType, struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onSetUserMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
 	uint64_t requestId, char *userId, enum C_RTM_ERROR_CODE errorCode);
@@ -78,7 +78,7 @@ void cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult(C_RtmEventHandlerBridg
 	uint64_t requestId, char *userId, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onGetUserMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
-	uint64_t requestId, char *userId, C_IMetadata *data, enum C_RTM_ERROR_CODE errorCode);
+	uint64_t requestId, char *userId, struct C_Metadata *data, enum C_RTM_ERROR_CODE errorCode);
 
 void cgo_RtmEventHandlerBridge_onSubscribeUserMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
 	uint64_t requestId, char *userId, enum C_RTM_ERROR_CODE errorCode);
@@ -122,6 +122,31 @@ void cgo_RtmEventHandlerBridge_onPresenceRemoveStateResult(C_RtmEventHandlerBrid
 void cgo_RtmEventHandlerBridge_onPresenceGetStateResult(C_RtmEventHandlerBridge *this_, void *userData,
 	uint64_t requestId, struct C_UserState *state, enum C_RTM_ERROR_CODE errorCode);
 
+// newly added callback functions
+void cgo_RtmEventHandlerBridge_onLinkStateEvent(C_RtmEventHandlerBridge *this_, void *userData,
+	struct C_LinkStateEvent *event);
+
+void cgo_RtmEventHandlerBridge_onLogoutResult(C_RtmEventHandlerBridge *this_, void *userData,
+	uint64_t requestId, enum C_RTM_ERROR_CODE errorCode);
+
+void cgo_RtmEventHandlerBridge_onRenewTokenResult(C_RtmEventHandlerBridge *this_, void *userData,
+	uint64_t requestId, enum C_RTM_SERVICE_TYPE serverType, char *channelName, enum C_RTM_ERROR_CODE errorCode);
+
+void cgo_RtmEventHandlerBridge_onPublishTopicMessageResult(C_RtmEventHandlerBridge *this_, void *userData,
+	uint64_t requestId, char *channelName, char *topic, enum C_RTM_ERROR_CODE errorCode);	
+
+void cgo_RtmEventHandlerBridge_onUnsubscribeTopicResult(C_RtmEventHandlerBridge *this_, void *userData,
+	uint64_t requestId, char *channelName, char *topic, enum C_RTM_ERROR_CODE errorCode);
+
+void cgo_RtmEventHandlerBridge_onGetSubscribedUserListResult(C_RtmEventHandlerBridge *this_, void *userData,
+	uint64_t requestId, char *channelName, char *topic, struct C_UserList users, enum C_RTM_ERROR_CODE errorCode);
+
+void cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult(C_RtmEventHandlerBridge *this_, void *userData,
+	uint64_t requestId, struct C_HistoryMessage *messageList, size_t count, uint64_t newStart, enum C_RTM_ERROR_CODE errorCode);
+
+void cgo_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult(C_RtmEventHandlerBridge *this_, void *userData,
+	uint64_t requestId, char *userId, enum C_RTM_ERROR_CODE errorCode);
+
 */
 import "C"
 import (
@@ -146,7 +171,7 @@ type IRtmEventHandlerBridgeHandler interface {
 	OnTokenPrivilegeWillExpire(channelName string)
 	OnSubscribeResult(requestId uint64, channelName string, errorCode  RTM_ERROR_CODE)
 	OnPublishResult(requestId uint64, errorCode  RTM_ERROR_CODE)
-	OnLoginResult(errorCode  RTM_ERROR_CODE)
+	OnLoginResult(requestId uint64, errorCode  RTM_ERROR_CODE)
 	OnSetChannelMetadataResult(requestId uint64, channelName string, channelType  RTM_CHANNEL_TYPE, errorCode  RTM_ERROR_CODE)
 	OnUpdateChannelMetadataResult(requestId uint64, channelName string, channelType  RTM_CHANNEL_TYPE, errorCode  RTM_ERROR_CODE)
 	OnRemoveChannelMetadataResult(requestId uint64, channelName string, channelType  RTM_CHANNEL_TYPE, errorCode  RTM_ERROR_CODE)
@@ -169,6 +194,18 @@ type IRtmEventHandlerBridgeHandler interface {
 	OnPresenceSetStateResult(requestId uint64, errorCode  RTM_ERROR_CODE)
 	OnPresenceRemoveStateResult(requestId uint64, errorCode  RTM_ERROR_CODE)
 	OnPresenceGetStateResult(requestId uint64, state * UserState, errorCode  RTM_ERROR_CODE)
+	// newly added callback functions
+	OnLinkStateEvent(event *LinkStateEvent)
+	OnLogoutResult(requestId uint64, errorCode  RTM_ERROR_CODE)
+	OnRenewTokenResult(requestId uint64, serverType  RTM_SERVICE_TYPE, channelName string, errorCode  RTM_ERROR_CODE)
+	OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode  RTM_ERROR_CODE)
+	OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode  RTM_ERROR_CODE)
+	OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user UserList, errorCode  RTM_ERROR_CODE)
+	// note： 可以将messageList转换为HistoryMessage切片，也就是将C的HistoryMessage数组转换为Go的HistoryMessage切片
+	// 使用unsafe.Slice将C的HistoryMessage数组转换为Go的HistoryMessage切片,也就是参数为：messageList *HistoryMessage,count uint,newStart uint64
+	// 这样就不需要做拷贝之类的，效率高，不过也没有多大影响。参考channelInfo的转换
+	OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, count uint, newStart uint64, errorCode  RTM_ERROR_CODE)
+	OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode  RTM_ERROR_CODE)
 }
 
 type RtmEventHandlerBridge struct {
@@ -230,6 +267,15 @@ func NewRtmEventHandlerBridge(handler IRtmEventHandlerBridgeHandler) *RtmEventHa
 			onPresenceSetStateResult:      C.C_RtmEventHandlerBridge_onPresenceSetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceSetStateResult),
 			onPresenceRemoveStateResult:   C.C_RtmEventHandlerBridge_onPresenceRemoveStateResult(C.cgo_RtmEventHandlerBridge_onPresenceRemoveStateResult),
 			onPresenceGetStateResult:      C.C_RtmEventHandlerBridge_onPresenceGetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceGetStateResult),
+			// newly added callback functions
+			onLinkStateEvent:              C.C_RtmEventHandlerBridge_onLinkStateEvent(C.cgo_RtmEventHandlerBridge_onLinkStateEvent),
+			onLogoutResult:                C.C_RtmEventHandlerBridge_onLogoutResult(C.cgo_RtmEventHandlerBridge_onLogoutResult),
+			onRenewTokenResult:            C.C_RtmEventHandlerBridge_onRenewTokenResult(C.cgo_RtmEventHandlerBridge_onRenewTokenResult),
+			onPublishTopicMessageResult:   C.C_RtmEventHandlerBridge_onPublishTopicMessageResult(C.cgo_RtmEventHandlerBridge_onPublishTopicMessageResult),
+			onUnsubscribeTopicResult:      C.C_RtmEventHandlerBridge_onUnsubscribeTopicResult(C.cgo_RtmEventHandlerBridge_onUnsubscribeTopicResult),
+			onGetSubscribedUserListResult: C.C_RtmEventHandlerBridge_onGetSubscribedUserListResult(C.cgo_RtmEventHandlerBridge_onGetSubscribedUserListResult),
+			onGetHistoryMessagesResult:    C.C_RtmEventHandlerBridge_onGetHistoryMessagesResult(C.cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult),
+			onUnsubscribeUserMetadataResult: C.C_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult(C.cgo_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult),
 		},
 		userData,
 	))
@@ -446,7 +492,7 @@ func cgo_RtmEventHandlerBridge_onPublishResult(_ *C.C_RtmEventHandlerBridge, use
 
 //export cgo_RtmEventHandlerBridge_onLoginResult
 func cgo_RtmEventHandlerBridge_onLoginResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return
@@ -454,6 +500,7 @@ func cgo_RtmEventHandlerBridge_onLoginResult(_ *C.C_RtmEventHandlerBridge, userD
 
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnLoginResult(
+		uint64(requestId),
 		 RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -511,7 +558,7 @@ func cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult(_ *C.C_RtmEventHand
 
 //export cgo_RtmEventHandlerBridge_onGetChannelMetadataResult
 func cgo_RtmEventHandlerBridge_onGetChannelMetadataResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	requestId C.uint64_t, channelName *C.char, channelType C.enum_C_RTM_CHANNEL_TYPE, data *C.C_IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, channelName *C.char, channelType C.enum_C_RTM_CHANNEL_TYPE, data *IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return
@@ -577,7 +624,7 @@ func cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult(_ *C.C_RtmEventHandler
 
 //export cgo_RtmEventHandlerBridge_onGetUserMetadataResult
 func cgo_RtmEventHandlerBridge_onGetUserMetadataResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	requestId C.uint64_t, userId *C.char, data *C.C_IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, userId *C.char, data *IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return
@@ -830,6 +877,151 @@ func cgo_RtmEventHandlerBridge_onPresenceGetStateResult(_ *C.C_RtmEventHandlerBr
 	bridge.handler.OnPresenceGetStateResult(
 		uint64(requestId),
 		(* UserState)(unsafe.Pointer(state)),
+		 RTM_ERROR_CODE(errorCode),
+	)
+}
+
+// newly added callback functions
+
+//export cgo_RtmEventHandlerBridge_onLinkStateEvent
+func cgo_RtmEventHandlerBridge_onLinkStateEvent(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	event *C.struct_C_LinkStateEvent) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	bridge.handler.OnLinkStateEvent(
+		(* LinkStateEvent)(unsafe.Pointer(event)),
+	)
+}
+
+//export cgo_RtmEventHandlerBridge_onLogoutResult
+func cgo_RtmEventHandlerBridge_onLogoutResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	requestId C.uint64_t, errorCode C.enum_C_RTM_ERROR_CODE) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	bridge.handler.OnLogoutResult(
+		uint64(requestId),
+		 RTM_ERROR_CODE(errorCode),
+	)
+}
+
+//export cgo_RtmEventHandlerBridge_onRenewTokenResult
+func cgo_RtmEventHandlerBridge_onRenewTokenResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	requestId C.uint64_t, serverType C.enum_C_RTM_SERVICE_TYPE, channelName *C.char, errorCode C.enum_C_RTM_ERROR_CODE) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	bridge.handler.OnRenewTokenResult(
+		uint64(requestId),
+		RTM_SERVICE_TYPE(serverType),
+		C.GoString(channelName),
+		 RTM_ERROR_CODE(errorCode),
+	)
+}	
+
+//export cgo_RtmEventHandlerBridge_onPublishTopicMessageResult
+func cgo_RtmEventHandlerBridge_onPublishTopicMessageResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	requestId C.uint64_t, channelName *C.char, topic *C.char, errorCode C.enum_C_RTM_ERROR_CODE) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	bridge.handler.OnPublishTopicMessageResult(
+		uint64(requestId),
+		C.GoString(channelName),
+		C.GoString(topic),
+		 RTM_ERROR_CODE(errorCode),
+	)
+}
+
+//export cgo_RtmEventHandlerBridge_onUnsubscribeTopicResult
+func cgo_RtmEventHandlerBridge_onUnsubscribeTopicResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	requestId C.uint64_t, channelName *C.char, topic *C.char, errorCode C.enum_C_RTM_ERROR_CODE) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	bridge.handler.OnUnsubscribeTopicResult(
+		uint64(requestId),
+		C.GoString(channelName),
+		C.GoString(topic),
+		 RTM_ERROR_CODE(errorCode),
+	)
+}
+
+//export cgo_RtmEventHandlerBridge_onGetSubscribedUserListResult
+func cgo_RtmEventHandlerBridge_onGetSubscribedUserListResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	requestId C.uint64_t, channelName *C.char, topic *C.char, users C.struct_C_UserList, errorCode C.enum_C_RTM_ERROR_CODE) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	bridge.handler.OnGetSubscribedUserListResult(
+		uint64(requestId),
+		C.GoString(channelName),
+		C.GoString(topic),
+		(UserList)(users),
+		 RTM_ERROR_CODE(errorCode),
+	)
+}
+
+//export cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult
+func cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	requestId C.uint64_t, messageList *C.struct_C_HistoryMessage, count C.size_t, newStart C.uint64_t, errorCode C.enum_C_RTM_ERROR_CODE) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	
+	// 将 C 的消息列表转换为 Go 的切片
+	messages := make([]HistoryMessage, count)
+	if count > 0 {
+		// 使用 unsafe.Slice 将 C 数组转换为 Go 切片
+		cMessages := unsafe.Slice(messageList, count)
+		for i := range messages {
+			messages[i] = *(*HistoryMessage)(unsafe.Pointer(&cMessages[i]))
+		}
+	}
+
+	bridge.handler.OnGetHistoryMessagesResult(
+		uint64(requestId),
+		messages,
+		uint(count),
+		uint64(newStart),
+		RTM_ERROR_CODE(errorCode),
+	)	
+}
+
+//export cgo_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult
+func cgo_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
+	requestId C.uint64_t, userId *C.char, errorCode C.enum_C_RTM_ERROR_CODE) {
+
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+	bridge.handler.OnUnsubscribeUserMetadataResult(	
+		uint64(requestId),
+		C.GoString(userId),
 		 RTM_ERROR_CODE(errorCode),
 	)
 }

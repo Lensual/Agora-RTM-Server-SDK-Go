@@ -7,9 +7,10 @@ package agora
 
 //链接AgoraRTM SDK
 #cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk -lagora_rtm_sdk
+#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk -laosl
 
 #include "C_IAgoraRtmClient.h"
+#include "C_AgoraRtmBase.h"
 #include <stdlib.h>
 */
 import "C"
@@ -830,7 +831,7 @@ func (this_ *StorageEvent) GetData() *IMetadata {
  * The metadata information
  */
 func (this_ *StorageEvent) SetData(data *IMetadata) {
-	this_.data = unsafe.Pointer(data)
+	this_.data = (*C.struct_C_Metadata)(unsafe.Pointer(data))
 }
 
 func NewStorageEvent() *StorageEvent {
@@ -1073,8 +1074,11 @@ func (this_ *IRtmEventHandler) OnPublishResult(requestId uint64, errorCode RTM_E
  *
  * @param errorCode The error code.
  */
-func (this_ *IRtmEventHandler) OnLoginResult(errorCode RTM_ERROR_CODE) {
+func (this_ *IRtmEventHandler) OnLoginResult(requestId uint64,errorCode RTM_ERROR_CODE) {
+	
+	
 	C.C_IRtmEventHandler_onLoginResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
 		C.enum_C_RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -1151,7 +1155,7 @@ func (this_ *IRtmEventHandler) OnGetChannelMetadataResult(requestId uint64, chan
 		C.uint64_t(requestId),
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		unsafe.Pointer(data),
+		(*C.struct_C_Metadata)(unsafe.Pointer(data)),
 		C.enum_C_RTM_ERROR_CODE(errorCode),
 	)
 	C.free(unsafe.Pointer(cChannelName))
@@ -1221,7 +1225,7 @@ func (this_ *IRtmEventHandler) OnGetUserMetadataResult(requestId uint64, userId 
 	C.C_IRtmEventHandler_onGetUserMetadataResult(unsafe.Pointer(this_),
 		C.uint64_t(requestId),
 		cUserId,
-		unsafe.Pointer(data),
+		(*C.struct_C_Metadata)(unsafe.Pointer(data)),
 		C.enum_C_RTM_ERROR_CODE(errorCode),
 	)
 	C.free(unsafe.Pointer(cUserId))
@@ -1493,6 +1497,128 @@ func (this_ *IRtmEventHandler) OnPresenceGetStateResult(requestId uint64, state 
 	)
 }
 
+/**
+ * Occurs when user logout
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param errorCode The error code.
+ */
+func (this_ *IRtmEventHandler) OnLogoutResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onLogoutResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user renew token
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param serverType The type of server.
+ * @param channelName The name of the channel.
+ * @param errorCode The error code.
+ */	
+func (this_ *IRtmEventHandler) OnRenewTokenResult(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onRenewTokenResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.enum_C_RTM_SERVICE_TYPE(serverType),
+		C.CString(channelName),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user publish topic message
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param channelName The name of the channel.
+ * @param topic The name of the topic.
+ * @param errorCode The error code.
+ */
+func (this_ *IRtmEventHandler) OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onPublishTopicMessageResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(channelName),
+		C.CString(topic),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user unsubscribe topic
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param channelName The name of the channel.
+ * @param topic The name of the topic.
+ * @param errorCode The error code.
+ */	
+
+func (this_ *IRtmEventHandler) OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onUnsubscribeTopicResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(channelName),
+		C.CString(topic),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user get subscribed user list
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param channelName The name of the channel.
+ * @param topic The name of the topic.
+ * @param users The subscribed user list.
+ * @param errorCode The error code.
+ */
+func (this_ *IRtmEventHandler) OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user UserList, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onGetSubscribedUserListResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(channelName),
+		C.CString(topic),
+		(C.struct_C_UserList)(user),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user get history messages
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param errorCode The error code.
+ * @param messageList The history message list.	
+ * @param count The message count.
+ * @param newStart The timestamp of next history message. If newStart is 0, means there are no more history messages
+ */	
+
+func (this_ *IRtmEventHandler) OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, count uint, newStart uint64, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onGetHistoryMessagesResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		(*C.struct_C_HistoryMessage)(unsafe.SliceData(messageList)),	
+		C.size_t(count),
+		C.uint64_t(newStart),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+/**
+ * Occurs when user unsubscribe user metadata
+ *
+ * @param requestId The related request id when user perform this operation
+ * @param userId The id of the user.
+ * @param errorCode The error code.	
+ */
+func (this_ *IRtmEventHandler) OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
+	C.C_IRtmEventHandler_onUnsubscribeUserMetadataResult(unsafe.Pointer(this_),
+		C.uint64_t(requestId),
+		C.CString(userId),
+		C.enum_C_RTM_ERROR_CODE(errorCode),
+	)
+}
+
+
+
+
 // #endregion IRtmEventHandler
 
 /**
@@ -1517,11 +1643,16 @@ type IRtmClient C.C_IRtmClient
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmClient) Initialize(config *RtmConfig) int {
-	return int(C.C_IRtmClient_initialize(unsafe.Pointer(this_),
-		(*C.struct_C_RtmConfig)(config),
-	))
+ /**
+ * Creates the rtm client object and returns the pointer.
+ *
+ * @return Pointer of the rtm client object.
+ */
+func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
+	err := 0
+	return (*IRtmClient)(C.agora_rtm_client_create((*C.struct_C_RtmConfig)(config), (*C.int)(unsafe.Pointer(&err))))
 }
+
 
 /**
  * Release the rtm client instance.
@@ -1531,7 +1662,7 @@ func (this_ *IRtmClient) Initialize(config *RtmConfig) int {
  * - < 0: Failure.
  */
 func (this_ *IRtmClient) Release() int {
-	return int(C.C_IRtmClient_release(unsafe.Pointer(this_)))
+	return int(C.agora_rtm_client_release(unsafe.Pointer(this_)))
 }
 
 /**
@@ -1543,12 +1674,14 @@ func (this_ *IRtmClient) Release() int {
  * - < 0: Failure.
  */
 func (this_ *IRtmClient) Login(token string) int {
+	var requestId uint64
 	cToken := C.CString(token)
-	ret := int(C.C_IRtmClient_login(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_login(unsafe.Pointer(this_),
 		cToken,
+		(*C.uint64_t)(unsafe.Pointer(&requestId)),
 	))
 	C.free(unsafe.Pointer(cToken))
-	return ret
+	return int(ret)
 }
 
 /**
@@ -1559,7 +1692,10 @@ func (this_ *IRtmClient) Login(token string) int {
  * - < 0: Failure.
  */
 func (this_ *IRtmClient) Logout() int {
-	return int(C.C_IRtmClient_logout(unsafe.Pointer(this_)))
+	var requestId uint64	
+	return int(C.agora_rtm_client_logout(unsafe.Pointer(this_),
+		(*C.uint64_t)(unsafe.Pointer(&requestId)),
+	))
 }
 
 /**
@@ -1569,7 +1705,7 @@ func (this_ *IRtmClient) Logout() int {
  * - return NULL if error occurred
  */
 func (this_ *IRtmClient) GetStorage() *IRtmStorage {
-	return (*IRtmStorage)(C.C_IRtmClient_getStorage(unsafe.Pointer(this_)))
+	return (*IRtmStorage)(C.agora_rtm_client_get_storage(unsafe.Pointer(this_)))
 }
 
 /**
@@ -1579,7 +1715,7 @@ func (this_ *IRtmClient) GetStorage() *IRtmStorage {
  * - return NULL if error occurred
  */
 func (this_ *IRtmClient) GetLock() *IRtmLock {
-	return (*IRtmLock)(C.C_IRtmClient_getLock(unsafe.Pointer(this_)))
+	return (*IRtmLock)(C.agora_rtm_client_get_lock(unsafe.Pointer(this_)))
 }
 
 /**
@@ -1589,7 +1725,7 @@ func (this_ *IRtmClient) GetLock() *IRtmLock {
  * - return NULL if error occurred
  */
 func (this_ *IRtmClient) GetPresence() *IRtmPresence {
-	return (*IRtmPresence)(C.C_IRtmClient_getPresence(unsafe.Pointer(this_)))
+	return (*IRtmPresence)(C.agora_rtm_client_get_presence(unsafe.Pointer(this_)))
 }
 
 /**
@@ -1602,11 +1738,13 @@ func (this_ *IRtmClient) GetPresence() *IRtmPresence {
  */
 func (this_ *IRtmClient) RenewToken(token string) int {
 	cToken := C.CString(token)
-	ret := int(C.C_IRtmClient_renewToken(unsafe.Pointer(this_),
+	var requestId uint64
+	ret := int(C.agora_rtm_client_renew_token(unsafe.Pointer(this_),
 		cToken,
+		(*C.uint64_t)(unsafe.Pointer(&requestId)),
 	))
 	C.free(unsafe.Pointer(cToken))
-	return ret
+	return int(ret)
 }
 
 /**
@@ -1624,7 +1762,7 @@ func (this_ *IRtmClient) RenewToken(token string) int {
 func (this_ *IRtmClient) Publish(channelName string, message []byte, length uint, option *PublishOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	cMessage := C.CBytes(message)
-	ret := int(C.C_IRtmClient_publish(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_publish(unsafe.Pointer(this_),
 		cChannelName,
 		(*C.char)(cMessage),
 		C.size_t(length),
@@ -1647,7 +1785,7 @@ func (this_ *IRtmClient) Publish(channelName string, message []byte, length uint
  */
 func (this_ *IRtmClient) Subscribe(channelName string, option *SubscribeOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
-	ret := int(C.C_IRtmClient_subscribe(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_subscribe(unsafe.Pointer(this_),
 		cChannelName,
 		(*C.struct_C_SubscribeOptions)(option),
 		(*C.uint64_t)(requestId),
@@ -1666,11 +1804,13 @@ func (this_ *IRtmClient) Subscribe(channelName string, option *SubscribeOptions,
  */
 func (this_ *IRtmClient) Unsubscribe(channelName string) int {
 	cChannelName := C.CString(channelName)
-	ret := int(C.C_IRtmClient_unsubscribe(unsafe.Pointer(this_),
+	var requestId uint64	
+	ret := int(C.agora_rtm_client_unsubscribe(unsafe.Pointer(this_),
 		cChannelName,
+		(*C.uint64_t)(unsafe.Pointer(&requestId)),
 	))
 	C.free(unsafe.Pointer(cChannelName))
-	return ret
+	return int(ret)
 }
 
 /**
@@ -1682,11 +1822,15 @@ func (this_ *IRtmClient) Unsubscribe(channelName string) int {
  */
 func (this_ *IRtmClient) CreateStreamChannel(channelName string) *IStreamChannel {
 	cChannelName := C.CString(channelName)
-	ret := (*IStreamChannel)(C.C_IRtmClient_createStreamChannel(unsafe.Pointer(this_),
+	var errorCode int
+	ret := C.agora_rtm_client_create_stream_channel(unsafe.Pointer(this_),
 		cChannelName,
-	))
+		(*C.int)(unsafe.Pointer(&errorCode)),
+	)
 	C.free(unsafe.Pointer(cChannelName))
-	return ret
+
+	streamChannel := &IStreamChannel{ptr: (*C.C_IStreamChannel)(ret)}
+	return streamChannel
 }
 
 /**
@@ -1699,7 +1843,7 @@ func (this_ *IRtmClient) CreateStreamChannel(channelName string) *IStreamChannel
  */
 func (this_ *IRtmClient) SetParameters(parameters string) int {
 	cParameters := C.CString(parameters)
-	ret := int(C.C_IRtmClient_setParameters(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_set_parameters(unsafe.Pointer(this_),
 		cParameters,
 	))
 	C.free(unsafe.Pointer(cParameters))
@@ -1708,14 +1852,7 @@ func (this_ *IRtmClient) SetParameters(parameters string) int {
 
 // #endregion IRtmClient
 
-/**
- * Creates the rtm client object and returns the pointer.
- *
- * @return Pointer of the rtm client object.
- */
-func CreateAgoraRtmClient() *IRtmClient {
-	return (*IRtmClient)(C.C_createAgoraRtmClient())
-}
+
 
 /**
  * Convert error code to error string
@@ -1724,7 +1861,7 @@ func CreateAgoraRtmClient() *IRtmClient {
  * @return The error reason
  */
 func GetErrorReason(errorCode int) string {
-	return C.GoString(C.C_getErrorReason(C.int(errorCode)))
+	return C.GoString(C.agora_rtm_client_get_error_reason(C.int(errorCode)))
 }
 
 /**
@@ -1733,7 +1870,7 @@ func GetErrorReason(errorCode int) string {
  * @return The version info of the Agora RTM SDK.
  */
 func GetVersion() string {
-	return C.GoString(C.C_getVersion())
+	return C.GoString(C.agora_rtm_client_get_version())
 }
 
 // #endregion agora::rtm
