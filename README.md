@@ -28,6 +28,9 @@ go build -o ./bin/ ./cmd/example/
 ./bin/example <appid> <channelname> <usid> <token_option>
 
 版本历史记录：
+20250428 release 0.0.4
+-- 更新：更新rtm 版本到2.2.4.1
+-- 修改：修改mac 的LDflags，fix mac下编译错误
 20250424 release 0.0.3
 -- Add:
    - 增加对mac的支持
@@ -49,6 +52,13 @@ All `.so` files are now located in a single directory.
 ## add 8 callback for logout etc
 ## add pushmessage in demo to do like echo server
 ## add chan in demo to get time for each step
+
+最佳实践
+1、释放顺序
+   - 先释放client，再释放channel
+2、回调中，不要调用sdk的api，否则会引起多次销毁
+3、回调中，不要做耗时的操作，否则会引起阻塞
+4 configure 最后释放
 
 
 
