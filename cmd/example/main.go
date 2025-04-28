@@ -59,6 +59,12 @@ func main() {
 	rtmConfig.SetAppId(appId)
 	rtmConfig.SetUserId(userId)
 	rtmConfig.SetEventHandler(rtmEventHandler.ToAgoraEventHandler())
+
+	logConfig := agrtm.NewRtmLogConfig()
+	logConfig.SetFilePath("./logs/rtm.log")
+	logConfig.SetFileSizeInKB(1024)
+	logConfig.SetLevel(agrtm.RTM_LOG_LEVEL_INFO)
+	rtmConfig.SetLogConfig(*logConfig)
 	fmt.Printf("NewRtmConfig: %+v\n", rtmConfig) //DEBUG
 
 	rtmClient := agrtm.CreateAgoraRtmClient(rtmConfig)

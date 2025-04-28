@@ -50,6 +50,13 @@ All `.so` files are now located in a single directory.
 ## add pushmessage in demo to do like echo server
 ## add chan in demo to get time for each step
 
+最佳实践
+1、释放顺序
+   - 先释放client，再释放channel
+2、回调中，不要调用sdk的api，否则会引起多次销毁
+3、回调中，不要做耗时的操作，否则会引起阻塞
+4 configure 最后释放
+
 
 
 
