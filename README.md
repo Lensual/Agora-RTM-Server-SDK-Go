@@ -28,6 +28,9 @@ go build -o ./bin/ ./cmd/example/
 ./bin/example <appid> <channelname> <usid> <token_option>
 
 版本历史记录：
+20250428 release 0.0.4
+-- 更新：更新rtm 版本到2.2.4.1
+-- 修改：修改mac 的LDflags，fix mac下编译错误
 20250424 release 0.0.3
 -- Add:
    - 增加对mac的支持
