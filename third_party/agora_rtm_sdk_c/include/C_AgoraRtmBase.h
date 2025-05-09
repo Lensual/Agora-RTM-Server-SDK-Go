@@ -1266,6 +1266,13 @@ struct C_SubscribeOptions
    * Whether to subscribe channel with lock
    */
   bool withLock;
+
+  /**
+   * Whether to subscribe channel in quiet mode
+   * Quiet mode means remote user will not receive any notification when we subscribe or
+   * unsubscribe or change our presence state
+   */
+  bool beQuiet;
 };
 struct C_SubscribeOptions *C_SubscribeOptions_New();
 void C_SubscribeOptions_Delete(struct C_SubscribeOptions *this_);
@@ -1346,6 +1353,10 @@ struct C_PublishOptions
    The custom type of the message, up to 32 bytes for customize
    */
  const char *customType;
+ /**
+   Whether to store in history, true to enable
+   */
+  bool storeInHistory;
 };
 struct C_PublishOptions *C_PublishOptions_New();
 void C_PublishOptions_Delete(struct C_PublishOptions *this_);
