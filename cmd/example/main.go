@@ -95,6 +95,9 @@ func main() {
 
 	var reqId uint64
 	opt := agrtm.NewSubscribeOptions()
+
+	opt.SetWithPresence(false)
+	opt.SetWithQuiet(true)
 	
 
 	logWithTime("Subscribe start: %d\n", ret)

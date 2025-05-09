@@ -1336,6 +1336,13 @@ func (this_ *SubscribeOptions) SetWithPresence(withPresence bool) {
 	this_.withPresence = C.bool(withPresence)
 }
 
+func (this_ *SubscribeOptions) SetWithQuiet(withQuiet bool) {
+	this_.beQuiet= C.bool(withQuiet)
+}
+func (this_ *SubscribeOptions) GetWithQuiet() bool {
+	return bool(this_.beQuiet)
+}
+
 /**
  * Whether to subscribe channel with lock
  */
