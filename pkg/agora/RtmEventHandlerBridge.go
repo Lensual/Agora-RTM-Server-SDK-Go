@@ -294,7 +294,7 @@ func cgo_RtmEventHandlerBridge_onLinkStateEvent(_ *C.C_RtmEventHandlerBridge, us
 
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnLinkStateEvent(
-		(*LinkStateEvent)(unsafe.Pointer(event)),
+		(*LinkStateEvent)(event),
 	)
 }
 
@@ -307,7 +307,7 @@ func cgo_RtmEventHandlerBridge_onMessageEvent(_ *C.C_RtmEventHandlerBridge, user
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnMessageEvent((*MessageEvent)(unsafe.Pointer(event)))
+	bridge.handler.OnMessageEvent((*MessageEvent)(event))
 }
 
 //export cgo_RtmEventHandlerBridge_onPresenceEvent
@@ -319,7 +319,7 @@ func cgo_RtmEventHandlerBridge_onPresenceEvent(_ *C.C_RtmEventHandlerBridge, use
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnPresenceEvent((*PresenceEvent)(unsafe.Pointer(event)))
+	bridge.handler.OnPresenceEvent((*PresenceEvent)(event))
 }
 
 //export cgo_RtmEventHandlerBridge_onTopicEvent
@@ -331,7 +331,7 @@ func cgo_RtmEventHandlerBridge_onTopicEvent(_ *C.C_RtmEventHandlerBridge, userDa
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnTopicEvent((*TopicEvent)(unsafe.Pointer(event)))
+	bridge.handler.OnTopicEvent((*TopicEvent)(event))
 }
 
 //export cgo_RtmEventHandlerBridge_onLockEvent
@@ -349,7 +349,7 @@ func cgo_RtmEventHandlerBridge_onStorageEvent(_ *C.C_RtmEventHandlerBridge, user
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnStorageEvent((*StorageEvent)(unsafe.Pointer(event)))
+	bridge.handler.OnStorageEvent((*StorageEvent)(event))
 }
 
 //export cgo_RtmEventHandlerBridge_onJoinResult
@@ -455,8 +455,8 @@ func cgo_RtmEventHandlerBridge_onSubscribeTopicResult(_ *C.C_RtmEventHandlerBrid
 		C.GoString(channelName),
 		C.GoString(userId),
 		C.GoString(topic),
-		*(*UserList)(unsafe.Pointer(&succeedUsers)),
-		*(*UserList)(unsafe.Pointer(&failedUsers)),
+		*(*UserList)(&succeedUsers),
+		*(*UserList)(&failedUsers),
 		RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -876,7 +876,7 @@ func cgo_RtmEventHandlerBridge_onGetLocksResult(_ *C.C_RtmEventHandlerBridge, us
 		uint64(requestId),
 		C.GoString(channelName),
 		RTM_CHANNEL_TYPE(channelType),
-		(*LockDetail)(unsafe.Pointer(lockDetailList)),
+		(*LockDetail)(lockDetailList),
 		uint(count),
 		RTM_ERROR_CODE(errorCode),
 	)
@@ -893,7 +893,7 @@ func cgo_RtmEventHandlerBridge_onWhoNowResult(_ *C.C_RtmEventHandlerBridge, user
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnWhoNowResult(
 		uint64(requestId),
-		(*UserState)(unsafe.Pointer(userStateList)),
+		(*UserState)(userStateList),
 		uint(count),
 		C.GoString(nextPage),
 		RTM_ERROR_CODE(errorCode),
@@ -911,7 +911,7 @@ func cgo_RtmEventHandlerBridge_onGetOnlineUsersResult(_ *C.C_RtmEventHandlerBrid
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnGetOnlineUsersResult(
 		uint64(requestId),
-		(*UserState)(unsafe.Pointer(userStateList)),
+		(*UserState)(userStateList),
 		uint(count),
 		C.GoString(nextPage),
 		RTM_ERROR_CODE(errorCode),
@@ -929,7 +929,7 @@ func cgo_RtmEventHandlerBridge_onWhereNowResult(_ *C.C_RtmEventHandlerBridge, us
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnWhereNowResult(
 		uint64(requestId),
-		(*ChannelInfo)(unsafe.Pointer(channels)),
+		(*ChannelInfo)(channels),
 		uint(count),
 		RTM_ERROR_CODE(errorCode),
 	)
@@ -946,7 +946,7 @@ func cgo_RtmEventHandlerBridge_onGetUserChannelsResult(_ *C.C_RtmEventHandlerBri
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnGetUserChannelsResult(
 		uint64(requestId),
-		(*ChannelInfo)(unsafe.Pointer(channels)),
+		(*ChannelInfo)(channels),
 		uint(count),
 		RTM_ERROR_CODE(errorCode),
 	)
@@ -993,7 +993,7 @@ func cgo_RtmEventHandlerBridge_onPresenceGetStateResult(_ *C.C_RtmEventHandlerBr
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnPresenceGetStateResult(
 		uint64(requestId),
-		(*UserState)(unsafe.Pointer(state)),
+		(*UserState)(state),
 		RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -1014,7 +1014,7 @@ func cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult(_ *C.C_RtmEventHandler
 		// 使用 unsafe.Slice 将 C 数组转换为 Go 切片
 		cMessages := unsafe.Slice(messageList, count)
 		for i := range messages {
-			messages[i] = *(*HistoryMessage)(unsafe.Pointer(&cMessages[i]))
+			messages[i] = *(*HistoryMessage)(&cMessages[i])
 		}
 	}
 
