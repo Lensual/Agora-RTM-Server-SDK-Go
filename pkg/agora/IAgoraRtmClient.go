@@ -213,6 +213,90 @@ type IRtmEventHandler C.C_IRtmEventHandler
 
 // #region IRtmEventHandler
 
+type LinkStateEvent struct {
+	/**
+	 * The current link state
+	 */
+	CurrentState RTM_LINK_STATE
+	/**
+	 * The previous link state
+	 */
+	PreviousState RTM_LINK_STATE
+	/**
+	 * The service type
+	 */
+	ServiceType RTM_SERVICE_TYPE
+	/**
+	 * The operation which trigger this event
+	 */
+	Operation RTM_LINK_OPERATION
+	/**
+	 * The reason code of this state change event
+	 */
+	ReasonCode RTM_LINK_STATE_CHANGE_REASON
+	/**
+	 * The reason of this state change event
+	 */
+	Reason string
+	/**
+	 * The affected channels
+	 */
+	AffectedChannels []string
+	/**
+	 * The affected channel count
+	 */
+	AffectedChannelCount uint
+	/**
+	 * The unrestored channels
+	 */
+	UnrestoredChannels []string
+	/**
+	 * The unrestored channel count
+	 */
+	UnrestoredChannelCount uint
+	/**
+	 * Is resumed from disconnected state
+	 */
+	IsResumed bool
+	/**
+	 * RTM server UTC time
+	 */
+	Timestamp uint64
+}
+
+// #region LinkStateEvent
+
+func convertLinkStateEventToGo(e *C.struct_C_LinkStateEvent) *LinkStateEvent {
+	affectedChannels := ([]*C.char)(unsafe.Slice(e.affectedChannels, e.affectedChannelCount))
+	goAffectedChannels := make([]string, len(affectedChannels))
+	for i := range affectedChannels {
+		goAffectedChannels[i] = C.GoString(affectedChannels[i])
+	}
+
+	unrestoredChannels := ([]*C.char)(unsafe.Slice(e.unrestoredChannels, e.unrestoredChannelCount))
+	goUnrestoredChannels := make([]string, len(unrestoredChannels))
+	for i := range unrestoredChannels {
+		goUnrestoredChannels[i] = C.GoString(unrestoredChannels[i])
+	}
+
+	return &LinkStateEvent{
+		CurrentState:           RTM_LINK_STATE(e.currentState),
+		PreviousState:          RTM_LINK_STATE(e.previousState),
+		ServiceType:            RTM_SERVICE_TYPE(e.serviceType),
+		Operation:              RTM_LINK_OPERATION(e.operation),
+		ReasonCode:             RTM_LINK_STATE_CHANGE_REASON(e.reasonCode),
+		Reason:                 C.GoString(e.reason),
+		AffectedChannels:       goAffectedChannels,
+		AffectedChannelCount:   uint(e.affectedChannelCount),
+		UnrestoredChannels:     goUnrestoredChannels,
+		UnrestoredChannelCount: uint(e.unrestoredChannelCount),
+		IsResumed:              bool(e.isResumed),
+		Timestamp:              uint64(e.timestamp),
+	}
+}
+
+// #endregion LinkStateEvent
+
 type MessageEvent struct {
 	/**
 	 * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE

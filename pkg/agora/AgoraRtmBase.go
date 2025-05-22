@@ -2217,14 +2217,11 @@ func (this_ *RtmEncryptionConfig) Delete() {
 	C.C_RtmEncryptionConfig_Delete((*C.struct_C_RtmEncryptionConfig)(this_))
 }
 
-// link state event
-type LinkStateEvent C.struct_C_LinkStateEvent //FIXME 这个定义不在这
-
-// #region LinkStateEvent
+// #region HistoryMessage
 
 type HistoryMessage C.struct_C_HistoryMessage
 
-// #endregion LinkStateEvent
+// #endregion HistoryMessage
 
 // #endregion RtmEncryptionConfig
 

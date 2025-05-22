@@ -294,7 +294,7 @@ func cgo_RtmEventHandlerBridge_onLinkStateEvent(_ *C.C_RtmEventHandlerBridge, us
 
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnLinkStateEvent(
-		(*LinkStateEvent)(event),
+		convertLinkStateEventToGo(event),
 	)
 }
 
