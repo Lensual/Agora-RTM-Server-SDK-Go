@@ -213,130 +213,59 @@ type IRtmEventHandler C.C_IRtmEventHandler
 
 // #region IRtmEventHandler
 
-type MessageEvent C.struct_C_MessageEvent
+type MessageEvent struct {
+	/**
+	 * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
+	 */
+	ChannelType RTM_CHANNEL_TYPE
+	/**
+	 * Message type
+	 */
+	MessageType RTM_MESSAGE_TYPE
+	/**
+	 * The channel which the message was published
+	 */
+	ChannelName string
+	/**
+	 * If the channelType is RTM_CHANNEL_TYPE_STREAM, which topic the message came from. only for RTM_CHANNEL_TYPE_STREAM
+	 */
+	ChannelTopic string
+	/**
+	 * The payload
+	 */
+	Message []byte
+	/**
+	 * The payload length
+	 */
+	MessageLength uint
+	/**
+	 * The publisher
+	 */
+	Publisher string
+	/**
+	 * The custom type of the message
+	 */
+	CustomType string
+	/**
+	 * RTM server UTC time
+	 */
+	Timestamp uint64
+}
 
 // #region MessageEvent
 
-/**
- * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
- */
-func (this_ *MessageEvent) GetChannelType() RTM_CHANNEL_TYPE {
-	return RTM_CHANNEL_TYPE(this_.channelType)
-}
-
-/**
- * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
- */
-func (this_ *MessageEvent) SetChannelType(channelType RTM_CHANNEL_TYPE) {
-	this_.channelType = C.enum_C_RTM_CHANNEL_TYPE(channelType)
-}
-
-/**
- * Message type
- */
-func (this_ *MessageEvent) GetMessageType() RTM_MESSAGE_TYPE {
-	return RTM_MESSAGE_TYPE(this_.messageType)
-}
-
-/**
- * Message type
- */
-func (this_ *MessageEvent) SetMessageType(messageType RTM_MESSAGE_TYPE) {
-	this_.messageType = C.enum_C_RTM_MESSAGE_TYPE(messageType)
-}
-
-/**
- * The channel which the message was published
- */
-func (this_ *MessageEvent) GetChannelName() string {
-	return C.GoString(this_.channelName)
-}
-
-/**
- * The channel which the message was published
- */
-func (this_ *MessageEvent) SetChannelName(channelName string) {
-	this_.channelName = C.CString(channelName)
-}
-
-/**
- * If the channelType is RTM_CHANNEL_TYPE_STREAM, which topic the message came from. only for RTM_CHANNEL_TYPE_STREAM
- */
-func (this_ *MessageEvent) GetChannelTopic() string {
-	return C.GoString(this_.channelTopic)
-}
-
-/**
- * If the channelType is RTM_CHANNEL_TYPE_STREAM, which topic the message came from. only for RTM_CHANNEL_TYPE_STREAM
- */
-func (this_ *MessageEvent) SetChannelTopic(channelTopic string) {
-	this_.channelTopic = C.CString(channelTopic)
-}
-
-/**
- * The payload
- */
-func (this_ *MessageEvent) GetMessage() []byte {
-	return C.GoBytes(
-		unsafe.Pointer(this_.message),
-		C.int(this_.GetMessageLength()),
-	)
-}
-
-/**
- * The payload
- */
-func (this_ *MessageEvent) SetMessage(message []byte) {
-	this_.message = (*C.char)(C.CBytes(message))
-}
-
-/**
- * The payload length
- */
-func (this_ *MessageEvent) GetMessageLength() uint {
-	return uint(this_.messageLength)
-}
-
-/**
- * The payload length
- */
-func (this_ *MessageEvent) SetMessageLength(messageLength uint) {
-	this_.messageLength = C.size_t(messageLength)
-}
-
-/**
- * The publisher
- */
-func (this_ *MessageEvent) GetPublisher() string {
-	return C.GoString(this_.publisher)
-}
-
-/**
- * The publisher
- */
-func (this_ *MessageEvent) SetPublisher(publisher string) {
-	this_.publisher = C.CString(publisher)
-}
-
-/**
- * The custom type of the message
- */
-func (this_ *MessageEvent) GetCustomType() string {
-	return C.GoString(this_.customType)
-}
-
-/**
- * The publisher
- */
-func (this_ *MessageEvent) SetCustomType(customType string) {
-	this_.customType = C.CString(customType)
-}
-
-func NewMessageEvent() *MessageEvent {
-	return (*MessageEvent)(C.C_MessageEvent_New())
-}
-func (this_ *MessageEvent) Delete() {
-	C.C_MessageEvent_Delete((*C.struct_C_MessageEvent)(this_))
+func convertMessageEventToGo(e *C.struct_C_MessageEvent) *MessageEvent {
+	return &MessageEvent{
+		ChannelType:   RTM_CHANNEL_TYPE(e.channelType),
+		MessageType:   RTM_MESSAGE_TYPE(e.messageType),
+		ChannelName:   C.GoString(e.channelName),
+		ChannelTopic:  C.GoString(e.channelTopic),
+		Message:       C.GoBytes(unsafe.Pointer(e.message), C.int(e.messageLength)),
+		MessageLength: uint(e.messageLength),
+		Publisher:     C.GoString(e.publisher),
+		CustomType:    C.GoString(e.customType),
+		// Timestamp:     uint64(e.timestamp), //TODO 需要更新C Bridge
+	}
 }
 
 // #endregion MessageEvent
@@ -849,8 +778,8 @@ func (this_ *StorageEvent) Delete() {
  *
  * @param event details of message event.
  */
-func (this_ *IRtmEventHandler) OnMessageEvent(event *MessageEvent) {
-	C.C_IRtmEventHandler_onMessageEvent(unsafe.Pointer(this_), (*C.struct_C_MessageEvent)(event))
+func (this_ *IRtmEventHandler) OnMessageEvent(event *C.struct_C_MessageEvent) {
+	C.C_IRtmEventHandler_onMessageEvent(unsafe.Pointer(this_), event)
 }
 
 /**

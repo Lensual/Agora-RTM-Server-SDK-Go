@@ -307,7 +307,7 @@ func cgo_RtmEventHandlerBridge_onMessageEvent(_ *C.C_RtmEventHandlerBridge, user
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnMessageEvent((*MessageEvent)(event))
+	bridge.handler.OnMessageEvent(convertMessageEventToGo(event))
 }
 
 //export cgo_RtmEventHandlerBridge_onPresenceEvent
