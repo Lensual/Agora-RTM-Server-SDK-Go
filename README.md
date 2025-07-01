@@ -28,7 +28,7 @@ go build -o ./bin/ ./cmd/example/
 ./bin/example <appid> <channelname> <usid> <token_option>
 
 版本历史记录：
-20250701 release 0.0.5
+20250701 release 0.0.6
 -- 更新：更新rtm 版本到2.2.5
 -- 增加：
    - 增加SendChannelMessage: 直接发送channelmsg，也就是频道消息
@@ -37,6 +37,8 @@ go build -o ./bin/ ./cmd/example/
    - 增加：对 *agrtm.LinkStateEvent的go 封装实现。GetGoLinkStateEvent()
 -- fix：
    - fix 一个在sample中，申请了optio，但没有做释放的bug
+20250623 release 0.0.5
+-- add bequiet field to option
 20250428 release 0.0.4
 -- 更新：更新rtm 版本到2.2.4.1
 -- 修改：修改mac 的LDflags，fix mac下编译错误
