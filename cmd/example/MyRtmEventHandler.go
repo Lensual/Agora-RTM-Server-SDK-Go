@@ -8,15 +8,15 @@ import (
 )
 
 type MyRtmEventHandler struct {
-    // public member, should be named with a uppercase letter
-    RtmClient *agrtm.IRtmClient	
+	// public member, should be named with a uppercase letter
+	RtmClient   *agrtm.IRtmClient
 	ChannelName string
-	UserId string
-	Sign chan struct{}
+	UserId      string
+	Sign        chan struct{}
 }
 
 func logWithTime(format string, args ...interface{}) {
-	fmt.Printf("[%s] %s\n", 
+	fmt.Printf("[%s] %s\n",
 		time.Now().Format("2006-01-02 15:04:05.000"),
 		fmt.Sprintf(format, args...))
 }
@@ -30,8 +30,30 @@ func (h *MyRtmEventHandler) OnMessageEvent(event *agrtm.MessageEvent) {
 		// Publish(channelName string, message []byte, length uint, option *PublishOptions, requestId *uint64) int {
 		requestId := uint64(0)
 		opt := agrtm.NewPublishOptions()
+		// date:2025-07-01 10:00:00
+		channelType := event.GetChannelType()
+		channelname := event.GetChannelName()
+		publisher := event.GetPublisher()
+
+		pubName := channelname
+
+		// end
 		opt.SetMessageType(event.GetMessageType())
-		h.RtmClient.Publish(h.ChannelName, []byte(message), uint(len(message)), opt, &requestId)
+		opt.SetChannelType(channelType)
+		opt.SetCustomType(event.GetCustomType())
+
+		if channelType == agrtm.RTM_CHANNEL_TYPE_USER {
+			pubName = string(publisher)
+
+			h.RtmClient.SendUserMessage(pubName, []byte(message), uint(len(message)), &requestId)
+		} else {
+			h.RtmClient.SendChannelMessage(pubName, []byte(message), uint(len(message)), &requestId)
+		}
+		fmt.Printf("pubName: %s\n", pubName)
+
+		h.RtmClient.Publish(pubName, []byte(message), uint(len(message)), opt, &requestId)
+		// should delete opt
+		opt.Delete()
 	}
 }
 func (h *MyRtmEventHandler) OnPresenceEvent(event *agrtm.PresenceEvent) {

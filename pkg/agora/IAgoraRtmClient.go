@@ -1769,7 +1769,44 @@ func (this_ *IRtmClient) Publish(channelName string, message []byte, length uint
 	C.free(unsafe.Pointer(cMessage))
 	return ret
 }
+func (this_ *IRtmClient) SendChannelMessage(channelName string, message []byte, length uint, requestId *uint64) int {
+	cChannelName := C.CString(channelName)
+	cMessage := C.CBytes(message)
+	opt := NewPublishOptions()
+	opt.SetChannelType(RTM_CHANNEL_TYPE_MESSAGE)
+	opt.SetMessageType(RTM_MESSAGE_TYPE_BINARY)
 
+	ret := int(C.agora_rtm_client_publish(unsafe.Pointer(this_),
+		cChannelName,
+		(*C.char)(cMessage),
+		C.size_t(length),
+		(*C.struct_C_PublishOptions)(opt),
+		(*C.uint64_t)(requestId),
+	))
+	C.free(unsafe.Pointer(cChannelName))
+	C.free(unsafe.Pointer(cMessage))
+	opt.Delete()
+	return ret
+}
+func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length uint, requestId *uint64) int {
+	cUserId := C.CString(userId)
+	cMessage := C.CBytes(message)
+	opt := NewPublishOptions()
+	opt.SetChannelType(RTM_CHANNEL_TYPE_USER)
+	opt.SetMessageType(RTM_MESSAGE_TYPE_BINARY)
+	
+	ret := int(C.agora_rtm_client_publish(unsafe.Pointer(this_),
+		cUserId,
+		(*C.char)(cMessage),
+		C.size_t(length),
+		(*C.struct_C_PublishOptions)(opt),
+		(*C.uint64_t)(requestId),
+	))
+	C.free(unsafe.Pointer(cUserId))
+	C.free(unsafe.Pointer(cMessage))
+	opt.Delete()
+	return ret
+}
 /**
  * Subscribe a channel.
  *

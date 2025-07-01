@@ -28,6 +28,15 @@ go build -o ./bin/ ./cmd/example/
 ./bin/example <appid> <channelname> <usid> <token_option>
 
 版本历史记录：
+20250701 release 0.0.5
+-- 更新：更新rtm 版本到2.2.5
+-- 增加：
+   - 增加SendChannelMessage: 直接发送channelmsg，也就是频道消息
+   - 增加SendUserMessage: 直接发送usermsg，也就是点对点消息
+   - NOTE： 开发者也可以直接调用Publish，但是需要自己实现消息的封装。参考sample
+   - 增加：对 *agrtm.LinkStateEvent的go 实现??not ready
+-- fix：
+   - fix 一个在sample中，申请了optio，但没有做释放的bug
 20250428 release 0.0.4
 -- 更新：更新rtm 版本到2.2.4.1
 -- 修改：修改mac 的LDflags，fix mac下编译错误
