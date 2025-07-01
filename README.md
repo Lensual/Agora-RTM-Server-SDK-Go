@@ -34,7 +34,7 @@ go build -o ./bin/ ./cmd/example/
    - 增加SendChannelMessage: 直接发送channelmsg，也就是频道消息
    - 增加SendUserMessage: 直接发送usermsg，也就是点对点消息
    - NOTE： 开发者也可以直接调用Publish，但是需要自己实现消息的封装。参考sample
-   - 增加：对 *agrtm.LinkStateEvent的go 实现??not ready
+   - 增加：对 *agrtm.LinkStateEvent的go 封装实现。GetGoLinkStateEvent()
 -- fix：
    - fix 一个在sample中，申请了optio，但没有做释放的bug
 20250428 release 0.0.4

@@ -195,7 +195,7 @@ type IRtmEventHandlerBridgeHandler interface {
 	OnPresenceRemoveStateResult(requestId uint64, errorCode RTM_ERROR_CODE)
 	OnPresenceGetStateResult(requestId uint64, state *UserState, errorCode RTM_ERROR_CODE)
 	// newly added callback functions
-	OnLinkStateEvent(event *LinkStateEvent)
+	OnLinkStateEvent(event *CLinkStateEvent)
 	OnLogoutResult(requestId uint64, errorCode RTM_ERROR_CODE)
 	OnRenewTokenResult(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE)
 	OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
@@ -893,7 +893,7 @@ func cgo_RtmEventHandlerBridge_onLinkStateEvent(_ *C.C_RtmEventHandlerBridge, us
 
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnLinkStateEvent(
-		(*LinkStateEvent)(unsafe.Pointer(event)),
+		(*CLinkStateEvent)(unsafe.Pointer(event)),
 	)
 }
 

@@ -170,8 +170,10 @@ func (h *MyRtmEventHandler) OnPresenceRemoveStateResult(requestId uint64, errorC
 func (h *MyRtmEventHandler) OnPresenceGetStateResult(requestId uint64, state *agrtm.UserState, errorCode agrtm.RTM_ERROR_CODE) {
 	logWithTime("OnPresenceGetStateResult requestId:%v state:%v errorCode:%v", requestId, state, errorCode)
 }
-func (h *MyRtmEventHandler) OnLinkStateEvent(event *agrtm.LinkStateEvent) {
-	logWithTime("OnLinkStateEvent event:%v", event)
+func (h *MyRtmEventHandler) OnLinkStateEvent(event *agrtm.CLinkStateEvent) {
+	logWithTime("------OnLinkStateEvent event:%v", event)
+	goLinkStateEvent := event.GetGoLinkStateEvent()
+	logWithTime("------OnLinkStateEvent goLinkStateEvent:%v", goLinkStateEvent)
 }
 func (h *MyRtmEventHandler) OnLogoutResult(requestId uint64, errorCode agrtm.RTM_ERROR_CODE) {
 	logWithTime("OnLogoutResult requestId:%v errorCode:%v", requestId, errorCode)
