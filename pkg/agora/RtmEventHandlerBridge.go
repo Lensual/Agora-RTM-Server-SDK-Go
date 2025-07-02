@@ -267,7 +267,6 @@ func NewRtmEventHandlerBridge(handler IRtmEventHandlerBridgeHandler) *RtmEventHa
 			onPresenceSetStateResult:      C.C_RtmEventHandlerBridge_onPresenceSetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceSetStateResult),
 			onPresenceRemoveStateResult:   C.C_RtmEventHandlerBridge_onPresenceRemoveStateResult(C.cgo_RtmEventHandlerBridge_onPresenceRemoveStateResult),
 			onPresenceGetStateResult:      C.C_RtmEventHandlerBridge_onPresenceGetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceGetStateResult),
-			// newly added callback functions
 			onLinkStateEvent:                C.C_RtmEventHandlerBridge_onLinkStateEvent(C.cgo_RtmEventHandlerBridge_onLinkStateEvent),
 			onLogoutResult:                  C.C_RtmEventHandlerBridge_onLogoutResult(C.cgo_RtmEventHandlerBridge_onLogoutResult),
 			onRenewTokenResult:              C.C_RtmEventHandlerBridge_onRenewTokenResult(C.cgo_RtmEventHandlerBridge_onRenewTokenResult),

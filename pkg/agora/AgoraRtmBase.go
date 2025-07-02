@@ -1881,36 +1881,35 @@ func (this_ *RtmEncryptionConfig) Delete() {
 type CLinkStateEvent C.struct_C_LinkStateEvent
 type RTM_SERVICE_TYPE C.enum_C_RTM_SERVICE_TYPE
 
-
 type LinkStateEvent struct {
-	CurrentState uint32
-	PreviousState uint32
-	ServiceType uint32
-	Operation uint32
-	ReasonCode uint32
-	Reason string
-	AffectedChannels []string
-	AffectedChannelCount uint
-	UnrestoredChannels []string
+	CurrentState           uint32
+	PreviousState          uint32
+	ServiceType            uint32
+	Operation              uint32
+	ReasonCode             uint32
+	Reason                 string
+	AffectedChannels       []string
+	AffectedChannelCount   uint
+	UnrestoredChannels     []string
 	UnrestoredChannelCount uint
-	IsResumed bool
-	Timestamp uint64
+	IsResumed              bool
+	Timestamp              uint64
 }
 
-func (this_ *CLinkStateEvent) GetGoLinkStateEvent	() *LinkStateEvent {
+func (this_ *CLinkStateEvent) GetGoLinkStateEvent() *LinkStateEvent {
 	goLinkStateEvent := &LinkStateEvent{
-		CurrentState: this_.currentState,
-		PreviousState: this_.previousState,
-		ServiceType: this_.serviceType,
-		Operation: this_.operation,
-		ReasonCode: this_.reasonCode,
-		Reason: C.GoString(this_.reason),
-		AffectedChannels: nil,	
-		AffectedChannelCount: uint(this_.affectedChannelCount),
-		UnrestoredChannels: nil,
+		CurrentState:           this_.currentState,
+		PreviousState:          this_.previousState,
+		ServiceType:            this_.serviceType,
+		Operation:              this_.operation,
+		ReasonCode:             this_.reasonCode,
+		Reason:                 C.GoString(this_.reason),
+		AffectedChannels:       nil,
+		AffectedChannelCount:   uint(this_.affectedChannelCount),
+		UnrestoredChannels:     nil,
 		UnrestoredChannelCount: uint(this_.unrestoredChannelCount),
-		IsResumed: bool(this_.isResumed),
-		Timestamp: uint64(this_.timestamp),
+		IsResumed:              bool(this_.isResumed),
+		Timestamp:              uint64(this_.timestamp),
 	}
 	return goLinkStateEvent
 }
