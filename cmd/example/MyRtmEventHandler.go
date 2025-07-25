@@ -29,19 +29,16 @@ func (h *MyRtmEventHandler) OnMessageEvent(event *agrtm.MessageEvent) {
 	if h.RtmClient != nil {
 		// Publish(channelName string, message []byte, length uint, option *PublishOptions, requestId *uint64) int {
 		requestId := uint64(0)
-		opt := agrtm.NewPublishOptions()
-		// date:2025-07-01 10:00:00
+		// Note1: parse the message, and get properties
 		channelType := event.GetChannelType()
 		channelname := event.GetChannelName()
 		publisher := event.GetPublisher()
 
 		pubName := channelname
 
-		// end
-		opt.SetMessageType(event.GetMessageType())
-		opt.SetChannelType(channelType)
-		opt.SetCustomType(event.GetCustomType())
+		
 
+		// Note2: accoring to the message type, send the message to the channel or user
 		if channelType == agrtm.RTM_CHANNEL_TYPE_USER {
 			pubName = string(publisher)
 
@@ -51,8 +48,14 @@ func (h *MyRtmEventHandler) OnMessageEvent(event *agrtm.MessageEvent) {
 		}
 		fmt.Printf("pubName: %s\n", pubName)
 
+		//Note3: send the message to the channel or user like echo server through Publish
+		
+		opt := agrtm.NewPublishOptions()
+		opt.SetMessageType(event.GetMessageType())
+		opt.SetChannelType(channelType)
+		opt.SetCustomType(event.GetCustomType())
 		h.RtmClient.Publish(pubName, []byte(message), uint(len(message)), opt, &requestId)
-		// should delete opt
+		// Must delete opt
 		opt.Delete()
 	}
 }
