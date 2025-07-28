@@ -17,12 +17,14 @@ export LD_LIBRARY_PATH=./agora_sdk/
 for mac:
 export DYLD_LIBRARY_PATH=./agora_sdk/
 
-编译过程：
-手动编译：
+如何编译？
+1、资源下载：只需要在初始化的时候/或者是更新仓库版本的时候，执行一次即可
+./scripts/rtminstall.sh
+2、手动编译：
 go build -o ./bin/ ./cmd/example/
 
-脚本编译：
-./scripts/build.sh
+3、脚本编译：
+./scripts/rtmbuild.sh
 
 执行: 
 ./bin/example <appid> <channelname> <usid> <token_option>
