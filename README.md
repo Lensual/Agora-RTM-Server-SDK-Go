@@ -8,6 +8,7 @@ linux + mac
 使用事项：
 [x]不要在回调函数中，调用sdk的api
 [x]不要在回调中，做耗时的操作
+[x]如果需要和rtc一起使用，需要先git clone rtc，并且先编译好rtc部分，然后在操作rtm部分
 
 
 需要设置：
