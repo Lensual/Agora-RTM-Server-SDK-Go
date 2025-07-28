@@ -1,14 +1,7 @@
 package agora
 
 /*
-//引入Agora C封装
-#cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/include
-#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk_c -lstdc++
 
-//链接AgoraRTM SDK
-#cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo linux LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk -laosl
-#cgo darwin LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lAgoraRtmKit -laosl
 
 #include "C_IAgoraRtmStorage.h"
 #include <stdlib.h>
@@ -16,8 +9,10 @@ package agora
 
 */
 import "C"
-import "unsafe"
-import "fmt"
+import (
+	"fmt"
+	"unsafe"
+)
 
 // #region agora
 // #region agora::rtm

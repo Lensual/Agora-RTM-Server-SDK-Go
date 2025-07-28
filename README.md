@@ -13,9 +13,9 @@ linux + mac
 需要设置：
 在项目目录下面：
 for Linux:
-export LD_LIBRARY_PATH=./third_party/agora_rtm_sdk_c/
+export LD_LIBRARY_PATH=./agora_sdk/
 for mac:
-export DYLD_LIBRARY_PATH=./third_party/agora_rtm_sdk_c/
+export DYLD_LIBRARY_PATH=./agora_sdk/
 
 编译过程：
 手动编译：
@@ -94,7 +94,7 @@ Todo list
 1. 整体结构符合 Go 标准项目布局：
    - `cmd/`: 存放主要的应用程序入口，也就是sample 的目录
    - `pkg/`: 存放可以被外部应用程序使用的库代码，也就是rtm的go实现代码
-   - `third_party/`: 存放agora_rtm_sdk有关的include和lib文件。其中:
+   - `agora_sdk/`: 存放agora_rtm_sdk有关的include和lib文件。其中:
         - `agora_rtm_sdk_c/`：存放的是c api 的include 和.a 文件
         - `agora_rtm_sdk_c/agora_rtm_sdk/`：存放的是rtm_sdk 有关的highlevel API和so文件
    - `scripts/`: 存放构建和部署脚本
@@ -103,12 +103,12 @@ Todo list
 2. 主要组件：
    - `cmd/example/`: 示例应用程序
    - `pkg/agora/`: Agora RTM SDK 的核心实现
-   - `third_party/agora_rtm_sdk_c/`: C 语言版本的 Agora RTM SDK
+   - `agora_sdk/agora_rtm_sdk_c/`: C 语言版本的 Agora RTM SDK
 
 3. 代码组织特点：
    - 接口和实现分离：`pkg/agora/` 目录下的文件都以 `I` 开头表示接口
    - 功能模块化：将不同功能（如 Client、Service、Storage 等）分离到不同文件
-   - 清晰的依赖关系：通过 `third_party` 目录管理外部依赖
+   - 清晰的依赖关系：通过 `agora_sdk` 目录管理外部依赖
 
 4. 构建系统：
    - 使用 `go.mod` 进行依赖管理

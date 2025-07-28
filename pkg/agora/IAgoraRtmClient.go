@@ -1,14 +1,7 @@
 package agora
 
 /*
-//引入Agora C封装
-#cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/include
-#cgo LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk_c -lstdc++
 
-//链接AgoraRTM SDK
-#cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo linux LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk -laosl
-#cgo darwin LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lAgoraRtmKit -laosl
 
 #include "C_IAgoraRtmClient.h"
 #include "C_AgoraRtmBase.h"
@@ -1794,7 +1787,7 @@ func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length u
 	opt := NewPublishOptions()
 	opt.SetChannelType(RTM_CHANNEL_TYPE_USER)
 	opt.SetMessageType(RTM_MESSAGE_TYPE_BINARY)
-	
+
 	ret := int(C.agora_rtm_client_publish(unsafe.Pointer(this_),
 		cUserId,
 		(*C.char)(cMessage),
@@ -1807,6 +1800,7 @@ func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length u
 	opt.Delete()
 	return ret
 }
+
 /**
  * Subscribe a channel.
  *

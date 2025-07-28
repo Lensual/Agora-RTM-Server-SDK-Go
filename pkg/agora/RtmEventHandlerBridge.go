@@ -1,14 +1,7 @@
 package agora
 
 /*
-//引入Agora C封装
-#cgo CFLAGS: -I${SRCDIR}/../../../third_party/agora_rtm_sdk_c/include
-#cgo LDFLAGS: -L${SRCDIR}/../../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk_c -lstdc++
 
-//链接AgoraRTM SDK
-#cgo CFLAGS: -I${SRCDIR}/../../third_party/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
-#cgo linux LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lagora_rtm_sdk -laosl
-#cgo darwin LDFLAGS: -L${SRCDIR}/../../third_party/agora_rtm_sdk_c -lAgoraRtmKit -laosl
 
 #include "bridge/C_RtmEventHandlerBridge.h"
 
@@ -230,43 +223,43 @@ func NewRtmEventHandlerBridge(handler IRtmEventHandlerBridgeHandler) *RtmEventHa
 	userData := unsafe.Pointer(&b)
 	b.cBridge = (*C.C_RtmEventHandlerBridge)(C.C_RtmEventHandlerBridge_New(
 		C.C_RtmEventHandlerBridge_Callbacks{
-			onMessageEvent:                C.C_RtmEventHandlerBridge_onMessageEvent(C.cgo_RtmEventHandlerBridge_onMessageEvent),
-			onPresenceEvent:               C.C_RtmEventHandlerBridge_onPresenceEvent(C.cgo_RtmEventHandlerBridge_onPresenceEvent),
-			onTopicEvent:                  C.C_RtmEventHandlerBridge_onTopicEvent(C.cgo_RtmEventHandlerBridge_onTopicEvent),
-			onLockEvent:                   C.C_RtmEventHandlerBridge_onLockEvent(C.cgo_RtmEventHandlerBridge_onLockEvent),
-			onStorageEvent:                C.C_RtmEventHandlerBridge_onStorageEvent(C.cgo_RtmEventHandlerBridge_onStorageEvent),
-			onJoinResult:                  C.C_RtmEventHandlerBridge_onJoinResult(C.cgo_RtmEventHandlerBridge_onJoinResult),
-			onLeaveResult:                 C.C_RtmEventHandlerBridge_onLeaveResult(C.cgo_RtmEventHandlerBridge_onLeaveResult),
-			onJoinTopicResult:             C.C_RtmEventHandlerBridge_onJoinTopicResult(C.cgo_RtmEventHandlerBridge_onJoinTopicResult),
-			onLeaveTopicResult:            C.C_RtmEventHandlerBridge_onLeaveTopicResult(C.cgo_RtmEventHandlerBridge_onLeaveTopicResult),
-			onSubscribeTopicResult:        C.C_RtmEventHandlerBridge_onSubscribeTopicResult(C.cgo_RtmEventHandlerBridge_onSubscribeTopicResult),
-			onConnectionStateChanged:      C.C_RtmEventHandlerBridge_onConnectionStateChanged(C.cgo_RtmEventHandlerBridge_onConnectionStateChanged),
-			onTokenPrivilegeWillExpire:    C.C_RtmEventHandlerBridge_onTokenPrivilegeWillExpire(C.cgo_RtmEventHandlerBridge_onTokenPrivilegeWillExpire),
-			onSubscribeResult:             C.C_RtmEventHandlerBridge_onSubscribeResult(C.cgo_RtmEventHandlerBridge_onSubscribeResult),
-			onPublishResult:               C.C_RtmEventHandlerBridge_onPublishResult(C.cgo_RtmEventHandlerBridge_onPublishResult),
-			onLoginResult:                 C.C_RtmEventHandlerBridge_onLoginResult(C.cgo_RtmEventHandlerBridge_onLoginResult),
-			onSetChannelMetadataResult:    C.C_RtmEventHandlerBridge_onSetChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onSetChannelMetadataResult),
-			onUpdateChannelMetadataResult: C.C_RtmEventHandlerBridge_onUpdateChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onUpdateChannelMetadataResult),
-			onRemoveChannelMetadataResult: C.C_RtmEventHandlerBridge_onRemoveChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult),
-			onGetChannelMetadataResult:    C.C_RtmEventHandlerBridge_onGetChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onGetChannelMetadataResult),
-			onSetUserMetadataResult:       C.C_RtmEventHandlerBridge_onSetUserMetadataResult(C.cgo_RtmEventHandlerBridge_onSetUserMetadataResult),
-			onUpdateUserMetadataResult:    C.C_RtmEventHandlerBridge_onUpdateUserMetadataResult(C.cgo_RtmEventHandlerBridge_onUpdateUserMetadataResult),
-			onRemoveUserMetadataResult:    C.C_RtmEventHandlerBridge_onRemoveUserMetadataResult(C.cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult),
-			onGetUserMetadataResult:       C.C_RtmEventHandlerBridge_onGetUserMetadataResult(C.cgo_RtmEventHandlerBridge_onGetUserMetadataResult),
-			onSubscribeUserMetadataResult: C.C_RtmEventHandlerBridge_onSubscribeUserMetadataResult(C.cgo_RtmEventHandlerBridge_onSubscribeUserMetadataResult),
-			onSetLockResult:               C.C_RtmEventHandlerBridge_onSetLockResult(C.cgo_RtmEventHandlerBridge_onSetLockResult),
-			onRemoveLockResult:            C.C_RtmEventHandlerBridge_onRemoveLockResult(C.cgo_RtmEventHandlerBridge_onRemoveLockResult),
-			onReleaseLockResult:           C.C_RtmEventHandlerBridge_onReleaseLockResult(C.cgo_RtmEventHandlerBridge_onReleaseLockResult),
-			onAcquireLockResult:           C.C_RtmEventHandlerBridge_onAcquireLockResult(C.cgo_RtmEventHandlerBridge_onAcquireLockResult),
-			onRevokeLockResult:            C.C_RtmEventHandlerBridge_onRevokeLockResult(C.cgo_RtmEventHandlerBridge_onRevokeLockResult),
-			onGetLocksResult:              C.C_RtmEventHandlerBridge_onGetLocksResult(C.cgo_RtmEventHandlerBridge_onGetLocksResult),
-			onWhoNowResult:                C.C_RtmEventHandlerBridge_onWhoNowResult(C.cgo_RtmEventHandlerBridge_onWhoNowResult),
-			onGetOnlineUsersResult:        C.C_RtmEventHandlerBridge_onGetOnlineUsersResult(C.cgo_RtmEventHandlerBridge_onGetOnlineUsersResult),
-			onWhereNowResult:              C.C_RtmEventHandlerBridge_onWhereNowResult(C.cgo_RtmEventHandlerBridge_onWhereNowResult),
-			onGetUserChannelsResult:       C.C_RtmEventHandlerBridge_onGetUserChannelsResult(C.cgo_RtmEventHandlerBridge_onGetUserChannelsResult),
-			onPresenceSetStateResult:      C.C_RtmEventHandlerBridge_onPresenceSetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceSetStateResult),
-			onPresenceRemoveStateResult:   C.C_RtmEventHandlerBridge_onPresenceRemoveStateResult(C.cgo_RtmEventHandlerBridge_onPresenceRemoveStateResult),
-			onPresenceGetStateResult:      C.C_RtmEventHandlerBridge_onPresenceGetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceGetStateResult),
+			onMessageEvent:                  C.C_RtmEventHandlerBridge_onMessageEvent(C.cgo_RtmEventHandlerBridge_onMessageEvent),
+			onPresenceEvent:                 C.C_RtmEventHandlerBridge_onPresenceEvent(C.cgo_RtmEventHandlerBridge_onPresenceEvent),
+			onTopicEvent:                    C.C_RtmEventHandlerBridge_onTopicEvent(C.cgo_RtmEventHandlerBridge_onTopicEvent),
+			onLockEvent:                     C.C_RtmEventHandlerBridge_onLockEvent(C.cgo_RtmEventHandlerBridge_onLockEvent),
+			onStorageEvent:                  C.C_RtmEventHandlerBridge_onStorageEvent(C.cgo_RtmEventHandlerBridge_onStorageEvent),
+			onJoinResult:                    C.C_RtmEventHandlerBridge_onJoinResult(C.cgo_RtmEventHandlerBridge_onJoinResult),
+			onLeaveResult:                   C.C_RtmEventHandlerBridge_onLeaveResult(C.cgo_RtmEventHandlerBridge_onLeaveResult),
+			onJoinTopicResult:               C.C_RtmEventHandlerBridge_onJoinTopicResult(C.cgo_RtmEventHandlerBridge_onJoinTopicResult),
+			onLeaveTopicResult:              C.C_RtmEventHandlerBridge_onLeaveTopicResult(C.cgo_RtmEventHandlerBridge_onLeaveTopicResult),
+			onSubscribeTopicResult:          C.C_RtmEventHandlerBridge_onSubscribeTopicResult(C.cgo_RtmEventHandlerBridge_onSubscribeTopicResult),
+			onConnectionStateChanged:        C.C_RtmEventHandlerBridge_onConnectionStateChanged(C.cgo_RtmEventHandlerBridge_onConnectionStateChanged),
+			onTokenPrivilegeWillExpire:      C.C_RtmEventHandlerBridge_onTokenPrivilegeWillExpire(C.cgo_RtmEventHandlerBridge_onTokenPrivilegeWillExpire),
+			onSubscribeResult:               C.C_RtmEventHandlerBridge_onSubscribeResult(C.cgo_RtmEventHandlerBridge_onSubscribeResult),
+			onPublishResult:                 C.C_RtmEventHandlerBridge_onPublishResult(C.cgo_RtmEventHandlerBridge_onPublishResult),
+			onLoginResult:                   C.C_RtmEventHandlerBridge_onLoginResult(C.cgo_RtmEventHandlerBridge_onLoginResult),
+			onSetChannelMetadataResult:      C.C_RtmEventHandlerBridge_onSetChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onSetChannelMetadataResult),
+			onUpdateChannelMetadataResult:   C.C_RtmEventHandlerBridge_onUpdateChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onUpdateChannelMetadataResult),
+			onRemoveChannelMetadataResult:   C.C_RtmEventHandlerBridge_onRemoveChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult),
+			onGetChannelMetadataResult:      C.C_RtmEventHandlerBridge_onGetChannelMetadataResult(C.cgo_RtmEventHandlerBridge_onGetChannelMetadataResult),
+			onSetUserMetadataResult:         C.C_RtmEventHandlerBridge_onSetUserMetadataResult(C.cgo_RtmEventHandlerBridge_onSetUserMetadataResult),
+			onUpdateUserMetadataResult:      C.C_RtmEventHandlerBridge_onUpdateUserMetadataResult(C.cgo_RtmEventHandlerBridge_onUpdateUserMetadataResult),
+			onRemoveUserMetadataResult:      C.C_RtmEventHandlerBridge_onRemoveUserMetadataResult(C.cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult),
+			onGetUserMetadataResult:         C.C_RtmEventHandlerBridge_onGetUserMetadataResult(C.cgo_RtmEventHandlerBridge_onGetUserMetadataResult),
+			onSubscribeUserMetadataResult:   C.C_RtmEventHandlerBridge_onSubscribeUserMetadataResult(C.cgo_RtmEventHandlerBridge_onSubscribeUserMetadataResult),
+			onSetLockResult:                 C.C_RtmEventHandlerBridge_onSetLockResult(C.cgo_RtmEventHandlerBridge_onSetLockResult),
+			onRemoveLockResult:              C.C_RtmEventHandlerBridge_onRemoveLockResult(C.cgo_RtmEventHandlerBridge_onRemoveLockResult),
+			onReleaseLockResult:             C.C_RtmEventHandlerBridge_onReleaseLockResult(C.cgo_RtmEventHandlerBridge_onReleaseLockResult),
+			onAcquireLockResult:             C.C_RtmEventHandlerBridge_onAcquireLockResult(C.cgo_RtmEventHandlerBridge_onAcquireLockResult),
+			onRevokeLockResult:              C.C_RtmEventHandlerBridge_onRevokeLockResult(C.cgo_RtmEventHandlerBridge_onRevokeLockResult),
+			onGetLocksResult:                C.C_RtmEventHandlerBridge_onGetLocksResult(C.cgo_RtmEventHandlerBridge_onGetLocksResult),
+			onWhoNowResult:                  C.C_RtmEventHandlerBridge_onWhoNowResult(C.cgo_RtmEventHandlerBridge_onWhoNowResult),
+			onGetOnlineUsersResult:          C.C_RtmEventHandlerBridge_onGetOnlineUsersResult(C.cgo_RtmEventHandlerBridge_onGetOnlineUsersResult),
+			onWhereNowResult:                C.C_RtmEventHandlerBridge_onWhereNowResult(C.cgo_RtmEventHandlerBridge_onWhereNowResult),
+			onGetUserChannelsResult:         C.C_RtmEventHandlerBridge_onGetUserChannelsResult(C.cgo_RtmEventHandlerBridge_onGetUserChannelsResult),
+			onPresenceSetStateResult:        C.C_RtmEventHandlerBridge_onPresenceSetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceSetStateResult),
+			onPresenceRemoveStateResult:     C.C_RtmEventHandlerBridge_onPresenceRemoveStateResult(C.cgo_RtmEventHandlerBridge_onPresenceRemoveStateResult),
+			onPresenceGetStateResult:        C.C_RtmEventHandlerBridge_onPresenceGetStateResult(C.cgo_RtmEventHandlerBridge_onPresenceGetStateResult),
 			onLinkStateEvent:                C.C_RtmEventHandlerBridge_onLinkStateEvent(C.cgo_RtmEventHandlerBridge_onLinkStateEvent),
 			onLogoutResult:                  C.C_RtmEventHandlerBridge_onLogoutResult(C.cgo_RtmEventHandlerBridge_onLogoutResult),
 			onRenewTokenResult:              C.C_RtmEventHandlerBridge_onRenewTokenResult(C.cgo_RtmEventHandlerBridge_onRenewTokenResult),
