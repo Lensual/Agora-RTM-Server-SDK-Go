@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	agrtm "github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/pkg/agora"
+	agrtm "github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/go_sdk/rtm"
 )
 
 type MyRtmEventHandler struct {
