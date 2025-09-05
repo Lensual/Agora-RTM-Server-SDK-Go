@@ -143,7 +143,7 @@ func NewJoinChannelOptions() *JoinChannelOptions {
 	options := &JoinChannelOptions{
 		Token:        "",
 		WithMetadata: false,
-		WithPresence: false,
+		WithPresence: true,
 		WithLock:     false,
 		BeQuiet:      false,
 	}
@@ -223,7 +223,7 @@ func (this_ *JoinTopicOptions) SetSyncWithMedia(syncWithMedia bool) {
 
 func NewJoinTopicOptions() *JoinTopicOptions {
 	return &JoinTopicOptions{
-		qos:           RTM_MESSAGE_QOS_ORDERED,
+		qos:           RTM_MESSAGE_QOS_UNORDERED,
 		priority:      RTM_MESSAGE_PRIORITY_NORMAL,
 		meta:          "",
 		syncWithMedia: false,

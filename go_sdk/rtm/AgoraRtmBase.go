@@ -1716,7 +1716,7 @@ func (this_ *PresenceOptions) SetPage(page string) {
 
 func NewPresenceOptions() *PresenceOptions {
 	presenceOptions := &PresenceOptions{
-		IncludeUserId: false,
+		IncludeUserId: true,
 		IncludeState:  false,
 		Page:          "",
 	}
