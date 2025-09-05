@@ -11,6 +11,7 @@ package agorartm
 #include "C_AgoraRtmBase.h"
 */
 import "C"
+import "unsafe"
 
 // #region agora
 
@@ -1601,9 +1602,9 @@ func (this_ *SubscribeOptions) SetWithLock(withLock bool) {
 
 func NewSubscribeOptions() *SubscribeOptions {
 	return &SubscribeOptions{
-		WithMessage:  false,
+		WithMessage:  true,
 		WithMetadata: false,
-		WithPresence: false,
+		WithPresence: true,
 		WithLock:     false,
 		BeQuiet:      false,
 	}
@@ -1881,6 +1882,41 @@ func NewPublishOptions() *PublishOptions {
 	}
 
 	return publishOptions
+}
+
+func (this_ *PublishOptions) toC() unsafe.Pointer {
+	if this_ == nil {
+		return nil
+	}
+	
+	cOpt := C.C_PublishOptions_New()
+	if cOpt == nil {
+		return nil
+	}
+	
+	cOpt.channelType = C.enum_C_RTM_CHANNEL_TYPE(this_.ChannelType)
+	cOpt.messageType = C.enum_C_RTM_MESSAGE_TYPE(this_.MessageType)
+	
+	if this_.CustomType != "" {
+		cOpt.customType = C.CString(this_.CustomType)
+	} else {
+		cOpt.customType = nil
+	}
+	
+	cOpt.storeInHistory = C.bool(this_.StoreInHistory)
+	
+	return unsafe.Pointer(cOpt)
+}
+
+func freePublishOptions(cOpt unsafe.Pointer) {
+	if cOpt != nil {
+		cPublishOpt := (*C.struct_C_PublishOptions)(cOpt)
+		if cPublishOpt.customType != nil {
+			C.free(unsafe.Pointer(cPublishOpt.customType))
+		}
+		
+		C.C_PublishOptions_Delete((*C.struct_C_PublishOptions)(cOpt))
+	}
 }
 
 // #endregion PublishOptions

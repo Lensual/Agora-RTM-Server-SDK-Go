@@ -1619,15 +1619,35 @@ func (this_ *IRtmClient) Publish(channelName string, message []byte, length uint
 	defer C.free(unsafe.Pointer(cChannelName))
 	cMessage := C.CBytes(message)
 	defer C.free(unsafe.Pointer(cMessage))
+	var cOption unsafe.Pointer
+	if option != nil {
+		cOption = option.toC()
+		defer freePublishOptions(cOption)
+	} else {
+		cOption = NewPublishOptions().toC()
+		defer freePublishOptions(cOption)
+	}
 	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
 		cChannelName,
 		(*C.char)(cMessage),
 		C.size_t(length),
-		(*C.struct_C_PublishOptions)(unsafe.Pointer(option)),
+		(*C.struct_C_PublishOptions)(cOption),
 		(*C.uint64_t)(requestId),
 	))
 	return ret
 }
+
+/**
+ * Send a message to a channel.
+ *
+ * @param [in] channelName The name of the channel.
+ * @param [in] message The content of the message.
+ * @param [in] length The length of the message.
+ * @param [out] requestId The related request id of this operation.
+ * @return
+ * - 0: Success.
+ * - < 0: Failure.
+*/
 func (this_ *IRtmClient) SendChannelMessage(channelName string, message []byte, length uint, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
@@ -1637,15 +1657,30 @@ func (this_ *IRtmClient) SendChannelMessage(channelName string, message []byte, 
 	opt.SetChannelType(RTM_CHANNEL_TYPE_MESSAGE)
 	opt.SetMessageType(RTM_MESSAGE_TYPE_BINARY)
 
+	cOption := opt.toC()
+	defer freePublishOptions(cOption)
+
 	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
 		cChannelName,
 		(*C.char)(cMessage),
 		C.size_t(length),
-		(*C.struct_C_PublishOptions)(unsafe.Pointer(opt)),
+		(*C.struct_C_PublishOptions)(cOption),
 		(*C.uint64_t)(requestId),
 	))
 	return ret
 }
+
+/**
+ * Send a message to a user.
+ *
+ * @param [in] userId The id of the user.
+ * @param [in] message The content of the message.
+ * @param [in] length The length of the message.
+ * @param [out] requestId The related request id of this operation.
+ * @return
+ * - 0: Success.
+ * - < 0: Failure.
+*/
 func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length uint, requestId *uint64) int {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
@@ -1655,11 +1690,14 @@ func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length u
 	opt.SetChannelType(RTM_CHANNEL_TYPE_USER)
 	opt.SetMessageType(RTM_MESSAGE_TYPE_BINARY)
 
+	cOption := opt.toC()
+	defer freePublishOptions(cOption)
+
 	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
 		cUserId,
 		(*C.char)(cMessage),
 		C.size_t(length),
-		(*C.struct_C_PublishOptions)(unsafe.Pointer(opt)),
+		(*C.struct_C_PublishOptions)(cOption),
 		(*C.uint64_t)(requestId),
 	))
 	return ret

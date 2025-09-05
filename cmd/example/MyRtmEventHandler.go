@@ -26,6 +26,37 @@ func (h *MyRtmEventHandler) IsRtmEventHandler() {}
 func (h *MyRtmEventHandler) OnMessageEvent(event *agrtm.MessageEvent) {
 	logWithTime("OnMessageEvent: received message event - Channel: %s, Publisher: %s, Message: %s, Message Length: %d",
 		event.ChannelName, event.Publisher, event.Message, event.MessageLength)
+
+	message := event.GetMessage()
+	fmt.Printf("messageContent: %v, string:%s\n", message, string(message))
+	// simulate a echo server
+	if h.RtmClient != nil {
+		// Publish(channelName string, message []byte, length uint, option *PublishOptions, requestId *uint64) int {
+		requestId := uint64(0)
+		// Note1: parse the message, and get properties
+		channelType := event.GetChannelType()
+		channelname := event.GetChannelName()
+		publisher := event.GetPublisher()
+
+		pubName := channelname
+		// Note2: accoring to the message type, send the message to the channel or user
+		if channelType == agrtm.RTM_CHANNEL_TYPE_USER {
+			pubName = string(publisher)
+
+			h.RtmClient.SendUserMessage(pubName, []byte(message), uint(len(message)), &requestId)
+		} else {
+			h.RtmClient.SendChannelMessage(pubName, []byte(message), uint(len(message)), &requestId)
+		}
+		fmt.Printf("pubName: %s\n", pubName)
+
+		//Note3: send the message to the channel or user like echo server through Publish
+		
+		opt := agrtm.NewPublishOptions()
+		opt.SetMessageType(event.GetMessageType())
+		opt.SetChannelType(channelType)
+		opt.SetCustomType(event.GetCustomType())
+		h.RtmClient.Publish(pubName, []byte(message), uint(len(message)), opt, &requestId)
+	}
 }
 func (h *MyRtmEventHandler) OnPresenceEvent(event *agrtm.PresenceEvent) {
 	logWithTime("OnPresenceEvent event:%v", event)

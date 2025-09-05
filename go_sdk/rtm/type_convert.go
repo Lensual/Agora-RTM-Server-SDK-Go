@@ -7,6 +7,7 @@ package agorartm
 #include <signal.h>
 #include <setjmp.h>
 #include <string.h>
+#include <stdint.h>
 
 int is_valid_memory(const void* ptr) {
     if (ptr == NULL) return 0;

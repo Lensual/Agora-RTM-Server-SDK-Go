@@ -37,13 +37,11 @@ func main() {
 
 	if lenArgs >= 5 {
 		token = os.Args[4]
-	} else {
-		token = appId
-	}
+	} 
 	logWithTime("appId: %s, channelName: %s, userId: %s, token: %s\n", appId, channelName, userId, token)
 
 	// 检查参数
-	if appId == "" || channelName == "" || userId == "" || token == "" {
+	if appId == "" || channelName == "" || userId == "" {
 		fmt.Println("参数错误")
 		os.Exit(1)
 	}
@@ -90,9 +88,6 @@ func main() {
 
 	var reqId uint64
 	opt := agrtm.NewSubscribeOptions()
-
-	opt.SetWithPresence(false)
-	opt.SetWithQuiet(true)
 
 	logWithTime("Subscribe start: %d\n", ret)
 	ret = rtmClient.Subscribe(channelName, opt, &reqId)
