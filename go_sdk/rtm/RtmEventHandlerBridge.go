@@ -1,5 +1,11 @@
 package agorartm
 
+import (
+	"fmt"
+	"runtime"
+	"unsafe"
+)
+
 /*
 
 
@@ -143,11 +149,8 @@ void cgo_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult(C_RtmEventHandler
 
 */
 import "C"
-import (
-	"runtime"
-	"unsafe"
-	//"github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/pkg/agora"
-)
+
+//"github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/pkg/agora"
 
 type IRtmEventHandlerBridgeHandler interface {
 	OnMessageEvent(event *MessageEvent)
@@ -188,26 +191,25 @@ type IRtmEventHandlerBridgeHandler interface {
 	OnPresenceRemoveStateResult(requestId uint64, errorCode RTM_ERROR_CODE)
 	OnPresenceGetStateResult(requestId uint64, state *UserState, errorCode RTM_ERROR_CODE)
 	// newly added callback functions
-	OnLinkStateEvent(event *CLinkStateEvent)
+	OnLinkStateEvent(event *LinkStateEvent)
 	OnLogoutResult(requestId uint64, errorCode RTM_ERROR_CODE)
 	OnRenewTokenResult(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE)
 	OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
 	OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
-	OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user UserList, errorCode RTM_ERROR_CODE)
+	OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user *UserList, errorCode RTM_ERROR_CODE)
 	// note： 可以将messageList转换为HistoryMessage切片，也就是将C的HistoryMessage数组转换为Go的HistoryMessage切片
 	// 使用unsafe.Slice将C的HistoryMessage数组转换为Go的HistoryMessage切片,也就是参数为：messageList *HistoryMessage,count uint,newStart uint64
 	// 这样就不需要做拷贝之类的，效率高，不过也没有多大影响。参考channelInfo的转换
-	OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, count uint, newStart uint64, errorCode RTM_ERROR_CODE)
+	OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode RTM_ERROR_CODE)
 	OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
 }
-
 type RtmEventHandlerBridge struct {
 	handler IRtmEventHandlerBridgeHandler
 	cBridge *C.C_RtmEventHandlerBridge
 }
 
-func (b *RtmEventHandlerBridge) ToAgoraEventHandler() *IRtmEventHandler {
-	return (*IRtmEventHandler)(b.cBridge)
+func (b *RtmEventHandlerBridge) ToAgoraEventHandler() unsafe.Pointer {
+	return unsafe.Pointer(b.cBridge)
 }
 
 func (b *RtmEventHandlerBridge) Delete() {
@@ -278,13 +280,17 @@ func NewRtmEventHandlerBridge(handler IRtmEventHandlerBridgeHandler) *RtmEventHa
 //export cgo_RtmEventHandlerBridge_onMessageEvent
 func cgo_RtmEventHandlerBridge_onMessageEvent(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
 	event *C.struct_C_MessageEvent) {
-
 	if userData == nil {
 		return
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnMessageEvent((*MessageEvent)(unsafe.Pointer(event)))
+
+	goEvent := NewMessageEvent()
+	if goEvent != nil {
+		goEvent.fromC(event)
+		bridge.handler.OnMessageEvent(goEvent)
+	}
 }
 
 //export cgo_RtmEventHandlerBridge_onPresenceEvent
@@ -296,7 +302,12 @@ func cgo_RtmEventHandlerBridge_onPresenceEvent(_ *C.C_RtmEventHandlerBridge, use
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnPresenceEvent((*PresenceEvent)(unsafe.Pointer(event)))
+
+	goEvent := NewPresenceEvent()
+	if goEvent != nil {
+		goEvent.fromC(event)
+		bridge.handler.OnPresenceEvent(goEvent)
+	}
 }
 
 //export cgo_RtmEventHandlerBridge_onTopicEvent
@@ -308,13 +319,29 @@ func cgo_RtmEventHandlerBridge_onTopicEvent(_ *C.C_RtmEventHandlerBridge, userDa
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnTopicEvent((*TopicEvent)(unsafe.Pointer(event)))
+
+	goEvent := NewTopicEvent()
+	if goEvent != nil {
+		goEvent.fromC(event)
+		bridge.handler.OnTopicEvent(goEvent)
+	}
 }
 
 //export cgo_RtmEventHandlerBridge_onLockEvent
 func cgo_RtmEventHandlerBridge_onLockEvent(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
 	event *C.struct_C_LockEvent) {
 
+	if userData == nil {
+		return
+	}
+
+	bridge := (*RtmEventHandlerBridge)(userData)
+
+	goEvent := NewLockEvent()
+	if goEvent != nil {
+		goEvent.fromC(event)
+		bridge.handler.OnLockEvent(goEvent)
+	}
 }
 
 //export cgo_RtmEventHandlerBridge_onStorageEvent
@@ -326,7 +353,12 @@ func cgo_RtmEventHandlerBridge_onStorageEvent(_ *C.C_RtmEventHandlerBridge, user
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
-	bridge.handler.OnStorageEvent((*StorageEvent)(unsafe.Pointer(event)))
+
+	goEvent := NewStorageEvent()
+	if goEvent != nil {
+		goEvent.fromC(event)
+		bridge.handler.OnStorageEvent(goEvent)
+	}
 }
 
 //export cgo_RtmEventHandlerBridge_onJoinResult
@@ -410,13 +442,28 @@ func cgo_RtmEventHandlerBridge_onSubscribeTopicResult(_ *C.C_RtmEventHandlerBrid
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goSucceedUsers := CUserListToUserList(&succeedUsers)
+	goFailedUsers := CUserListToUserList(&failedUsers)
+
+	// 安全地处理可能为 nil 的 UserList
+	var safeSucceedUsers UserList
+	var safeFailedUsers UserList
+
+	if goSucceedUsers != nil {
+		safeSucceedUsers = *goSucceedUsers
+	}
+
+	if goFailedUsers != nil {
+		safeFailedUsers = *goFailedUsers
+	}
+
 	bridge.handler.OnSubscribeTopicResult(
 		uint64(requestId),
 		C.GoString(channelName),
 		C.GoString(userId),
 		C.GoString(topic),
-		*(*UserList)(unsafe.Pointer(&succeedUsers)),
-		*(*UserList)(unsafe.Pointer(&failedUsers)),
+		safeSucceedUsers,
+		safeFailedUsers,
 		RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -486,15 +533,21 @@ func cgo_RtmEventHandlerBridge_onPublishResult(_ *C.C_RtmEventHandlerBridge, use
 func cgo_RtmEventHandlerBridge_onLoginResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
 	requestId C.uint64_t, errorCode C.enum_C_RTM_ERROR_CODE) {
 
+	fmt.Printf("[DEBUG] cgo_RtmEventHandlerBridge_onLoginResult被调用: requestId=%d, errorCode=%d\n", requestId, errorCode)
+
 	if userData == nil {
+		fmt.Printf("[DEBUG] userData为nil，返回\n")
 		return
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	fmt.Printf("[DEBUG] 调用Go事件处理器OnLoginResult, handler类型: %T, handler值: %v\n", bridge.handler, bridge.handler)
+
 	bridge.handler.OnLoginResult(
 		uint64(requestId),
 		RTM_ERROR_CODE(errorCode),
 	)
+	fmt.Printf("[DEBUG] Go事件处理器OnLoginResult调用完成\n")
 }
 
 //export cgo_RtmEventHandlerBridge_onSetChannelMetadataResult
@@ -550,18 +603,19 @@ func cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult(_ *C.C_RtmEventHand
 
 //export cgo_RtmEventHandlerBridge_onGetChannelMetadataResult
 func cgo_RtmEventHandlerBridge_onGetChannelMetadataResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	requestId C.uint64_t, channelName *C.char, channelType C.enum_C_RTM_CHANNEL_TYPE, data *IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, channelName *C.char, channelType C.enum_C_RTM_CHANNEL_TYPE, data *C.struct_C_Metadata, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goData := CMetadataToIMetadata(data)
 	bridge.handler.OnGetChannelMetadataResult(
 		uint64(requestId),
 		C.GoString(channelName),
 		RTM_CHANNEL_TYPE(channelType),
-		(*IMetadata)(data),
+		goData,
 		RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -616,7 +670,7 @@ func cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult(_ *C.C_RtmEventHandler
 
 //export cgo_RtmEventHandlerBridge_onGetUserMetadataResult
 func cgo_RtmEventHandlerBridge_onGetUserMetadataResult(_ *C.C_RtmEventHandlerBridge, userData unsafe.Pointer,
-	requestId C.uint64_t, userId *C.char, data *IMetadata, errorCode C.enum_C_RTM_ERROR_CODE) {
+	requestId C.uint64_t, userId *C.char, data *C.struct_C_Metadata, errorCode C.enum_C_RTM_ERROR_CODE) {
 
 	if userData == nil {
 		return
@@ -626,7 +680,7 @@ func cgo_RtmEventHandlerBridge_onGetUserMetadataResult(_ *C.C_RtmEventHandlerBri
 	bridge.handler.OnGetUserMetadataResult(
 		uint64(requestId),
 		C.GoString(userId),
-		(*IMetadata)(data),
+		(*IMetadata)(unsafe.Pointer(data)),
 		RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -747,11 +801,12 @@ func cgo_RtmEventHandlerBridge_onGetLocksResult(_ *C.C_RtmEventHandlerBridge, us
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goLockDetail := CLockDetailToLockDetail(lockDetailList)
 	bridge.handler.OnGetLocksResult(
 		uint64(requestId),
 		C.GoString(channelName),
 		RTM_CHANNEL_TYPE(channelType),
-		(*LockDetail)(unsafe.Pointer(lockDetailList)),
+		goLockDetail,
 		uint(count),
 		RTM_ERROR_CODE(errorCode),
 	)
@@ -766,9 +821,10 @@ func cgo_RtmEventHandlerBridge_onWhoNowResult(_ *C.C_RtmEventHandlerBridge, user
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goUserState := CUserStateToUserState(userStateList)
 	bridge.handler.OnWhoNowResult(
 		uint64(requestId),
-		(*UserState)(unsafe.Pointer(userStateList)),
+		goUserState,
 		uint(count),
 		C.GoString(nextPage),
 		RTM_ERROR_CODE(errorCode),
@@ -784,9 +840,10 @@ func cgo_RtmEventHandlerBridge_onGetOnlineUsersResult(_ *C.C_RtmEventHandlerBrid
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goUserState := CUserStateToUserState(userStateList)
 	bridge.handler.OnGetOnlineUsersResult(
 		uint64(requestId),
-		(*UserState)(unsafe.Pointer(userStateList)),
+		goUserState,
 		uint(count),
 		C.GoString(nextPage),
 		RTM_ERROR_CODE(errorCode),
@@ -802,9 +859,10 @@ func cgo_RtmEventHandlerBridge_onWhereNowResult(_ *C.C_RtmEventHandlerBridge, us
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goChannelInfo := CChannelInfoToChannelInfo(channels)
 	bridge.handler.OnWhereNowResult(
 		uint64(requestId),
-		(*ChannelInfo)(unsafe.Pointer(channels)),
+		goChannelInfo,
 		uint(count),
 		RTM_ERROR_CODE(errorCode),
 	)
@@ -819,9 +877,10 @@ func cgo_RtmEventHandlerBridge_onGetUserChannelsResult(_ *C.C_RtmEventHandlerBri
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goChannelInfo := CChannelInfoToChannelInfo(channels)
 	bridge.handler.OnGetUserChannelsResult(
 		uint64(requestId),
-		(*ChannelInfo)(unsafe.Pointer(channels)),
+		goChannelInfo,
 		uint(count),
 		RTM_ERROR_CODE(errorCode),
 	)
@@ -866,9 +925,10 @@ func cgo_RtmEventHandlerBridge_onPresenceGetStateResult(_ *C.C_RtmEventHandlerBr
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goUserState := CUserStateToUserState(state)
 	bridge.handler.OnPresenceGetStateResult(
 		uint64(requestId),
-		(*UserState)(unsafe.Pointer(state)),
+		goUserState,
 		RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -884,8 +944,9 @@ func cgo_RtmEventHandlerBridge_onLinkStateEvent(_ *C.C_RtmEventHandlerBridge, us
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+	goLinkStateEvent := CLinkStateEventToLinkStateEvent(event)
 	bridge.handler.OnLinkStateEvent(
-		(*CLinkStateEvent)(unsafe.Pointer(event)),
+		goLinkStateEvent,
 	)
 }
 
@@ -964,11 +1025,14 @@ func cgo_RtmEventHandlerBridge_onGetSubscribedUserListResult(_ *C.C_RtmEventHand
 	}
 
 	bridge := (*RtmEventHandlerBridge)(userData)
+
+	goUserList := CUserListToUserList(&users)
+
 	bridge.handler.OnGetSubscribedUserListResult(
 		uint64(requestId),
 		C.GoString(channelName),
 		C.GoString(topic),
-		(UserList)(users),
+		goUserList,
 		RTM_ERROR_CODE(errorCode),
 	)
 }
@@ -983,20 +1047,17 @@ func cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult(_ *C.C_RtmEventHandler
 
 	bridge := (*RtmEventHandlerBridge)(userData)
 
-	// 将 C 的消息列表转换为 Go 的切片
 	messages := make([]HistoryMessage, count)
 	if count > 0 {
-		// 使用 unsafe.Slice 将 C 数组转换为 Go 切片
 		cMessages := unsafe.Slice(messageList, count)
 		for i := range messages {
-			messages[i] = *(*HistoryMessage)(unsafe.Pointer(&cMessages[i]))
+			messages[i] = *CHistoryMessageToHistoryMessage(&cMessages[i])
 		}
 	}
 
 	bridge.handler.OnGetHistoryMessagesResult(
 		uint64(requestId),
 		messages,
-		uint(count),
 		uint64(newStart),
 		RTM_ERROR_CODE(errorCode),
 	)

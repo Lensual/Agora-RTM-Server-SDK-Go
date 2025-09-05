@@ -21,43 +21,11 @@ func logWithTime(format string, args ...interface{}) {
 		fmt.Sprintf(format, args...))
 }
 
+func (h *MyRtmEventHandler) IsRtmEventHandler() {}
+
 func (h *MyRtmEventHandler) OnMessageEvent(event *agrtm.MessageEvent) {
-	logWithTime("OnMessageEvent event:%v", event)
-	message := event.GetMessage()
-	fmt.Printf("messageContent: %v, string:%s\n", message, string(message))
-	// simulate a echo server
-	if h.RtmClient != nil {
-		// Publish(channelName string, message []byte, length uint, option *PublishOptions, requestId *uint64) int {
-		requestId := uint64(0)
-		// Note1: parse the message, and get properties
-		channelType := event.GetChannelType()
-		channelname := event.GetChannelName()
-		publisher := event.GetPublisher()
-
-		pubName := channelname
-
-		
-
-		// Note2: accoring to the message type, send the message to the channel or user
-		if channelType == agrtm.RTM_CHANNEL_TYPE_USER {
-			pubName = string(publisher)
-
-			h.RtmClient.SendUserMessage(pubName, []byte(message), uint(len(message)), &requestId)
-		} else {
-			h.RtmClient.SendChannelMessage(pubName, []byte(message), uint(len(message)), &requestId)
-		}
-		fmt.Printf("pubName: %s\n", pubName)
-
-		//Note3: send the message to the channel or user like echo server through Publish
-		
-		opt := agrtm.NewPublishOptions()
-		opt.SetMessageType(event.GetMessageType())
-		opt.SetChannelType(channelType)
-		opt.SetCustomType(event.GetCustomType())
-		h.RtmClient.Publish(pubName, []byte(message), uint(len(message)), opt, &requestId)
-		// Must delete opt
-		opt.Delete()
-	}
+	logWithTime("OnMessageEvent: received message event - Channel: %s, Publisher: %s, Message: %s, Message Length: %d",
+		event.ChannelName, event.Publisher, event.Message, event.MessageLength)
 }
 func (h *MyRtmEventHandler) OnPresenceEvent(event *agrtm.PresenceEvent) {
 	logWithTime("OnPresenceEvent event:%v", event)
@@ -173,10 +141,8 @@ func (h *MyRtmEventHandler) OnPresenceRemoveStateResult(requestId uint64, errorC
 func (h *MyRtmEventHandler) OnPresenceGetStateResult(requestId uint64, state *agrtm.UserState, errorCode agrtm.RTM_ERROR_CODE) {
 	logWithTime("OnPresenceGetStateResult requestId:%v state:%v errorCode:%v", requestId, state, errorCode)
 }
-func (h *MyRtmEventHandler) OnLinkStateEvent(event *agrtm.CLinkStateEvent) {
-	logWithTime("------OnLinkStateEvent event:%v", event)
-	goLinkStateEvent := event.GetGoLinkStateEvent()
-	logWithTime("------OnLinkStateEvent goLinkStateEvent:%v", goLinkStateEvent)
+func (h *MyRtmEventHandler) OnLinkStateEvent(event *agrtm.LinkStateEvent) {
+	logWithTime("OnLinkStateEvent event:%v", event)
 }
 func (h *MyRtmEventHandler) OnLogoutResult(requestId uint64, errorCode agrtm.RTM_ERROR_CODE) {
 	logWithTime("OnLogoutResult requestId:%v errorCode:%v", requestId, errorCode)
@@ -190,11 +156,11 @@ func (h *MyRtmEventHandler) OnPublishTopicMessageResult(requestId uint64, channe
 func (h *MyRtmEventHandler) OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode agrtm.RTM_ERROR_CODE) {
 	logWithTime("OnUnsubscribeTopicResult requestId:%v channelName:%v topic:%v errorCode:%v", requestId, channelName, topic, errorCode)
 }
-func (h *MyRtmEventHandler) OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user agrtm.UserList, errorCode agrtm.RTM_ERROR_CODE) {
+func (h *MyRtmEventHandler) OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user *agrtm.UserList, errorCode agrtm.RTM_ERROR_CODE) {
 	logWithTime("OnGetSubscribedUserListResult requestId:%v channelName:%v topic:%v user:%v errorCode:%v", requestId, channelName, topic, user, errorCode)
 }
-func (h *MyRtmEventHandler) OnGetHistoryMessagesResult(requestId uint64, messageList []agrtm.HistoryMessage, count uint, newStart uint64, errorCode agrtm.RTM_ERROR_CODE) {
-	logWithTime("OnGetHistoryMessagesResult requestId:%v messageList:%v count:%v newStart:%v errorCode:%v", requestId, messageList, count, newStart, errorCode)
+func (h *MyRtmEventHandler) OnGetHistoryMessagesResult(requestId uint64, messageList []agrtm.HistoryMessage, newStart uint64, errorCode agrtm.RTM_ERROR_CODE) {
+	logWithTime("OnGetHistoryMessagesResult requestId:%v messageList:%v newStart:%v errorCode:%v", requestId, messageList, newStart, errorCode)
 }
 func (h *MyRtmEventHandler) OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode agrtm.RTM_ERROR_CODE) {
 	logWithTime("OnUnsubscribeUserMetadataResult requestId:%v userId:%v errorCode:%v", requestId, userId, errorCode)

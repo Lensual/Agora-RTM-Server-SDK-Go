@@ -2,17 +2,15 @@ package agorartm
 
 /*
 //引入Agora C封装
-#cgo CFLAGS: -I${SRCDIR}/../../agora_sdk/agora_rtm_sdk_c/include
-
+#cgo CFLAGS: -I${SRCDIR}/../../agora_sdk/agora_rtm_sdk_c/include -I${SRCDIR}/../../agora_sdk/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
 
 //链接AgoraRTM SDK
-#cgo CFLAGS: -I${SRCDIR}/../../agora_sdk/agora_rtm_sdk_c/agora_rtm_sdk/high_level_api/include
 #cgo linux LDFLAGS: -L${SRCDIR}/../../agora_sdk -lagora_rtm_sdk -laosl -lagora_rtm_sdk_c
-#cgo darwin LDFLAGS: -L${SRCDIR}/../../agora_sdk_mac -lAgoraRtmKit -laosl -lagora_rtm_sdk_c
+#cgo darwin LDFLAGS: -L${SRCDIR}/../../agora_sdk -lAgoraRtmKit -laosl -lagora_rtm_sdk_c
+#include <stdlib.h>
 #include "C_AgoraRtmBase.h"
 */
 import "C"
-import "unsafe"
 
 // #region agora
 
@@ -866,10 +864,254 @@ const (
 	RTM_PRESENCE_EVENT_TYPE_ERROR_OUT_OF_SERVICE RTM_PRESENCE_EVENT_TYPE = C.RTM_PRESENCE_EVENT_TYPE_ERROR_OUT_OF_SERVICE
 )
 
+/*
+*
+@brief Rtm link operation
+*/
+type RTM_LINK_OPERATION C.enum_C_RTM_LINK_OPERATION
+
+const (
+	/**
+	 * 0: Login.
+	 */
+	RTM_LINK_OPERATION_LOGIN RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_LOGIN
+	/**
+	 * 1: Logout.
+	 */
+	RTM_LINK_OPERATION_LOGOUT RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_LOGOUT
+	/**
+	 * 2: Join.
+	 */
+	RTM_LINK_OPERATION_JOIN RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_JOIN
+	/**
+	 * 3: Server reject.
+	 */
+	RTM_LINK_OPERATION_SERVER_REJECT RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_SERVER_REJECT
+	/**
+	 * 4: Auto reconnect.
+	 */
+	RTM_LINK_OPERATION_AUTO_RECONNECT RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_AUTO_RECONNECT
+	/**
+	 * 5: Reconnected.
+	 */
+	RTM_LINK_OPERATION_RECONNECTED RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_RECONNECTED
+	/**
+	 * 6: Heartbeat lost.
+	 */
+	RTM_LINK_OPERATION_HEARTBEAT_LOST RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_HEARTBEAT_LOST
+	/**
+	 * 7: Server timeout.
+	 */
+	RTM_LINK_OPERATION_SERVER_TIMEOUT RTM_LINK_OPERATION = C.RTM_LINK_OPERATION_SERVER_TIMEOUT
+)
+
+type RTM_LINK_STATE C.enum_C_RTM_LINK_STATE
+
+const (
+	/**
+	 * The initial state.
+	 */
+	RTM_LINK_STATE_IDLE RTM_LINK_STATE = C.RTM_LINK_STATE_IDLE
+	/**
+	 * The SDK is connecting to the server.
+	 */
+	RTM_LINK_STATE_CONNECTING RTM_LINK_STATE = C.RTM_LINK_STATE_CONNECTING
+	/**
+	 * The SDK has connected to the server.
+	 */
+	RTM_LINK_STATE_CONNECTED RTM_LINK_STATE = C.RTM_LINK_STATE_CONNECTED
+	/**
+	 * The SDK is disconnected from the server.
+	 */
+	RTM_LINK_STATE_DISCONNECTED RTM_LINK_STATE = C.RTM_LINK_STATE_DISCONNECTED
+	/**
+	 * The SDK link is suspended.
+	 */
+	RTM_LINK_STATE_SUSPENDED RTM_LINK_STATE = C.RTM_LINK_STATE_SUSPENDED
+	/**
+	 * The SDK is failed to connect to the server.
+	 */
+	RTM_LINK_STATE_FAILED RTM_LINK_STATE = C.RTM_LINK_STATE_FAILED
+)
+
+type RTM_LINK_STATE_CHANGE_REASON C.enum_C_RTM_LINK_STATE_CHANGE_REASON
+
+const (
+	/**
+	 * Unknown reason.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_UNKNOWN RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_UNKNOWN
+	/**
+	 * Login.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOGIN RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOGIN
+	/**
+	 * Login success.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOGIN_SUCCESS RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOGIN_SUCCESS
+	/**
+	 * Login timeout.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOGIN_TIMEOUT RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOGIN_TIMEOUT
+	/**
+	 * Login not authorized.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOGIN_NOT_AUTHORIZED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOGIN_NOT_AUTHORIZED
+	/**
+	 * Login rejected.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOGIN_REJECTED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOGIN_REJECTED
+	/**
+	 * Re-login.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_RELOGIN RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_RELOGIN
+	/**
+	 * Logout.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOGOUT RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOGOUT
+	/**
+	 * Auto reconnect.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_AUTO_RECONNECT RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_AUTO_RECONNECT
+	/**
+	 * Reconnect timeout.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_RECONNECT_TIMEOUT RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_RECONNECT_TIMEOUT
+	/**
+	 * Reconnect success.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_RECONNECT_SUCCESS RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_RECONNECT_SUCCESS
+	/**
+	 * Join.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_JOIN RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_JOIN
+	/**
+	 * Join success.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_JOIN_SUCCESS RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_JOIN_SUCCESS
+	/**
+	 * Join failed.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_JOIN_FAILED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_JOIN_FAILED
+	/**
+	 * Rejoin.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_REJOIN RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_REJOIN
+	/**
+	 * Leave.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LEAVE RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LEAVE
+	/**
+	 * Invalid token.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_INVALID_TOKEN RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_INVALID_TOKEN
+	/**
+	 * Token expired.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_TOKEN_EXPIRED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_TOKEN_EXPIRED
+	/**
+	 * Inconsistent app ID.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_INCONSISTENT_APP_ID RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_INCONSISTENT_APP_ID
+	/**
+	 * Invalid channel name.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_INVALID_CHANNEL_NAME RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_INVALID_CHANNEL_NAME
+	/**
+	 * Invalid user ID.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_INVALID_USER_ID RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_INVALID_USER_ID
+	/**
+	 * Not initialized.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_NOT_INITIALIZED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_NOT_INITIALIZED
+	/**
+	 * Rtm service not connected.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_RTM_SERVICE_NOT_CONNECTED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_RTM_SERVICE_NOT_CONNECTED
+	/**
+	 * Channel instance exceed limitation.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_CHANNEL_INSTANCE_EXCEED_LIMITATION RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_CHANNEL_INSTANCE_EXCEED_LIMITATION
+	/**
+	 * Operation rate exceed limitation.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_OPERATION_RATE_EXCEED_LIMITATION RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_OPERATION_RATE_EXCEED_LIMITATION
+	/**
+	 * Channel in error state.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_CHANNEL_IN_ERROR_STATE RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_CHANNEL_IN_ERROR_STATE
+	/**
+	 * Presence not connected.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_PRESENCE_NOT_CONNECTED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_PRESENCE_NOT_CONNECTED
+	/**
+	 * Same UID login.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_SAME_UID_LOGIN RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_SAME_UID_LOGIN
+	/**
+	 * Kicked out by server.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_KICKED_OUT_BY_SERVER RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_KICKED_OUT_BY_SERVER
+	/**
+	 * Keep alive timeout.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_KEEP_ALIVE_TIMEOUT RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_KEEP_ALIVE_TIMEOUT
+	/**
+	 * Connection error.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_CONNECTION_ERROR RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_CONNECTION_ERROR
+	/**
+	 * Presence not ready.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_PRESENCE_NOT_READY RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_PRESENCE_NOT_READY
+	/**
+	 * Network change.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_NETWORK_CHANGE RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_NETWORK_CHANGE
+	/**
+	 * Service not supported.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_SERVICE_NOT_SUPPORTED RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_SERVICE_NOT_SUPPORTED
+	/**
+	 * Stream channel not available.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_STREAM_CHANNEL_NOT_AVAILABLE RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_STREAM_CHANNEL_NOT_AVAILABLE
+	/**
+	 * storage not available.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_STORAGE_NOT_AVAILABLE RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_STORAGE_NOT_AVAILABLE
+	/**
+	 * Lock not available.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOCK_NOT_AVAILABLE RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOCK_NOT_AVAILABLE
+	/**
+	 * Login too frequent.
+	 */
+	RTM_LINK_STATE_CHANGE_REASON_LOGIN_TOO_FREQUENT RTM_LINK_STATE_CHANGE_REASON = C.RTM_LINK_STATE_CHANGE_REASON_LOGIN_TOO_FREQUENT
+)
+
+type RTM_PROTOCOL_TYPE C.enum_C_RTM_PROTOCOL_TYPE
+
+const (
+	/**
+	 * TCP and UDP (default).
+	 */
+	RTM_PROTOCOL_TYPE_TCP_UDP RTM_PROTOCOL_TYPE = C.RTM_PROTOCOL_TYPE_TCP_UDP
+	/**
+	 * Use TCP only.
+	 */
+	RTM_PROTOCOL_TYPE_TCP_ONLY RTM_PROTOCOL_TYPE = C.RTM_PROTOCOL_TYPE_TCP_ONLY
+)
+
 /**
  * Definition of LogConfiguration
  */
-type RtmLogConfig C.struct_C_RtmLogConfig
+type RtmLogConfig struct {
+	FilePath     string
+	FileSizeInKB uint32
+	Level        RTM_LOG_LEVEL
+}
 
 // #region RtmLogConfig
 
@@ -877,54 +1119,51 @@ type RtmLogConfig C.struct_C_RtmLogConfig
  * The log file path, default is NULL for default log path
  */
 func (this_ *RtmLogConfig) GetFilePath() string {
-	return C.GoString(this_.filePath)
+	return this_.FilePath
 }
 
 /**
  * The log file path, default is NULL for default log path
  */
 func (this_ *RtmLogConfig) SetFilePath(filePath string) {
-	var cStr *C.char = nil
-	if len(filePath) > 0 {
-		cStr = C.CString(filePath)
-	}
-	this_.filePath = cStr
+	this_.FilePath = filePath
 }
 
 /**
  * The log file size, KB , set 1024KB to use default log size
  */
 func (this_ *RtmLogConfig) GetFileSizeInKB() uint32 {
-	return uint32(this_.fileSizeInKB)
+	return this_.FileSizeInKB
 }
 
 /**
  * The log file size, KB , set 1024KB to use default log size
  */
 func (this_ *RtmLogConfig) SetFileSizeInKB(fileSizeInKB uint32) {
-	this_.fileSizeInKB = C.uint32_t(fileSizeInKB)
+	this_.FileSizeInKB = fileSizeInKB
 }
 
 /**
  *  The log level, set LOG_LEVEL_INFO to use default log level
  */
 func (this_ *RtmLogConfig) GetLevel() RTM_LOG_LEVEL {
-	return RTM_LOG_LEVEL(this_.level)
+	return this_.Level
 }
 
 /**
  *  The log level, set LOG_LEVEL_INFO to use default log level
  */
 func (this_ *RtmLogConfig) SetLevel(level RTM_LOG_LEVEL) {
-	this_.level = C.enum_C_RTM_LOG_LEVEL(level)
+	this_.Level = level
 }
 
 func NewRtmLogConfig() *RtmLogConfig {
-	return (*RtmLogConfig)(C.C_RtmLogConfig_New())
-}
+	config := &RtmLogConfig{
+		FileSizeInKB: DEFAULT_LOG_SIZE_IN_KB,
+		Level:        RTM_LOG_LEVEL_INFO,
+	}
 
-func (this_ *RtmLogConfig) Delete() {
-	C.C_RtmLogConfig_Delete((*C.struct_C_RtmLogConfig)(this_))
+	return config
 }
 
 // #endregion RtmLogConfig
@@ -932,7 +1171,10 @@ func (this_ *RtmLogConfig) Delete() {
 /**
  * User list.
  */
-type UserList C.struct_C_UserList
+type UserList struct {
+	Users     []string
+	UserCount uint
+}
 
 // #region UserList
 
@@ -940,46 +1182,38 @@ type UserList C.struct_C_UserList
  * The list of users.
  */
 func (this_ *UserList) GetUsers() []string {
-	count := this_.GetUserCount()
-	cStrArr := unsafe.Slice(this_.users, count)
-	users := make([]string, 0, count)
-	for _, cStr := range cStrArr {
-		users = append(users, C.GoString(cStr))
-	}
-	return users
+	return this_.Users
 }
 
 /**
  * The list of users.
  */
 func (this_ *UserList) SetUsers(users []string) {
-	cStrArr := make([]*C.char, 0, len(users))
-	for _, goStr := range users {
-		cStrArr = append(cStrArr, C.CString(goStr))
-	}
-	this_.users = unsafe.SliceData(cStrArr)
+	this_.Users = users
+	this_.UserCount = uint(len(users))
 }
 
 /**
  * The number of users.
  */
 func (this_ *UserList) GetUserCount() uint {
-	return uint(this_.userCount)
+	return this_.UserCount
 }
 
 /**
  * The number of users.
  */
 func (this_ *UserList) SetUserCount(userCount uint) {
-	this_.userCount = C.size_t(userCount)
+	this_.UserCount = userCount
 }
 
 func NewUserList() *UserList {
-	return (*UserList)(C.C_UserList_New())
-}
+	userList := &UserList{
+		Users:     make([]string, 0),
+		UserCount: 0,
+	}
 
-func (this_ *UserList) Delete() {
-	C.C_UserList_Delete((*C.struct_C_UserList)(this_))
+	return userList
 }
 
 // #endregion UserList
@@ -988,7 +1222,10 @@ func (this_ *UserList) Delete() {
 *
 @brief Topic publisher information
 */
-type PublisherInfo C.struct_C_PublisherInfo
+type PublisherInfo struct {
+	PublisherUserId string
+	PublisherMeta   string
+}
 
 // #region PublisherInfo
 
@@ -996,44 +1233,37 @@ type PublisherInfo C.struct_C_PublisherInfo
  * The publisher user ID
  */
 func (this_ *PublisherInfo) GetPublisherUserId() string {
-	return C.GoString(this_.publisherUserId)
+	return this_.PublisherUserId
 }
 
 /**
  * The publisher user ID
  */
 func (this_ *PublisherInfo) SetPublisherUserId(publisherUserId string) {
-	var cStr *C.char = nil
-	if len(publisherUserId) > 0 {
-		cStr = C.CString(publisherUserId)
-	}
-	this_.publisherUserId = cStr
+	this_.PublisherUserId = publisherUserId
 }
 
 /**
  * The metadata of the publisher
  */
 func (this_ *PublisherInfo) GetPublisherMeta() string {
-	return C.GoString(this_.publisherMeta)
+	return this_.PublisherMeta
 }
 
 /**
  * The metadata of the publisher
  */
 func (this_ *PublisherInfo) SetPublisherMeta(publisherMeta string) {
-	var cStr *C.char = nil
-	if len(publisherMeta) > 0 {
-		cStr = C.CString(publisherMeta)
-	}
-	this_.publisherMeta = cStr
+	this_.PublisherMeta = publisherMeta
 }
 
 func NewPublisherInfo() *PublisherInfo {
-	return (*PublisherInfo)(C.C_PublisherInfo_New())
-}
+	publisher := &PublisherInfo{
+		PublisherUserId: "",
+		PublisherMeta:   "",
+	}
 
-func (this_ *PublisherInfo) Delete() {
-	C.C_PublisherInfo_Delete((*C.struct_C_PublisherInfo)(this_))
+	return publisher
 }
 
 // #endregion PublisherInfo
@@ -1042,7 +1272,11 @@ func (this_ *PublisherInfo) Delete() {
 *
 @brief Topic information
 */
-type TopicInfo C.struct_C_TopicInfo
+type TopicInfo struct {
+	Topic          string
+	Publishers     []PublisherInfo
+	PublisherCount uint
+}
 
 // #region TopicInfo
 
@@ -1050,55 +1284,53 @@ type TopicInfo C.struct_C_TopicInfo
  * The name of the topic
  */
 func (this_ *TopicInfo) GetTopic() string {
-	return C.GoString(this_.topic)
+	return this_.Topic
 }
 
 /**
  * The name of the topic
  */
 func (this_ *TopicInfo) SetTopic(topic string) {
-	var cStr *C.char = nil
-	if len(topic) > 0 {
-		cStr = C.CString(topic)
-	}
-	this_.topic = cStr
+	this_.Topic = topic
 }
 
 /**
  * The publisher array
  */
 func (this_ *TopicInfo) GetPublishers() []PublisherInfo {
-	count := this_.GetPublisherCount()
-	return unsafe.Slice((*PublisherInfo)(this_.publishers), count)
+	return this_.Publishers
 }
 
 /**
  * The publisher array
  */
 func (this_ *TopicInfo) SetPublishers(publishers []PublisherInfo) {
-	this_.publishers = (*C.struct_C_PublisherInfo)(unsafe.SliceData(publishers))
+	this_.Publishers = publishers
+	this_.PublisherCount = uint(len(publishers))
 }
 
 /**
  * The count of publisher in current topic
  */
 func (this_ *TopicInfo) GetPublisherCount() uint {
-	return uint(this_.publisherCount)
+	return this_.PublisherCount
 }
 
 /**
  * The count of publisher in current topic
  */
-func (this_ *TopicInfo) SetPublisherCount(publisherCount *uint) {
-	this_.publisherCount = C.size_t(*publisherCount)
+func (this_ *TopicInfo) SetPublisherCount(publisherCount uint) {
+	this_.PublisherCount = publisherCount
 }
 
 func NewTopicInfo() *TopicInfo {
-	return (*TopicInfo)(C.C_TopicInfo_New())
-}
+	topicInfo := &TopicInfo{
+		Topic:          "",
+		Publishers:     make([]PublisherInfo, 0),
+		PublisherCount: 0,
+	}
 
-func (this_ *TopicInfo) Delete() {
-	C.C_TopicInfo_Delete((*C.struct_C_TopicInfo)(this_))
+	return topicInfo
 }
 
 // #endregion TopicInfo
@@ -1107,7 +1339,10 @@ func (this_ *TopicInfo) Delete() {
 *
 @brief User state property
 */
-type StateItem C.struct_C_StateItem
+type StateItem struct {
+	Key   string
+	Value string
+}
 
 // #region StateItem
 
@@ -1115,43 +1350,37 @@ type StateItem C.struct_C_StateItem
  * The key of the state item.
  */
 func (this_ *StateItem) GetKey() string {
-	return C.GoString(this_.key)
+	return this_.Key
 }
 
 /**
  * The key of the state item.
  */
 func (this_ *StateItem) SetKey(key string) {
-	var cStr *C.char = nil
-	if len(key) > 0 {
-		cStr = C.CString(key)
-	}
-	this_.key = cStr
+	this_.Key = key
 }
 
 /**
  * The value of the state item.
  */
 func (this_ *StateItem) GetValue() string {
-	return C.GoString(this_.value)
+	return this_.Value
 }
 
 /**
  * The value of the state item.
  */
 func (this_ *StateItem) SetValue(value string) {
-	var cStr *C.char = nil
-	if len(value) > 0 {
-		cStr = C.CString(value)
-	}
-	this_.key = cStr
+	this_.Value = value
 }
 
 func NewStateItem() *StateItem {
-	return (*StateItem)(C.C_StateItem_New())
-}
-func (this_ *StateItem) Delete() {
-	C.C_StateItem_Delete((*C.struct_C_StateItem)(this_))
+	stateItem := &StateItem{
+		Key:   "",
+		Value: "",
+	}
+
+	return stateItem
 }
 
 // #endregion StateItem
@@ -1159,7 +1388,11 @@ func (this_ *StateItem) Delete() {
 /**
 *  The information of a Lock.
  */
-type LockDetail C.struct_C_LockDetail
+type LockDetail struct {
+	lockName string
+	owner    string
+	ttl      uint32
+}
 
 // #region LockDetail
 
@@ -1167,66 +1400,64 @@ type LockDetail C.struct_C_LockDetail
  * The name of the lock.
  */
 func (this_ *LockDetail) GetLockName() string {
-	return C.GoString(this_.lockName)
+	return this_.lockName
 }
 
 /**
  * The name of the lock.
  */
 func (this_ *LockDetail) SetLockName(lockName string) {
-	var cStr *C.char = nil
-	if len(lockName) > 0 {
-		cStr = C.CString(lockName)
-	}
-	this_.lockName = cStr
+	this_.lockName = lockName
 }
 
 /**
  * The owner of the lock. Only valid when user getLocks or receive LockEvent with RTM_LOCK_EVENT_TYPE_SNAPSHOT
  */
 func (this_ *LockDetail) GetOwner() string {
-	return C.GoString(this_.lockName)
+	return this_.owner
 }
 
 /**
  * The owner of the lock. Only valid when user getLocks or receive LockEvent with RTM_LOCK_EVENT_TYPE_SNAPSHOT
  */
 func (this_ *LockDetail) SetOwner(owner string) {
-	var cStr *C.char = nil
-	if len(owner) > 0 {
-		cStr = C.CString(owner)
-	}
-	this_.owner = cStr
+	this_.owner = owner
 }
 
 /**
  * The ttl of the lock.
  */
 func (this_ *LockDetail) GetTtl() uint32 {
-	return uint32(this_.ttl)
+	return this_.ttl
 }
 
 /**
  * The ttl of the lock.
  */
 func (this_ *LockDetail) SetTtl(ttl uint32) {
-	this_.ttl = C.uint32_t(ttl)
+	this_.ttl = ttl
 }
 
 func NewLockDetail() *LockDetail {
-	return (*LockDetail)(C.C_LockDetail_New())
+	return &LockDetail{
+		lockName: "",
+		owner:    "",
+		ttl:      0,
+	}
 }
 
-func (this_ *LockDetail) Delete() {
-	C.C_LockDetail_Delete((*C.struct_C_LockDetail)(this_))
-}
+// 内部方法：转换为C对象
 
 // #endregion LockDetail
 
 /**
 *  The states of user.
  */
-type UserState C.struct_C_UserState
+type UserState struct {
+	UserId      string
+	States      []StateItem
+	StatesCount uint
+}
 
 // #region UserState
 
@@ -1234,55 +1465,53 @@ type UserState C.struct_C_UserState
  * The user id.
  */
 func (this_ *UserState) GetUserId() string {
-	return C.GoString(this_.userId)
+	return this_.UserId
 }
 
 /**
  * The user id.
  */
 func (this_ *UserState) SetUserId(userId string) {
-	var cStr *C.char = nil
-	if len(userId) > 0 {
-		cStr = C.CString(userId)
-	}
-	this_.userId = cStr
+	this_.UserId = userId
 }
 
 /**
  * The user states.
  */
 func (this_ *UserState) GetStates() []StateItem {
-	count := this_.GetStatesCount()
-	return unsafe.Slice((*StateItem)(this_.states), count)
+	return this_.States
 }
 
 /**
  * The user states.
  */
 func (this_ *UserState) SetStates(states []StateItem) {
-	this_.states = (*C.struct_C_StateItem)(unsafe.SliceData(states))
+	this_.States = states
+	this_.StatesCount = uint(len(states))
 }
 
 /**
  * The count of user states.
  */
 func (this_ *UserState) GetStatesCount() uint {
-	return uint(this_.statesCount)
+	return this_.StatesCount
 }
 
 /**
  * The count of user states.
  */
 func (this_ *UserState) SetStatesCount(statesCount uint) {
-	this_.statesCount = C.size_t(statesCount)
+	this_.StatesCount = statesCount
 }
 
 func NewUserState() *UserState {
-	return (*UserState)(C.C_UserState_New())
-}
+	userState := &UserState{
+		UserId:      "",
+		States:      make([]StateItem, 0),
+		StatesCount: 0,
+	}
 
-func (this_ *UserState) Delete() {
-	C.C_UserState_Delete((*C.struct_C_UserState)(this_))
+	return userState
 }
 
 // #endregion UserState
@@ -1290,7 +1519,13 @@ func (this_ *UserState) Delete() {
 /**
  *  The subscribe option.
  */
-type SubscribeOptions C.struct_C_SubscribeOptions
+type SubscribeOptions struct {
+	WithMessage  bool
+	WithMetadata bool
+	WithPresence bool
+	WithLock     bool
+	BeQuiet      bool
+}
 
 // #region SubscribeOptions
 
@@ -1298,71 +1533,80 @@ type SubscribeOptions C.struct_C_SubscribeOptions
  * Whether to subscribe channel with message
  */
 func (this_ *SubscribeOptions) GetWithMessage() bool {
-	return bool(this_.withMessage)
+	return this_.WithMessage
 }
 
 /**
  * Whether to subscribe channel with message
  */
 func (this_ *SubscribeOptions) SetWithMessage(withMessage bool) {
-	this_.withMessage = C.bool(withMessage)
+	this_.WithMessage = withMessage
 }
 
 /**
  * Whether to subscribe channel with metadata
  */
 func (this_ *SubscribeOptions) GetWithMetadata() bool {
-	return bool(this_.withMetadata)
+	return this_.WithMetadata
 }
 
 /**
  * Whether to subscribe channel with metadata
  */
 func (this_ *SubscribeOptions) SetWithMetadata(withMetadata bool) {
-	this_.withMetadata = C.bool(withMetadata)
+	this_.WithMetadata = withMetadata
 }
 
 /**
  * Whether to subscribe channel with user presence
  */
 func (this_ *SubscribeOptions) GetWithPresence() bool {
-	return bool(this_.withPresence)
+	return this_.WithPresence
 }
 
 /**
  * Whether to subscribe channel with user presence
  */
 func (this_ *SubscribeOptions) SetWithPresence(withPresence bool) {
-	this_.withPresence = C.bool(withPresence)
+	this_.WithPresence = withPresence
 }
 
+/**
+ * Whether to subscribe channel with quiet
+ */
 func (this_ *SubscribeOptions) SetWithQuiet(withQuiet bool) {
-	this_.beQuiet = C.bool(withQuiet)
+	this_.BeQuiet = withQuiet
 }
+
+/**
+ * Whether to subscribe channel with quiet
+ */
 func (this_ *SubscribeOptions) GetWithQuiet() bool {
-	return bool(this_.beQuiet)
+	return this_.BeQuiet
 }
 
 /**
  * Whether to subscribe channel with lock
  */
 func (this_ *SubscribeOptions) GetWithLock() bool {
-	return bool(this_.withLock)
+	return this_.WithLock
 }
 
 /**
  * Whether to subscribe channel with lock
  */
 func (this_ *SubscribeOptions) SetWithLock(withLock bool) {
-	this_.withLock = C.bool(withLock)
+	this_.WithLock = withLock
 }
 
 func NewSubscribeOptions() *SubscribeOptions {
-	return (*SubscribeOptions)(C.C_SubscribeOptions_New())
-}
-
-func (this_ *SubscribeOptions) Delete() {
-	C.C_SubscribeOptions_Delete((*C.struct_C_SubscribeOptions)(this_))
+	return &SubscribeOptions{
+		WithMessage:  false,
+		WithMetadata: false,
+		WithPresence: false,
+		WithLock:     false,
+		BeQuiet:      false,
+	}
 }
 
 // #endregion SubscribeOptions
@@ -1370,7 +1614,10 @@ func (this_ *SubscribeOptions) Delete() {
 /**
  *  The channel information.
  */
-type ChannelInfo C.struct_C_ChannelInfo
+type ChannelInfo struct {
+	ChannelName string
+	ChannelType RTM_CHANNEL_TYPE
+}
 
 // #region ChannelInfo
 
@@ -1378,40 +1625,37 @@ type ChannelInfo C.struct_C_ChannelInfo
  * The channel which the message was published
  */
 func (this_ *ChannelInfo) GetChannelName() string {
-	return C.GoString(this_.channelName)
+	return this_.ChannelName
 }
 
 /**
  * The channel which the message was published
  */
 func (this_ *ChannelInfo) SetChannelName(channelName string) {
-	var cStr *C.char = nil
-	if len(channelName) > 0 {
-		cStr = C.CString(channelName)
-	}
-	this_.channelName = cStr
+	this_.ChannelName = channelName
 }
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *ChannelInfo) GetChannelType() RTM_CHANNEL_TYPE {
-	return RTM_CHANNEL_TYPE(this_.channelType)
+	return this_.ChannelType
 }
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *ChannelInfo) SetChannelType(channelType RTM_CHANNEL_TYPE) {
-	this_.channelType = C.enum_C_RTM_CHANNEL_TYPE(channelType)
+	this_.ChannelType = channelType
 }
 
 func NewChannelInfo() *ChannelInfo {
-	return (*ChannelInfo)(C.C_ChannelInfo_New())
-}
+	channelInfo := &ChannelInfo{
+		ChannelName: "",
+		ChannelType: 0,
+	}
 
-func (this_ *ChannelInfo) Delete() {
-	C.C_ChannelInfo_Delete((*C.struct_C_ChannelInfo)(this_))
+	return channelInfo
 }
 
 // #endregion ChannelInfo
@@ -1419,7 +1663,11 @@ func (this_ *ChannelInfo) Delete() {
 /**
  *  The option to query user presence.
  */
-type PresenceOptions C.struct_C_PresenceOptions
+type PresenceOptions struct {
+	IncludeUserId bool
+	IncludeState  bool
+	Page          string
+}
 
 // #region PresenceOptions
 
@@ -1427,54 +1675,52 @@ type PresenceOptions C.struct_C_PresenceOptions
  * Whether to display user id in query result
  */
 func (this_ *PresenceOptions) GetIncludeUserId() bool {
-	return bool(this_.includeUserId)
+	return this_.IncludeUserId
 }
 
 /**
  * Whether to display user id in query result
  */
 func (this_ *PresenceOptions) SetIncludeUserId(includeUserId bool) {
-	this_.includeUserId = C.bool(includeUserId)
+	this_.IncludeUserId = includeUserId
 }
 
 /**
  * Whether to display user state in query result
  */
 func (this_ *PresenceOptions) GetIncludeState() bool {
-	return bool(this_.includeState)
+	return this_.IncludeState
 }
 
 /**
  * Whether to display user state in query result
  */
 func (this_ *PresenceOptions) SetIncludeState(includeState bool) {
-	this_.includeState = C.bool(includeState)
+	this_.IncludeState = includeState
 }
 
 /**
  * The paging object used for pagination.
  */
 func (this_ *PresenceOptions) GetPage() string {
-	return C.GoString(this_.page)
+	return this_.Page
 }
 
 /**
  * The paging object used for pagination.
  */
 func (this_ *PresenceOptions) SetPage(page string) {
-	var cStr *C.char = nil
-	if len(page) > 0 {
-		cStr = C.CString(page)
-	}
-	this_.page = cStr
+	this_.Page = page
 }
 
 func NewPresenceOptions() *PresenceOptions {
-	return (*PresenceOptions)(C.C_PresenceOptions_New())
-}
+	presenceOptions := &PresenceOptions{
+		IncludeUserId: false,
+		IncludeState:  false,
+		Page:          "",
+	}
 
-func (this_ *PresenceOptions) Delete() {
-	C.C_PresenceOptions_Delete((*C.struct_C_PresenceOptions)(this_))
+	return presenceOptions
 }
 
 // #endregion PresenceOptions
@@ -1482,7 +1728,11 @@ func (this_ *PresenceOptions) Delete() {
 /**
 *  The option to query user presence.
  */
-type GetOnlineUsersOptions C.struct_C_GetOnlineUsersOptions
+type GetOnlineUsersOptions struct {
+	IncludeUserId bool
+	IncludeState  bool
+	Page          string
+}
 
 // #region GetOnlineUsersOptions
 
@@ -1490,54 +1740,52 @@ type GetOnlineUsersOptions C.struct_C_GetOnlineUsersOptions
  * Whether to display user id in query result
  */
 func (this_ *GetOnlineUsersOptions) GetIncludeUserId() bool {
-	return bool(this_.includeUserId)
+	return this_.IncludeUserId
 }
 
 /**
  * Whether to display user id in query result
  */
 func (this_ *GetOnlineUsersOptions) SetIncludeUserId(includeUserId bool) {
-	this_.includeUserId = C.bool(includeUserId)
+	this_.IncludeUserId = includeUserId
 }
 
 /**
  * Whether to display user state in query result
  */
 func (this_ *GetOnlineUsersOptions) GetIncludeState() bool {
-	return bool(this_.includeState)
+	return this_.IncludeState
 }
 
 /**
  * Whether to display user state in query result
  */
 func (this_ *GetOnlineUsersOptions) SetIncludeState(includeState bool) {
-	this_.includeState = C.bool(includeState)
+	this_.IncludeState = includeState
 }
 
 /**
  * The paging object used for pagination.
  */
 func (this_ *GetOnlineUsersOptions) GetPage() string {
-	return C.GoString(this_.page)
+	return this_.Page
 }
 
 /**
  * The paging object used for pagination.
  */
 func (this_ *GetOnlineUsersOptions) SetPage(page string) {
-	var cStr *C.char = nil
-	if len(page) > 0 {
-		cStr = C.CString(page)
-	}
-	this_.page = cStr
+	this_.Page = page
 }
 
 func NewGetOnlineUsersOptions() *GetOnlineUsersOptions {
-	return (*GetOnlineUsersOptions)(C.C_GetOnlineUsersOptions_New())
-}
+	getOnlineUsersOptions := &GetOnlineUsersOptions{
+		IncludeUserId: false,
+		IncludeState:  false,
+		Page:          "",
+	}
 
-func (this_ *GetOnlineUsersOptions) Delete() {
-	C.C_GetOnlineUsersOptions_Delete((*C.struct_C_GetOnlineUsersOptions)(this_))
+	return getOnlineUsersOptions
 }
 
 // #endregion GetOnlineUsersOptions
@@ -1547,7 +1795,12 @@ func (this_ *GetOnlineUsersOptions) Delete() {
 
 	@brief Publish message option
 */
-type PublishOptions C.struct_C_PublishOptions
+type PublishOptions struct {
+	ChannelType    RTM_CHANNEL_TYPE
+	MessageType    RTM_MESSAGE_TYPE
+	CustomType     string
+	StoreInHistory bool
+}
 
 // #region PublishOptions
 
@@ -1555,14 +1808,14 @@ type PublishOptions C.struct_C_PublishOptions
 The channel type.
 */
 func (this_ *PublishOptions) GetChannelType() RTM_CHANNEL_TYPE {
-	return RTM_CHANNEL_TYPE(this_.channelType)
+	return this_.ChannelType
 }
 
 /*
 The channel type.
 */
 func (this_ *PublishOptions) SetChannelType(channelType RTM_CHANNEL_TYPE) {
-	this_.channelType = C.enum_C_RTM_CHANNEL_TYPE(channelType)
+	this_.ChannelType = channelType
 }
 
 /*
@@ -1571,7 +1824,7 @@ func (this_ *PublishOptions) SetChannelType(channelType RTM_CHANNEL_TYPE) {
 	The message type.
 */
 func (this_ *PublishOptions) GetMessageType() RTM_MESSAGE_TYPE {
-	return RTM_MESSAGE_TYPE(this_.messageType)
+	return this_.MessageType
 }
 
 /*
@@ -1580,7 +1833,7 @@ func (this_ *PublishOptions) GetMessageType() RTM_MESSAGE_TYPE {
 	The message type.
 */
 func (this_ *PublishOptions) SetMessageType(messageType RTM_MESSAGE_TYPE) {
-	this_.messageType = C.enum_C_RTM_MESSAGE_TYPE(messageType)
+	this_.MessageType = messageType
 }
 
 /*
@@ -1589,7 +1842,7 @@ func (this_ *PublishOptions) SetMessageType(messageType RTM_MESSAGE_TYPE) {
 	The custom type of the message, up to 32 bytes for customize
 */
 func (this_ *PublishOptions) GetCustomType() string {
-	return C.GoString(this_.customType)
+	return this_.CustomType
 }
 
 /*
@@ -1598,76 +1851,86 @@ func (this_ *PublishOptions) GetCustomType() string {
 	The custom type of the message, up to 32 bytes for customize
 */
 func (this_ *PublishOptions) SetCustomType(customType string) {
-	var cStr *C.char = nil
-	if len(customType) > 0 {
-		cStr = C.CString(customType)
-	}
-	this_.customType = cStr
+	this_.CustomType = customType
+}
+
+/*
+*
+
+	Whether to store in history, true to enable
+*/
+func (this_ *PublishOptions) GetStoreInHistory() bool {
+	return this_.StoreInHistory
+}
+
+/*
+*
+
+	Whether to store in history, true to enable
+*/
+func (this_ *PublishOptions) SetStoreInHistory(storeInHistory bool) {
+	this_.StoreInHistory = storeInHistory
 }
 
 func NewPublishOptions() *PublishOptions {
-	return (*PublishOptions)(C.C_PublishOptions_New())
-}
+	publishOptions := &PublishOptions{
+		ChannelType:    0,
+		MessageType:    0,
+		CustomType:     "",
+		StoreInHistory: false,
+	}
 
-func (this_ *PublishOptions) Delete() {
-	C.C_PublishOptions_Delete((*C.struct_C_PublishOptions)(this_))
+	return publishOptions
 }
 
 // #endregion PublishOptions
 
 /*
-*
 @brief topic message option
 */
-type TopicMessageOptions C.struct_C_TopicMessageOptions
+type TopicMessageOptions struct {
+	MessageType RTM_MESSAGE_TYPE
+	SendTs      uint64
+	CustomType  string
+}
 
 // #region TopicMessageOptions
 
 /*
-*
-
-	The message type.
+The message type.
 */
 func (this_ *TopicMessageOptions) GetMessageType() RTM_MESSAGE_TYPE {
-	return RTM_MESSAGE_TYPE(this_.messageType)
+	return this_.MessageType
 }
 
 /*
-*
-
-	The message type.
+The message type.
 */
 func (this_ *TopicMessageOptions) SetMessageType(messageType RTM_MESSAGE_TYPE) {
-	this_.messageType = C.enum_C_RTM_MESSAGE_TYPE(messageType)
+	this_.MessageType = messageType
 }
 
 /*
-*
-
-	The time to calibrate data with media,
-	only valid when user join topic with syncWithMedia in stream channel
+The time to calibrate data with media,
+only valid when user join topic with syncWithMedia in stream channel
 */
 func (this_ *TopicMessageOptions) GetSendTs() uint64 {
-	return uint64(this_.sendTs)
+	return this_.SendTs
 }
 
 /*
-*
-
-	The time to calibrate data with media,
-	only valid when user join topic with syncWithMedia in stream channel
+The time to calibrate data with media,
+only valid when user join topic with syncWithMedia in stream channel
 */
 func (this_ *TopicMessageOptions) SetSendTs(sendTs uint64) {
-	this_.sendTs = C.uint64_t(sendTs)
+	this_.SendTs = sendTs
 }
 
 /*
-*
-
-	The custom type of the message, up to 32 bytes for customize
+The custom type of the message, up to 32 bytes for customize
 */
 func (this_ *TopicMessageOptions) GetCustomType() string {
-	return C.GoString(this_.customType)
+	return this_.CustomType
 }
 
 /*
@@ -1676,19 +1939,17 @@ func (this_ *TopicMessageOptions) GetCustomType() string {
 	The custom type of the message, up to 32 bytes for customize
 */
 func (this_ *TopicMessageOptions) SetCustomType(customType string) {
-	var cStr *C.char = nil
-	if len(customType) > 0 {
-		cStr = C.CString(customType)
-	}
-	this_.customType = cStr
+	this_.CustomType = customType
 }
 
 func NewTopicMessageOptions() *TopicMessageOptions {
-	return (*TopicMessageOptions)(C.C_TopicMessageOptions_New())
-}
+	topicMessageOptions := &TopicMessageOptions{
+		MessageType: 0,
+		SendTs:      0,
+		CustomType:  "",
+	}
 
-func (this_ *TopicMessageOptions) Delete() {
-	C.C_TopicMessageOptions_Delete((*C.struct_C_TopicMessageOptions)(this_))
+	return topicMessageOptions
 }
 
 // #endregion TopicMessageOptions
@@ -1697,7 +1958,13 @@ func (this_ *TopicMessageOptions) Delete() {
 *
 @brief Proxy configuration
 */
-type RtmProxyConfig C.struct_C_RtmProxyConfig
+type RtmProxyConfig struct {
+	ProxyType RTM_PROXY_TYPE
+	Server    string
+	Port      uint16
+	Account   string
+	Password  string
+}
 
 // #region RtmProxyConfig
 
@@ -1707,7 +1974,7 @@ type RtmProxyConfig C.struct_C_RtmProxyConfig
 	The Proxy type.
 */
 func (this_ *RtmProxyConfig) GetProxyType() RTM_PROXY_TYPE {
-	return RTM_PROXY_TYPE(this_.proxyType)
+	return this_.ProxyType
 }
 
 /*
@@ -1715,8 +1982,8 @@ func (this_ *RtmProxyConfig) GetProxyType() RTM_PROXY_TYPE {
 
 	The Proxy type.
 */
-func (this_ *RtmProxyConfig) SetProxyType(messageType RTM_PROXY_TYPE) {
-	this_.proxyType = C.enum_C_RTM_PROXY_TYPE(messageType)
+func (this_ *RtmProxyConfig) SetProxyType(proxyType RTM_PROXY_TYPE) {
+	this_.ProxyType = proxyType
 }
 
 /*
@@ -1725,7 +1992,7 @@ func (this_ *RtmProxyConfig) SetProxyType(messageType RTM_PROXY_TYPE) {
 	The Proxy server address.
 */
 func (this_ *RtmProxyConfig) GetServer() string {
-	return C.GoString(this_.server)
+	return this_.Server
 }
 
 /*
@@ -1734,11 +2001,7 @@ func (this_ *RtmProxyConfig) GetServer() string {
 	The Proxy server address.
 */
 func (this_ *RtmProxyConfig) SetServer(server string) {
-	var cStr *C.char = nil
-	if len(server) > 0 {
-		cStr = C.CString(server)
-	}
-	this_.server = cStr
+	this_.Server = server
 }
 
 /*
@@ -1747,7 +2010,7 @@ func (this_ *RtmProxyConfig) SetServer(server string) {
 	The Proxy server port.
 */
 func (this_ *RtmProxyConfig) GetPort() uint16 {
-	return uint16(this_.port)
+	return this_.Port
 }
 
 /*
@@ -1756,7 +2019,7 @@ func (this_ *RtmProxyConfig) GetPort() uint16 {
 	The Proxy server port.
 */
 func (this_ *RtmProxyConfig) SetPort(port uint16) {
-	this_.port = C.uint16_t(port)
+	this_.Port = port
 }
 
 /*
@@ -1765,7 +2028,7 @@ func (this_ *RtmProxyConfig) SetPort(port uint16) {
 	The Proxy user account.
 */
 func (this_ *RtmProxyConfig) GetAccount() string {
-	return C.GoString(this_.account)
+	return this_.Account
 }
 
 /*
@@ -1774,11 +2037,7 @@ func (this_ *RtmProxyConfig) GetAccount() string {
 	The Proxy user account.
 */
 func (this_ *RtmProxyConfig) SetAccount(account string) {
-	var cStr *C.char = nil
-	if len(account) > 0 {
-		cStr = C.CString(account)
-	}
-	this_.account = cStr
+	this_.Account = account
 }
 
 /*
@@ -1787,7 +2046,7 @@ func (this_ *RtmProxyConfig) SetAccount(account string) {
 	The Proxy password.
 */
 func (this_ *RtmProxyConfig) GetPassword() string {
-	return C.GoString(this_.password)
+	return this_.Password
 }
 
 /*
@@ -1796,19 +2055,19 @@ func (this_ *RtmProxyConfig) GetPassword() string {
 	The Proxy password.
 */
 func (this_ *RtmProxyConfig) SetPassword(password string) {
-	var cStr *C.char = nil
-	if len(password) > 0 {
-		cStr = C.CString(password)
-	}
-	this_.password = cStr
+	this_.Password = password
 }
 
 func NewRtmProxyConfig() *RtmProxyConfig {
-	return (*RtmProxyConfig)(C.C_RtmProxyConfig_New())
-}
+	rtmProxyConfig := &RtmProxyConfig{
+		ProxyType: 0,
+		Server:    "",
+		Port:      0,
+		Account:   "",
+		Password:  "",
+	}
 
-func (this_ *RtmProxyConfig) Delete() {
-	C.C_RtmProxyConfig_Delete((*C.struct_C_RtmProxyConfig)(this_))
+	return rtmProxyConfig
 }
 
 // #endregion RtmProxyConfig
@@ -1817,7 +2076,11 @@ func (this_ *RtmProxyConfig) Delete() {
 *
 @brief encryption configuration
 */
-type RtmEncryptionConfig C.struct_C_RtmEncryptionConfig
+type RtmEncryptionConfig struct {
+	EncryptionMode RTM_ENCRYPTION_MODE
+	EncryptionKey  string
+	EncryptionSalt [32]uint8
+}
 
 // #region RtmEncryptionConfig
 
@@ -1825,68 +2088,115 @@ type RtmEncryptionConfig C.struct_C_RtmEncryptionConfig
  * The encryption mode.
  */
 func (this_ *RtmEncryptionConfig) GetEncryptionMode() RTM_ENCRYPTION_MODE {
-	return RTM_ENCRYPTION_MODE(this_.encryptionMode)
+	return this_.EncryptionMode
 }
 
 /**
  * The encryption mode.
  */
 func (this_ *RtmEncryptionConfig) SetEncryptionMode(encryptionMode RTM_ENCRYPTION_MODE) {
-	this_.encryptionMode = C.enum_C_RTM_ENCRYPTION_MODE(encryptionMode)
+	this_.EncryptionMode = encryptionMode
 }
 
 /**
  * The encryption key in the string format.
  */
 func (this_ *RtmEncryptionConfig) GetEncryptionKey() string {
-	return C.GoString(this_.encryptionKey)
+	return this_.EncryptionKey
 }
 
 /**
  * The encryption key in the string format.
  */
 func (this_ *RtmEncryptionConfig) SetEncryptionKey(encryptionKey string) {
-	var cStr *C.char = nil
-	if len(encryptionKey) > 0 {
-		cStr = C.CString(encryptionKey)
-	}
-	this_.encryptionKey = cStr
+	this_.EncryptionKey = encryptionKey
 }
 
 /**
  * The encryption salt.
  */
 func (this_ *RtmEncryptionConfig) GetEncryptionSalt() [32]uint8 {
-	return ([32]uint8)(unsafe.Slice((*uint8)(&this_.encryptionSalt[0]), 32))
+	return this_.EncryptionSalt
 }
 
 /**
  * The encryption salt.
  */
 func (this_ *RtmEncryptionConfig) SetEncryptionSalt(encryptionSalt [32]uint8) {
-	for i, _ := range this_.encryptionSalt {
-		this_.encryptionSalt[i] = C.uint8_t(encryptionSalt[i])
-	}
+	this_.EncryptionSalt = encryptionSalt
 }
 
 func NewRtmEncryptionConfig() *RtmEncryptionConfig {
-	return (*RtmEncryptionConfig)(C.C_RtmEncryptionConfig_New())
+	rtmEncryptionConfig := &RtmEncryptionConfig{
+		EncryptionMode: 0,
+		EncryptionKey:  "",
+		EncryptionSalt: [32]uint8{},
+	}
+
+	return rtmEncryptionConfig
 }
 
-func (this_ *RtmEncryptionConfig) Delete() {
-	C.C_RtmEncryptionConfig_Delete((*C.struct_C_RtmEncryptionConfig)(this_))
+// #endregion RtmEncryptionConfig
+
+// #region RtmPrivateConfig
+type RtmPrivateConfig struct {
+	ServiceType           uint32
+	AccessPointHosts      []string
+	AccessPointHostsCount uint
 }
+
+func (this_ *RtmPrivateConfig) GetServiceType() uint32 {
+	return this_.ServiceType
+}
+
+func (this_ *RtmPrivateConfig) SetServiceType(serviceType uint32) {
+	this_.ServiceType = serviceType
+}
+
+func (this_ *RtmPrivateConfig) GetAccessPointHosts() []string {
+	return this_.AccessPointHosts
+}
+
+func (this_ *RtmPrivateConfig) SetAccessPointHosts(accessPointHosts []string) {
+	this_.AccessPointHosts = accessPointHosts
+	this_.AccessPointHostsCount = uint(len(accessPointHosts))
+}
+
+func (this_ *RtmPrivateConfig) GetAccessPointHostsCount() uint {
+	return this_.AccessPointHostsCount
+}
+
+func (this_ *RtmPrivateConfig) SetAccessPointHostsCount(accessPointHostsCount uint) {
+	this_.AccessPointHostsCount = accessPointHostsCount
+}
+
+func NewRtmPrivateConfig() *RtmPrivateConfig {
+	rtmPrivateConfig := &RtmPrivateConfig{
+		ServiceType:           0,
+		AccessPointHosts:      make([]string, 0),
+		AccessPointHostsCount: 0,
+	}
+	return rtmPrivateConfig
+}
+
+// #endregion RtmPrivateConfig
 
 // link state event
-type CLinkStateEvent C.struct_C_LinkStateEvent
+
 type RTM_SERVICE_TYPE C.enum_C_RTM_SERVICE_TYPE
 
+const (
+	RTM_SERVICE_TYPE_RTM     RTM_SERVICE_TYPE = 0
+	RTM_SERVICE_TYPE_MESSAGE RTM_SERVICE_TYPE = 1
+	RTM_SERVICE_TYPE_STREAM  RTM_SERVICE_TYPE = 2
+)
+
 type LinkStateEvent struct {
-	CurrentState           uint32
-	PreviousState          uint32
-	ServiceType            uint32
-	Operation              uint32
-	ReasonCode             uint32
+	CurrentState           RTM_LINK_STATE
+	PreviousState          RTM_LINK_STATE
+	ServiceType            RTM_SERVICE_TYPE
+	Operation              RTM_LINK_OPERATION
+	ReasonCode             RTM_LINK_STATE_CHANGE_REASON
 	Reason                 string
 	AffectedChannels       []string
 	AffectedChannelCount   uint
@@ -1896,27 +2206,307 @@ type LinkStateEvent struct {
 	Timestamp              uint64
 }
 
-func (this_ *CLinkStateEvent) GetGoLinkStateEvent() *LinkStateEvent {
-	goLinkStateEvent := &LinkStateEvent{
-		CurrentState:           this_.currentState,
-		PreviousState:          this_.previousState,
-		ServiceType:            this_.serviceType,
-		Operation:              this_.operation,
-		ReasonCode:             this_.reasonCode,
-		Reason:                 C.GoString(this_.reason),
-		AffectedChannels:       nil,
-		AffectedChannelCount:   uint(this_.affectedChannelCount),
-		UnrestoredChannels:     nil,
-		UnrestoredChannelCount: uint(this_.unrestoredChannelCount),
-		IsResumed:              bool(this_.isResumed),
-		Timestamp:              uint64(this_.timestamp),
+// #region LinkStateEvent
+
+/**
+ * Current state
+ */
+func (this_ *LinkStateEvent) GetCurrentState() RTM_LINK_STATE {
+	return this_.CurrentState
+}
+
+/**
+ * Current state
+ */
+func (this_ *LinkStateEvent) SetCurrentState(currentState RTM_LINK_STATE) {
+	this_.CurrentState = currentState
+}
+
+/**
+ * Previous state
+ */
+func (this_ *LinkStateEvent) GetPreviousState() RTM_LINK_STATE {
+	return this_.PreviousState
+}
+
+/**
+ * Previous state
+ */
+func (this_ *LinkStateEvent) SetPreviousState(previousState RTM_LINK_STATE) {
+	this_.PreviousState = previousState
+}
+
+/**
+ * Service type
+ */
+func (this_ *LinkStateEvent) GetServiceType() RTM_SERVICE_TYPE {
+	return this_.ServiceType
+}
+
+/**
+ * Service type
+ */
+func (this_ *LinkStateEvent) SetServiceType(serviceType RTM_SERVICE_TYPE) {
+	this_.ServiceType = serviceType
+}
+
+/**
+ * Operation
+ */
+func (this_ *LinkStateEvent) GetOperation() RTM_LINK_OPERATION {
+	return this_.Operation
+}
+
+/**
+ * Operation
+ */
+func (this_ *LinkStateEvent) SetOperation(operation RTM_LINK_OPERATION) {
+	this_.Operation = operation
+}
+
+/**
+ * Reason code
+ */
+func (this_ *LinkStateEvent) GetReasonCode() RTM_LINK_STATE_CHANGE_REASON {
+	return this_.ReasonCode
+}
+
+/**
+ * Reason code
+ */
+func (this_ *LinkStateEvent) SetReasonCode(reasonCode RTM_LINK_STATE_CHANGE_REASON) {
+	this_.ReasonCode = reasonCode
+}
+
+/**
+ * Reason
+ */
+func (this_ *LinkStateEvent) GetReason() string {
+	return this_.Reason
+}
+
+/**
+ * Reason
+ */
+func (this_ *LinkStateEvent) SetReason(reason string) {
+	this_.Reason = reason
+}
+
+/**
+ * Affected channels
+ */
+func (this_ *LinkStateEvent) GetAffectedChannels() []string {
+	return this_.AffectedChannels
+}
+
+/**
+ * Affected channels
+ */
+func (this_ *LinkStateEvent) SetAffectedChannels(affectedChannels []string) {
+	this_.AffectedChannels = affectedChannels
+	this_.AffectedChannelCount = uint(len(affectedChannels))
+}
+
+/**
+ * Affected channel count
+ */
+func (this_ *LinkStateEvent) GetAffectedChannelCount() uint {
+	return this_.AffectedChannelCount
+}
+
+/**
+ * Affected channel count
+ */
+func (this_ *LinkStateEvent) SetAffectedChannelCount(affectedChannelCount uint) {
+	this_.AffectedChannelCount = affectedChannelCount
+}
+
+/**
+ * Unrestored channels
+ */
+func (this_ *LinkStateEvent) GetUnrestoredChannels() []string {
+	return this_.UnrestoredChannels
+}
+
+/**
+ * Unrestored channels
+ */
+func (this_ *LinkStateEvent) SetUnrestoredChannels(unrestoredChannels []string) {
+	this_.UnrestoredChannels = unrestoredChannels
+	this_.UnrestoredChannelCount = uint(len(unrestoredChannels))
+}
+
+/**
+ * Unrestored channel count
+ */
+func (this_ *LinkStateEvent) GetUnrestoredChannelCount() uint {
+	return this_.UnrestoredChannelCount
+}
+
+/**
+ * Unrestored channel count
+ */
+func (this_ *LinkStateEvent) SetUnrestoredChannelCount(unrestoredChannelCount uint) {
+	this_.UnrestoredChannelCount = unrestoredChannelCount
+}
+
+/**
+ * Is resumed
+ */
+func (this_ *LinkStateEvent) GetIsResumed() bool {
+	return this_.IsResumed
+}
+
+/**
+ * Is resumed
+ */
+func (this_ *LinkStateEvent) SetIsResumed(isResumed bool) {
+	this_.IsResumed = isResumed
+}
+
+/**
+ * Timestamp
+ */
+func (this_ *LinkStateEvent) GetTimestamp() uint64 {
+	return this_.Timestamp
+}
+
+/**
+ * Timestamp
+ */
+func (this_ *LinkStateEvent) SetTimestamp(timestamp uint64) {
+	this_.Timestamp = timestamp
+}
+
+func NewLinkStateEvent() *LinkStateEvent {
+	linkStateEvent := &LinkStateEvent{
+		CurrentState:           RTM_LINK_STATE_IDLE,
+		PreviousState:          RTM_LINK_STATE_IDLE,
+		ServiceType:            RTM_SERVICE_TYPE_RTM,
+		Operation:              RTM_LINK_OPERATION_LOGIN,
+		ReasonCode:             RTM_LINK_STATE_CHANGE_REASON_UNKNOWN,
+		Reason:                 "",
+		AffectedChannels:       make([]string, 0),
+		AffectedChannelCount:   0,
+		UnrestoredChannels:     make([]string, 0),
+		UnrestoredChannelCount: 0,
+		IsResumed:              false,
+		Timestamp:              0,
 	}
-	return goLinkStateEvent
+
+	return linkStateEvent
 }
 
 // #region LinkStateEvent
 
-type HistoryMessage C.struct_C_HistoryMessage
+type HistoryMessage struct {
+	MessageType   RTM_MESSAGE_TYPE
+	Publisher     string
+	Message       string
+	MessageLength uint
+	CustomType    string
+	Timestamp     uint64
+}
+
+// #region HistoryMessage
+
+/**
+ * Message type
+ */
+func (this_ *HistoryMessage) GetMessageType() RTM_MESSAGE_TYPE {
+	return this_.MessageType
+}
+
+/**
+ * Message type
+ */
+func (this_ *HistoryMessage) SetMessageType(messageType RTM_MESSAGE_TYPE) {
+	this_.MessageType = messageType
+}
+
+/**
+ * The publisher
+ */
+func (this_ *HistoryMessage) GetPublisher() string {
+	return this_.Publisher
+}
+
+/**
+ * The publisher
+ */
+func (this_ *HistoryMessage) SetPublisher(publisher string) {
+	this_.Publisher = publisher
+}
+
+/**
+ * The payload
+ */
+func (this_ *HistoryMessage) GetMessage() string {
+	return this_.Message
+}
+
+/**
+ * The payload
+ */
+func (this_ *HistoryMessage) SetMessage(message string) {
+	this_.Message = message
+	this_.MessageLength = uint(len(message))
+}
+
+/**
+ * The payload length
+ */
+func (this_ *HistoryMessage) GetMessageLength() uint {
+	return this_.MessageLength
+}
+
+/**
+ * The payload length
+ */
+func (this_ *HistoryMessage) SetMessageLength(messageLength uint) {
+	this_.MessageLength = messageLength
+}
+
+/**
+ * The custom type of the message
+ */
+func (this_ *HistoryMessage) GetCustomType() string {
+	return this_.CustomType
+}
+
+/**
+ * The custom type of the message
+ */
+func (this_ *HistoryMessage) SetCustomType(customType string) {
+	this_.CustomType = customType
+}
+
+/**
+ * Timestamp of the message received by rtm server
+ */
+func (this_ *HistoryMessage) GetTimestamp() uint64 {
+	return this_.Timestamp
+}
+
+/**
+ * Timestamp of the message received by rtm server
+ */
+func (this_ *HistoryMessage) SetTimestamp(timestamp uint64) {
+	this_.Timestamp = timestamp
+}
+
+func NewHistoryMessage() *HistoryMessage {
+	historyMessage := &HistoryMessage{
+		MessageType:   0,
+		Publisher:     "",
+		Message:       "",
+		MessageLength: 0,
+		CustomType:    "",
+		Timestamp:     0,
+	}
+
+	return historyMessage
+}
 
 // #endregion LinkStateEvent
 

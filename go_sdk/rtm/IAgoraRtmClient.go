@@ -1,8 +1,6 @@
 package agorartm
 
 /*
-
-
 #include "C_IAgoraRtmClient.h"
 #include "C_AgoraRtmBase.h"
 #include <stdlib.h>
@@ -19,7 +17,22 @@ import (
 /**
  *  Configurations for RTM Client.
  */
-type RtmConfig C.struct_C_RtmConfig
+type RtmConfig struct {
+	AppId             string
+	UserId            string
+	AreaCode          RTM_AREA_CODE
+	ProtocolType      uint32
+	PresenceTimeout   uint32
+	HeartbeatInterval uint32
+	Context           unsafe.Pointer
+	UseStringUserId   bool
+	Multipath         bool
+	EventHandler      RtmEventHandler
+	LogConfig         *RtmLogConfig
+	ProxyConfig       *RtmProxyConfig
+	EncryptionConfig  *RtmEncryptionConfig
+	PrivateConfig     *RtmPrivateConfig
+}
 
 // #region RtmConfig
 
@@ -27,28 +40,28 @@ type RtmConfig C.struct_C_RtmConfig
  * The App ID of your project.
  */
 func (this_ *RtmConfig) GetAppId() string {
-	return C.GoString(this_.appId)
+	return this_.AppId
 }
 
 /**
  * The App ID of your project.
  */
 func (this_ *RtmConfig) SetAppId(appId string) {
-	this_.appId = C.CString(appId)
+	this_.AppId = appId
 }
 
 /**
  * The ID of the user.
  */
 func (this_ *RtmConfig) GetUserId() string {
-	return C.GoString(this_.userId)
+	return this_.UserId
 }
 
 /**
  * The ID of the user.
  */
 func (this_ *RtmConfig) SetUserId(userId string) {
-	this_.userId = C.CString(userId)
+	this_.UserId = userId
 }
 
 /**
@@ -61,7 +74,7 @@ func (this_ *RtmConfig) SetUserId(userId string) {
  * that region.
  */
 func (this_ *RtmConfig) GetAreaCode() RTM_AREA_CODE {
-	return RTM_AREA_CODE(this_.areaCode)
+	return this_.AreaCode
 }
 
 /**
@@ -74,7 +87,7 @@ func (this_ *RtmConfig) GetAreaCode() RTM_AREA_CODE {
  * that region.
  */
 func (this_ *RtmConfig) SetAreaCode(areaCode RTM_AREA_CODE) {
-	this_.areaCode = C.enum_C_RTM_AREA_CODE(areaCode)
+	this_.AreaCode = areaCode
 }
 
 /**
@@ -82,7 +95,7 @@ func (this_ *RtmConfig) SetAreaCode(areaCode RTM_AREA_CODE) {
  * and rtm service.
  */
 func (this_ *RtmConfig) GetPresenceTimeout() uint32 {
-	return uint32(this_.presenceTimeout)
+	return this_.PresenceTimeout
 }
 
 /**
@@ -90,7 +103,7 @@ func (this_ *RtmConfig) GetPresenceTimeout() uint32 {
  * and rtm service.
  */
 func (this_ *RtmConfig) SetPresenceTimeout(presenceTimeout uint32) {
-	this_.presenceTimeout = C.uint32_t(presenceTimeout)
+	this_.PresenceTimeout = presenceTimeout
 }
 
 /**
@@ -99,7 +112,7 @@ func (this_ *RtmConfig) SetPresenceTimeout(presenceTimeout uint32) {
  * or unplug the video devices while they are powered.
  */
 func (this_ *RtmConfig) GetContext() unsafe.Pointer {
-	return this_.context
+	return this_.Context
 }
 
 /**
@@ -108,7 +121,7 @@ func (this_ *RtmConfig) GetContext() unsafe.Pointer {
  * or unplug the video devices while they are powered.
  */
 func (this_ *RtmConfig) SetContext(context unsafe.Pointer) {
-	this_.context = context
+	this_.Context = context
 }
 
 /**
@@ -116,7 +129,7 @@ func (this_ *RtmConfig) SetContext(context unsafe.Pointer) {
  * set this value as 'false'. Otherwise errors might occur.
  */
 func (this_ *RtmConfig) GetUseStringUserId() bool {
-	return bool(this_.useStringUserId)
+	return this_.UseStringUserId
 }
 
 /**
@@ -124,70 +137,84 @@ func (this_ *RtmConfig) GetUseStringUserId() bool {
  * set this value as 'false'. Otherwise errors might occur.
  */
 func (this_ *RtmConfig) SetUseStringUserId(useStringUserId bool) {
-	this_.useStringUserId = C.bool(useStringUserId)
+	this_.UseStringUserId = useStringUserId
 }
 
 /**
  * The callbacks handler
  */
-func (this_ *RtmConfig) GetEventHandler() *IRtmEventHandler {
-	return (*IRtmEventHandler)(this_.eventHandler)
+func (this_ *RtmConfig) GetEventHandler() RtmEventHandler {
+	return this_.EventHandler
 }
 
 /**
  * The callbacks handler
  */
-func (this_ *RtmConfig) SetEventHandler(eventHandler *IRtmEventHandler) {
-	this_.eventHandler = unsafe.Pointer(eventHandler)
+func (this_ *RtmConfig) SetEventHandler(eventHandler RtmEventHandler) {
+	this_.EventHandler = eventHandler
 }
 
 /**
  * The config for customer set log path, log size and log level.
  */
-func (this_ *RtmConfig) GetLogConfig() RtmLogConfig {
-	return (RtmLogConfig)(this_.logConfig)
+func (this_ *RtmConfig) GetLogConfig() *RtmLogConfig {
+	return this_.LogConfig
 }
 
 /**
  * The config for customer set log path, log size and log level.
  */
-func (this_ *RtmConfig) SetLogConfig(logConfig RtmLogConfig) {
-	this_.logConfig = (C.struct_C_RtmLogConfig)(logConfig)
+func (this_ *RtmConfig) SetLogConfig(logConfig *RtmLogConfig) {
+	this_.LogConfig = logConfig
 }
 
 /**
  * The config for proxy setting
  */
-func (this_ *RtmConfig) GetProxyConfig() RtmProxyConfig {
-	return (RtmProxyConfig)(this_.proxyConfig)
+func (this_ *RtmConfig) GetProxyConfig() *RtmProxyConfig {
+	return this_.ProxyConfig
 }
 
 /**
  * The config for proxy setting
  */
-func (this_ *RtmConfig) SetProxyConfig(proxyConfig RtmProxyConfig) {
-	this_.proxyConfig = (C.struct_C_RtmProxyConfig)(proxyConfig)
+func (this_ *RtmConfig) SetProxyConfig(proxyConfig *RtmProxyConfig) {
+	this_.ProxyConfig = proxyConfig
 }
 
 /**
  * The config for encryption setting
  */
-func (this_ *RtmConfig) GetEncryptionConfig() RtmEncryptionConfig {
-	return (RtmEncryptionConfig)(this_.encryptionConfig)
+func (this_ *RtmConfig) GetEncryptionConfig() *RtmEncryptionConfig {
+	return this_.EncryptionConfig
 }
 
 /**
  * The config for encryption setting
  */
-func (this_ *RtmConfig) SetEncryptionConfig(encryptionConfig RtmEncryptionConfig) {
-	this_.encryptionConfig = (C.struct_C_RtmEncryptionConfig)(encryptionConfig)
+func (this_ *RtmConfig) SetEncryptionConfig(encryptionConfig *RtmEncryptionConfig) {
+	this_.EncryptionConfig = encryptionConfig
 }
 
 func NewRtmConfig() *RtmConfig {
-	return (*RtmConfig)(C.C_RtmConfig_New())
-}
-func (this_ *RtmConfig) Delete() {
-	C.C_RtmConfig_Delete((*C.struct_C_RtmConfig)(this_))
+	config := &RtmConfig{
+		AppId:             "",
+		UserId:            "",
+		AreaCode:          RTM_AREA_CODE_GLOB,
+		ProtocolType:      0,
+		HeartbeatInterval: 0,
+		Context:           nil,
+		UseStringUserId:   true,
+		Multipath:         false,
+		EventHandler:      nil,
+		LogConfig:         nil,
+		ProxyConfig:       nil,
+		EncryptionConfig:  nil,
+		PrivateConfig:     nil,
+		PresenceTimeout:   30,
+	}
+
+	return config
 }
 
 // #endregion RtmConfig
@@ -202,265 +229,450 @@ func (this_ *RtmConfig) Delete() {
  * only some of the required events instead of all. In the callback methods, the app should avoid
  * time-consuming tasks or calling blocking APIs, otherwise the SDK may not work properly.
  */
-type IRtmEventHandler C.C_IRtmEventHandler
+// 旧的 IRtmEventHandler 已删除，请使用新的 RtmEventHandler 接口
 
-// #region IRtmEventHandler
+// 新的用户友好的事件处理器接口设计
 
-type MessageEvent C.struct_C_MessageEvent
+// RtmEventHandler 定义用户可以实现的事件处理器接口
+// 用户只需要实现需要的方法，未实现的方法会被SDK自动忽略
+//
+// 常用的回调方法：
+//   - OnLoginResult: 登录结果回调
+//   - OnLogoutResult: 登出结果回调
+//   - OnMessageEvent: 消息事件回调
+//   - OnPresenceEvent: 在线状态事件回调
+//   - OnSubscribeResult: 订阅结果回调
+//   - OnPublishResult: 发布结果回调
+//
+// 使用方式一（面向对象）：
+//
+//	type MyEventHandler struct{}
+//	func (h *MyEventHandler) OnLoginResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+//	    // 处理登录结果
+//	}
+//	rtmConfig.SetEventHandler(&MyEventHandler{})
+//
+// 使用方式二（函数式）：
+//
+//	handler := &RtmEventHandlerConfig{
+//	    OnLoginResult: func(requestId uint64, errorCode RTM_ERROR_CODE) {
+//	        // 处理登录结果
+//	    },
+//	}
+//	rtmConfig.SetEventHandler(handler)
+type RtmEventHandler interface {
+	// 标记接口，用于类型约束
+	// 用户必须实现此方法来标识自己是一个事件处理器，空实现即可
+	// 这样可以确保类型安全，防止传入错误的类型
+	IsRtmEventHandler()
+}
+
+// RtmEventHandlerConfig 提供函数式的事件处理器配置
+// 用户只需要设置需要的回调函数，其他保持 nil 即可
+type RtmEventHandlerConfig struct {
+	// 基础回调
+	OnLoginResult     func(requestId uint64, errorCode RTM_ERROR_CODE)
+	OnLogoutResult    func(requestId uint64, errorCode RTM_ERROR_CODE)
+	OnMessageEvent    func(event *MessageEvent)
+	OnPresenceEvent   func(event *PresenceEvent)
+	OnSubscribeResult func(requestId uint64, channelName string, errorCode RTM_ERROR_CODE)
+	OnPublishResult   func(requestId uint64, errorCode RTM_ERROR_CODE)
+
+	// 高级回调
+	OnTopicEvent               func(event *TopicEvent)
+	OnLockEvent                func(event *LockEvent)
+	OnStorageEvent             func(event *StorageEvent)
+	OnConnectionStateChanged   func(channelName string, state RTM_CONNECTION_STATE, reason RTM_CONNECTION_CHANGE_REASON)
+	OnTokenPrivilegeWillExpire func(channelName string)
+	OnJoinResult               func(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE)
+	OnLeaveResult              func(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE)
+	OnJoinTopicResult          func(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE)
+	OnLeaveTopicResult         func(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE)
+	OnSubscribeTopicResult     func(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode RTM_ERROR_CODE)
+
+	// 元数据回调
+	OnSetChannelMetadataResult      func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
+	OnUpdateChannelMetadataResult   func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
+	OnRemoveChannelMetadataResult   func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
+	OnGetChannelMetadataResult      func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, data *IMetadata, errorCode RTM_ERROR_CODE)
+	OnSetUserMetadataResult         func(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
+	OnUpdateUserMetadataResult      func(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
+	OnRemoveUserMetadataResult      func(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
+	OnGetUserMetadataResult         func(requestId uint64, userId string, data *IMetadata, errorCode RTM_ERROR_CODE)
+	OnSubscribeUserMetadataResult   func(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
+	OnUnsubscribeUserMetadataResult func(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
+
+	// 锁回调
+	OnSetLockResult     func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
+	OnRemoveLockResult  func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
+	OnReleaseLockResult func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
+	OnAcquireLockResult func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE, errorDetails string)
+	OnRevokeLockResult  func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
+	OnGetLocksResult    func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockDetailList *LockDetail, count uint, errorCode RTM_ERROR_CODE)
+
+	// 在线状态回调
+	OnWhoNowResult              func(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE)
+	OnGetOnlineUsersResult      func(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE)
+	OnWhereNowResult            func(requestId uint64, channels *ChannelInfo, count uint, errorCode RTM_ERROR_CODE)
+	OnGetUserChannelsResult     func(requestId uint64, channels *ChannelInfo, count uint, errorCode RTM_ERROR_CODE)
+	OnPresenceSetStateResult    func(requestId uint64, errorCode RTM_ERROR_CODE)
+	OnPresenceRemoveStateResult func(requestId uint64, errorCode RTM_ERROR_CODE)
+	OnPresenceGetStateResult    func(requestId uint64, state *UserState, errorCode RTM_ERROR_CODE)
+
+	// 其他回调
+	OnLinkStateEvent              func(event *LinkStateEvent)
+	OnPublishTopicMessageResult   func(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
+	OnRenewTokenResult            func(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE)
+	OnUnsubscribeTopicResult      func(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
+	OnGetSubscribedUserListResult func(requestId uint64, channelName string, topic string, user *UserList, errorCode RTM_ERROR_CODE)
+	OnGetHistoryMessagesResult    func(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode RTM_ERROR_CODE)
+}
+
+// 让函数式配置实现接口
+func (config *RtmEventHandlerConfig) IsRtmEventHandler() {}
 
 // #region MessageEvent
+type MessageEvent struct {
+	ChannelType   RTM_CHANNEL_TYPE
+	MessageType   RTM_MESSAGE_TYPE
+	ChannelName   string
+	ChannelTopic  string
+	Message       []byte
+	MessageLength int32
+	Publisher     string
+	CustomType    string
+}
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *MessageEvent) GetChannelType() RTM_CHANNEL_TYPE {
-	return RTM_CHANNEL_TYPE(this_.channelType)
+	return this_.ChannelType
 }
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *MessageEvent) SetChannelType(channelType RTM_CHANNEL_TYPE) {
-	this_.channelType = C.enum_C_RTM_CHANNEL_TYPE(channelType)
+	this_.ChannelType = channelType
 }
 
 /**
  * Message type
  */
 func (this_ *MessageEvent) GetMessageType() RTM_MESSAGE_TYPE {
-	return RTM_MESSAGE_TYPE(this_.messageType)
+	return this_.MessageType
 }
 
 /**
  * Message type
  */
 func (this_ *MessageEvent) SetMessageType(messageType RTM_MESSAGE_TYPE) {
-	this_.messageType = C.enum_C_RTM_MESSAGE_TYPE(messageType)
+	this_.MessageType = messageType
 }
 
 /**
  * The channel which the message was published
  */
 func (this_ *MessageEvent) GetChannelName() string {
-	return C.GoString(this_.channelName)
+	return this_.ChannelName
 }
 
 /**
  * The channel which the message was published
  */
 func (this_ *MessageEvent) SetChannelName(channelName string) {
-	this_.channelName = C.CString(channelName)
+	this_.ChannelName = channelName
 }
 
 /**
  * If the channelType is RTM_CHANNEL_TYPE_STREAM, which topic the message came from. only for RTM_CHANNEL_TYPE_STREAM
  */
 func (this_ *MessageEvent) GetChannelTopic() string {
-	return C.GoString(this_.channelTopic)
+	return this_.ChannelTopic
 }
 
 /**
  * If the channelType is RTM_CHANNEL_TYPE_STREAM, which topic the message came from. only for RTM_CHANNEL_TYPE_STREAM
  */
 func (this_ *MessageEvent) SetChannelTopic(channelTopic string) {
-	this_.channelTopic = C.CString(channelTopic)
+	this_.ChannelTopic = channelTopic
 }
 
 /**
  * The payload
  */
 func (this_ *MessageEvent) GetMessage() []byte {
-	return C.GoBytes(
-		unsafe.Pointer(this_.message),
-		C.int(this_.GetMessageLength()),
-	)
+	return this_.Message
 }
 
 /**
  * The payload
  */
 func (this_ *MessageEvent) SetMessage(message []byte) {
-	this_.message = (*C.char)(C.CBytes(message))
+	this_.Message = message
+	this_.MessageLength = int32(len(message))
 }
 
 /**
  * The payload length
  */
 func (this_ *MessageEvent) GetMessageLength() uint {
-	return uint(this_.messageLength)
+	return uint(this_.MessageLength)
 }
 
 /**
  * The payload length
  */
 func (this_ *MessageEvent) SetMessageLength(messageLength uint) {
-	this_.messageLength = C.size_t(messageLength)
+	this_.MessageLength = int32(messageLength)
 }
 
 /**
  * The publisher
  */
 func (this_ *MessageEvent) GetPublisher() string {
-	return C.GoString(this_.publisher)
+	return this_.Publisher
 }
 
 /**
  * The publisher
  */
 func (this_ *MessageEvent) SetPublisher(publisher string) {
-	this_.publisher = C.CString(publisher)
+	this_.Publisher = publisher
 }
 
 /**
  * The custom type of the message
  */
 func (this_ *MessageEvent) GetCustomType() string {
-	return C.GoString(this_.customType)
+	return this_.CustomType
 }
 
 /**
  * The publisher
  */
 func (this_ *MessageEvent) SetCustomType(customType string) {
-	this_.customType = C.CString(customType)
+	this_.CustomType = customType
 }
 
 func NewMessageEvent() *MessageEvent {
-	return (*MessageEvent)(C.C_MessageEvent_New())
+	event := &MessageEvent{
+		ChannelType:   RTM_CHANNEL_TYPE_NONE,
+		MessageType:   RTM_MESSAGE_TYPE_STRING,
+		ChannelName:   "",
+		ChannelTopic:  "",
+		Message:       make([]byte, 0),
+		MessageLength: 0,
+		Publisher:     "",
+		CustomType:    "",
+	}
+
+	return event
 }
-func (this_ *MessageEvent) Delete() {
-	C.C_MessageEvent_Delete((*C.struct_C_MessageEvent)(this_))
+
+// 从C结构体安全转换
+func (this_ *MessageEvent) fromC(cEvent *C.struct_C_MessageEvent) {
+	if cEvent == nil {
+		return
+	}
+
+	if !IsValidMemory(unsafe.Pointer(cEvent)) {
+		return
+	}
+
+	this_.ChannelType = RTM_CHANNEL_TYPE(cEvent.channelType)
+	this_.MessageType = RTM_MESSAGE_TYPE(cEvent.messageType)
+
+	if cEvent.channelName != nil {
+		this_.ChannelName = C.GoString(cEvent.channelName)
+	}
+	if cEvent.channelTopic != nil {
+		this_.ChannelTopic = C.GoString(cEvent.channelTopic)
+	}
+	if cEvent.publisher != nil {
+		this_.Publisher = C.GoString(cEvent.publisher)
+	}
+	if cEvent.customType != nil {
+		this_.CustomType = C.GoString(cEvent.customType)
+	}
+
+	if cEvent.message != nil && cEvent.messageLength > 0 {
+		// 检查消息指针是否有效
+		if IsValidMemory(unsafe.Pointer(cEvent.message)) {
+			messageSize := int(cEvent.messageLength)
+			if messageSize > 0 {
+				this_.Message = make([]byte, messageSize)
+				for i := 0; i < messageSize; i++ {
+					this_.Message[i] = *(*byte)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.message)) + uintptr(i)))
+				}
+				this_.MessageLength = int32(messageSize)
+			} else {
+				this_.Message = make([]byte, 0)
+				this_.MessageLength = 0
+			}
+		} else {
+			this_.Message = make([]byte, 0)
+			this_.MessageLength = 0
+		}
+	} else {
+		this_.Message = make([]byte, 0)
+		this_.MessageLength = 0
+	}
 }
 
 // #endregion MessageEvent
 
-type IntervalInfo C.struct_C_IntervalInfo
+type IntervalInfo struct {
+	JoinUserList    *UserList
+	LeaveUserList   *UserList
+	TimeoutUserList *UserList
+	UserStateList   []*UserState
+	UserStateCount  uint
+}
 
 // #region IntervalInfo
 
 /**
  * Joined users during this interval
  */
-func (this_ *IntervalInfo) GetJoinUserList() UserList {
-	return (UserList)(this_.joinUserList)
+func (this_ *IntervalInfo) GetJoinUserList() *UserList {
+	return this_.JoinUserList
 }
 
 /**
  * Joined users during this interval
  */
-func (this_ *IntervalInfo) SetJoinUserList(joinUserList UserList) {
-	this_.joinUserList = C.struct_C_UserList(joinUserList)
+func (this_ *IntervalInfo) SetJoinUserList(joinUserList *UserList) {
+	this_.JoinUserList = joinUserList
 }
 
 /**
  * Left users during this interval
  */
-func (this_ *IntervalInfo) GetLeaveUserList() UserList {
-	return (UserList)(this_.leaveUserList)
+func (this_ *IntervalInfo) GetLeaveUserList() *UserList {
+	return this_.LeaveUserList
 }
 
 /**
  * Left users during this interval
  */
-func (this_ *IntervalInfo) SetLeaveUserList(leaveUserList UserList) {
-	this_.leaveUserList = C.struct_C_UserList(leaveUserList)
+func (this_ *IntervalInfo) SetLeaveUserList(leaveUserList *UserList) {
+	this_.LeaveUserList = leaveUserList
 }
 
 /**
  * Timeout users during this interval
  */
-func (this_ *IntervalInfo) GetTimeoutUserList() UserList {
-	return (UserList)(this_.timeoutUserList)
+func (this_ *IntervalInfo) GetTimeoutUserList() *UserList {
+	return this_.TimeoutUserList
 }
 
 /**
  * Timeout users during this interval
  */
-func (this_ *IntervalInfo) SetTimeoutUserList(timeoutUserList UserList) {
-	this_.timeoutUserList = C.struct_C_UserList(timeoutUserList)
+func (this_ *IntervalInfo) SetTimeoutUserList(timeoutUserList *UserList) {
+	this_.TimeoutUserList = timeoutUserList
 }
 
 /**
  * The user state changed during this interval
  */
-func (this_ *IntervalInfo) GetUserStateList() []UserState {
-	count := this_.GetUserStateCount()
-	return unsafe.Slice((*UserState)(this_.userStateList), count)
+func (this_ *IntervalInfo) GetUserStateList() []*UserState {
+	return this_.UserStateList
 }
 
 /**
  * The user state changed during this interval
  */
-func (this_ *IntervalInfo) SetUserStateList(userStateList []UserState) {
-	this_.userStateList = (*C.struct_C_UserState)(unsafe.SliceData(userStateList))
+func (this_ *IntervalInfo) SetUserStateList(userStateList []*UserState) {
+	this_.UserStateList = userStateList
 }
 
 /**
  * The user count
  */
 func (this_ *IntervalInfo) GetUserStateCount() uint {
-	return uint(this_.userStateCount)
+	return this_.UserStateCount
 }
 
 /**
  * The user count
  */
 func (this_ *IntervalInfo) SetUserStateCount(userStateCount uint) {
-	this_.userStateCount = C.size_t(userStateCount)
+	this_.UserStateCount = userStateCount
 }
 
 func NewIntervalInfo() *IntervalInfo {
-	return (*IntervalInfo)(C.C_IntervalInfo_New())
-}
-func (this_ *IntervalInfo) Delete() {
-	C.C_IntervalInfo_Delete((*C.struct_C_IntervalInfo)(this_))
+	info := &IntervalInfo{
+		JoinUserList:    NewUserList(),
+		LeaveUserList:   NewUserList(),
+		TimeoutUserList: NewUserList(),
+		UserStateList:   make([]*UserState, 0),
+		UserStateCount:  0,
+	}
+
+	return info
 }
 
 // #endregion IntervalInfo
 
-type SnapshotInfo C.struct_C_SnapshotInfo
+type SnapshotInfo struct {
+	UserStateList []*UserState
+	UserCount     uint
+}
 
 // #region SnapshotInfo
 
 /**
  * The user state in this snapshot event
  */
-func (this_ *SnapshotInfo) GetUserStateList() []UserState {
-	count := this_.GetUserCount()
-	return unsafe.Slice((*UserState)(this_.userStateList), count)
+func (this_ *SnapshotInfo) GetUserStateList() []*UserState {
+	return this_.UserStateList
 }
 
 /**
  * The user state in this snapshot event
  */
-func (this_ *SnapshotInfo) SetUserStateList(userStateList []UserState) {
-	this_.userStateList = (*C.struct_C_UserState)(unsafe.SliceData(userStateList))
+func (this_ *SnapshotInfo) SetUserStateList(userStateList []*UserState) {
+	this_.UserStateList = userStateList
 }
 
 /**
  * The user count
  */
 func (this_ *SnapshotInfo) GetUserCount() uint {
-	return uint(this_.userCount)
+	return this_.UserCount
 }
 
 /**
  * The user count
  */
 func (this_ *SnapshotInfo) SetUserCount(userCount uint) {
-	this_.userCount = C.size_t(userCount)
+	this_.UserCount = userCount
 }
 
 func NewSnapshotInfo() *SnapshotInfo {
-	return (*SnapshotInfo)(C.C_SnapshotInfo_New())
-}
-func (this_ *SnapshotInfo) Delete() {
-	C.C_SnapshotInfo_Delete((*C.struct_C_SnapshotInfo)(this_))
+	info := &SnapshotInfo{
+		UserStateList: make([]*UserState, 0),
+		UserCount:     0,
+	}
+
+	return info
 }
 
 // #endregion SnapshotInfo
 
-type PresenceEvent C.struct_C_PresenceEvent
+type PresenceEvent struct {
+	Type           RTM_PRESENCE_EVENT_TYPE
+	ChannelType    RTM_CHANNEL_TYPE
+	ChannelName    string
+	Publisher      string
+	StateItems     []*StateItem
+	StateItemCount uint
+	Interval       *IntervalInfo
+	Snapshot       *SnapshotInfo
+}
 
 // #region PresenceEvent
 
@@ -468,125 +680,306 @@ type PresenceEvent C.struct_C_PresenceEvent
  * Indicate presence event type
  */
 func (this_ *PresenceEvent) GetType() RTM_PRESENCE_EVENT_TYPE {
-	return RTM_PRESENCE_EVENT_TYPE(this_._type)
+	return this_.Type
 }
 
 /**
  * Indicate presence event type
  */
 func (this_ *PresenceEvent) SetType(_type RTM_PRESENCE_EVENT_TYPE) {
-	this_._type = C.enum_C_RTM_PRESENCE_EVENT_TYPE(_type)
+	this_.Type = _type
 }
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *PresenceEvent) GetChannelType() RTM_CHANNEL_TYPE {
-	return RTM_CHANNEL_TYPE(this_.channelType)
+	return this_.ChannelType
 }
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
-func (this_ *PresenceEvent) SetChannelType(_type RTM_CHANNEL_TYPE) {
-	this_._type = C.enum_C_RTM_CHANNEL_TYPE(_type)
+func (this_ *PresenceEvent) SetChannelType(channelType RTM_CHANNEL_TYPE) {
+	this_.ChannelType = channelType
 }
 
 /**
  * The channel which the presence event was triggered
  */
 func (this_ *PresenceEvent) GetChannelName() string {
-	return C.GoString(this_.channelName)
+	return this_.ChannelName
 }
 
 /**
  * The channel which the presence event was triggered
  */
 func (this_ *PresenceEvent) SetChannelName(channelName string) {
-	this_.channelName = C.CString(channelName)
+	this_.ChannelName = channelName
 }
 
 /**
  * The user who triggered this event.
  */
 func (this_ *PresenceEvent) GetPublisher() string {
-	return C.GoString(this_.publisher)
+	return this_.Publisher
 }
 
 /**
  * The user who triggered this event.
  */
 func (this_ *PresenceEvent) SetPublisher(publisher string) {
-	this_.publisher = C.CString(publisher)
+	this_.Publisher = publisher
 }
 
 /**
  * The user states
  */
-func (this_ *PresenceEvent) GetStateItems() []StateItem {
-	count := this_.GetStateItemCount()
-	return unsafe.Slice((*StateItem)(this_.stateItems), count)
+func (this_ *PresenceEvent) GetStateItems() []*StateItem {
+	return this_.StateItems
 }
 
 /**
  * The user states
  */
-func (this_ *PresenceEvent) SetStateItems(stateItems []StateItem) {
-	this_.stateItems = (*C.struct_C_StateItem)(unsafe.SliceData(stateItems))
+func (this_ *PresenceEvent) SetStateItems(stateItems []*StateItem) {
+	this_.StateItems = stateItems
 }
 
 /**
  * The states count
  */
 func (this_ *PresenceEvent) GetStateItemCount() uint {
-	return uint(this_.stateItemCount)
+	return this_.StateItemCount
 }
 
 /**
  * The states count
  */
 func (this_ *PresenceEvent) SetStateItemCount(stateItemCount uint) {
-	this_.stateItemCount = C.size_t(stateItemCount)
+	this_.StateItemCount = stateItemCount
 }
 
 /**
  * Only valid when in interval mode
  */
-func (this_ *PresenceEvent) GetInterval() IntervalInfo {
-	return IntervalInfo(this_.interval)
+func (this_ *PresenceEvent) GetInterval() *IntervalInfo {
+	return this_.Interval
 }
 
 /**
  * Only valid when in interval mode
  */
-func (this_ *PresenceEvent) SetInterval(interval IntervalInfo) {
-	this_.interval = (C.struct_C_IntervalInfo)(interval)
+func (this_ *PresenceEvent) SetInterval(interval *IntervalInfo) {
+	this_.Interval = interval
 }
 
 /**
  * Only valid when receive snapshot event
  */
-func (this_ *PresenceEvent) GetSnapshot() SnapshotInfo {
-	return SnapshotInfo(this_.snapshot)
+func (this_ *PresenceEvent) GetSnapshot() *SnapshotInfo {
+	return this_.Snapshot
 }
 
 /**
- * Only valid when receive snapshot event
+ * Only valid when in interval mode
  */
-func (this_ *PresenceEvent) SetSnapshot(snapshot SnapshotInfo) {
-	this_.snapshot = (C.struct_C_SnapshotInfo)(snapshot)
+func (this_ *PresenceEvent) SetSnapshot(snapshot *SnapshotInfo) {
+	this_.Snapshot = snapshot
 }
 
 func NewPresenceEvent() *PresenceEvent {
-	return (*PresenceEvent)(C.C_PresenceEvent_New())
+	event := &PresenceEvent{
+		Type:           RTM_PRESENCE_EVENT_TYPE_NONE,
+		ChannelType:    RTM_CHANNEL_TYPE_NONE,
+		ChannelName:    "",
+		Publisher:      "",
+		StateItems:     make([]*StateItem, 0),
+		StateItemCount: 0,
+		Interval:       nil,
+		Snapshot:       nil,
+	}
+
+	return event
 }
-func (this_ *PresenceEvent) Delete() {
-	C.C_PresenceEvent_Delete((*C.struct_C_PresenceEvent)(this_))
+
+func (this_ *PresenceEvent) fromC(cEvent *C.struct_C_PresenceEvent) {
+	if cEvent == nil {
+		return
+	}
+
+	if !IsValidMemory(unsafe.Pointer(cEvent)) {
+		return
+	}
+
+	// 从C对象读取数据
+	this_.Type = RTM_PRESENCE_EVENT_TYPE(cEvent._type)
+	this_.ChannelType = RTM_CHANNEL_TYPE(cEvent.channelType)
+
+	if cEvent.channelName != nil {
+		this_.ChannelName = C.GoString(cEvent.channelName)
+	}
+	if cEvent.publisher != nil {
+		this_.Publisher = C.GoString(cEvent.publisher)
+	}
+
+	// 处理StateItems数组
+	if cEvent.stateItems != nil && cEvent.stateItemCount > 0 {
+		// 检查数组指针是否有效
+		if IsValidMemory(unsafe.Pointer(cEvent.stateItems)) {
+			itemCount := int(cEvent.stateItemCount)
+			if itemCount > 0 {
+				this_.StateItems = make([]*StateItem, itemCount)
+				this_.StateItemCount = uint(itemCount)
+
+				// 安全地复制StateItem数据
+				for i := 0; i < itemCount; i++ {
+					cItem := (*C.struct_C_StateItem)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.stateItems)) + uintptr(i)*unsafe.Sizeof(C.struct_C_StateItem{})))
+					if cItem != nil && IsValidMemory(unsafe.Pointer(cItem)) {
+						stateItem := NewStateItem()
+						if stateItem != nil {
+							// 直接设置字段，因为StateItem结构简单
+							if cItem.key != nil {
+								stateItem.Key = FastSafeCGoString(cItem.key)
+							}
+							if cItem.value != nil {
+								stateItem.Value = FastSafeCGoString(cItem.value)
+							}
+							this_.StateItems[i] = stateItem
+						}
+					}
+				}
+			} else {
+				this_.StateItems = make([]*StateItem, 0)
+				this_.StateItemCount = 0
+			}
+		} else {
+			this_.StateItems = make([]*StateItem, 0)
+			this_.StateItemCount = 0
+		}
+	} else {
+		this_.StateItems = make([]*StateItem, 0)
+		this_.StateItemCount = 0
+	}
+
+	// 处理Interval信息 - 注意这是值类型，不是指针
+	this_.Interval = NewIntervalInfo()
+	if this_.Interval != nil {
+		// 直接设置字段，因为IntervalInfo结构相对简单
+		if cEvent.interval.userStateList != nil && cEvent.interval.userStateCount > 0 {
+			// 检查数组指针是否有效
+			if IsValidMemory(unsafe.Pointer(cEvent.interval.userStateList)) {
+				userCount := int(cEvent.interval.userStateCount)
+				if userCount > 0 {
+					this_.Interval.UserStateList = make([]*UserState, userCount)
+					this_.Interval.UserStateCount = uint(userCount)
+
+					for i := 0; i < userCount; i++ {
+						cUserState := (*C.struct_C_UserState)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.interval.userStateList)) + uintptr(i)*unsafe.Sizeof(C.struct_C_UserState{})))
+						if cUserState != nil && IsValidMemory(unsafe.Pointer(cUserState)) {
+							userState := NewUserState()
+							if userState != nil {
+								if cUserState.userId != nil {
+									userState.UserId = FastSafeCGoString(cUserState.userId)
+								}
+								// 处理states数组
+								if cUserState.states != nil && cUserState.statesCount > 0 {
+									// 检查states数组指针是否有效
+									if IsValidMemory(unsafe.Pointer(cUserState.states)) {
+										stateCount := int(cUserState.statesCount)
+										if stateCount > 0 {
+											userState.States = make([]StateItem, stateCount)
+											userState.StatesCount = uint(stateCount)
+
+											for j := 0; j < stateCount; j++ {
+												cState := (*C.struct_C_StateItem)(unsafe.Pointer(uintptr(unsafe.Pointer(cUserState.states)) + uintptr(j)*unsafe.Sizeof(C.struct_C_StateItem{})))
+												if cState != nil && IsValidMemory(unsafe.Pointer(cState)) {
+													stateItem := StateItem{}
+													if cState.key != nil {
+														stateItem.Key = FastSafeCGoString(cState.key)
+													}
+													if cState.value != nil {
+														stateItem.Value = FastSafeCGoString(cState.value)
+													}
+													userState.States[j] = stateItem
+												}
+											}
+										}
+									}
+								}
+								this_.Interval.UserStateList[i] = userState
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// 处理Snapshot信息 - 注意这是值类型，不是指针
+	this_.Snapshot = NewSnapshotInfo()
+	if this_.Snapshot != nil {
+		// 直接设置字段，因为SnapshotInfo结构相对简单
+		if cEvent.snapshot.userStateList != nil && cEvent.snapshot.userCount > 0 {
+			// 检查数组指针是否有效
+			if IsValidMemory(unsafe.Pointer(cEvent.snapshot.userStateList)) {
+				userCount := int(cEvent.snapshot.userCount)
+				if userCount > 0 {
+					this_.Snapshot.UserStateList = make([]*UserState, userCount)
+					this_.Snapshot.UserCount = uint(userCount)
+
+					for i := 0; i < userCount; i++ {
+						cUserState := (*C.struct_C_UserState)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.snapshot.userStateList)) + uintptr(i)*unsafe.Sizeof(C.struct_C_UserState{})))
+						if cUserState != nil && IsValidMemory(unsafe.Pointer(cUserState)) {
+							userState := NewUserState()
+							if userState != nil {
+								if cUserState.userId != nil {
+									userState.UserId = FastSafeCGoString(cUserState.userId)
+								}
+								// 处理states数组
+								if cUserState.states != nil && cUserState.statesCount > 0 {
+									// 检查states数组指针是否有效
+									if IsValidMemory(unsafe.Pointer(cUserState.states)) {
+										stateCount := int(cUserState.statesCount)
+										if stateCount > 0 {
+											userState.States = make([]StateItem, stateCount)
+											userState.StatesCount = uint(stateCount)
+
+											for j := 0; j < stateCount; j++ {
+												cState := (*C.struct_C_StateItem)(unsafe.Pointer(uintptr(unsafe.Pointer(cUserState.states)) + uintptr(j)*unsafe.Sizeof(C.struct_C_StateItem{})))
+												if cState != nil && IsValidMemory(unsafe.Pointer(cState)) {
+													stateItem := StateItem{}
+													if cState.key != nil {
+														stateItem.Key = FastSafeCGoString(cState.key)
+													}
+													if cState.value != nil {
+														stateItem.Value = FastSafeCGoString(cState.value)
+													}
+													userState.States[j] = stateItem
+												}
+											}
+										}
+									}
+								}
+								this_.Snapshot.UserStateList[i] = userState
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 // #endregion PresenceEvent
 
-type TopicEvent C.struct_C_TopicEvent
+type TopicEvent struct {
+	Type           RTM_TOPIC_EVENT_TYPE
+	ChannelName    string
+	Publisher      string
+	TopicInfos     []*TopicInfo
+	TopicInfoCount uint
+}
 
 // #region TopicEvent
 
@@ -594,83 +987,174 @@ type TopicEvent C.struct_C_TopicEvent
  * Indicate topic event type
  */
 func (this_ *TopicEvent) GetType() RTM_TOPIC_EVENT_TYPE {
-	return RTM_TOPIC_EVENT_TYPE(this_._type)
+	return this_.Type
 }
 
 /**
  * Indicate topic event type
  */
 func (this_ *TopicEvent) SetType(_type RTM_TOPIC_EVENT_TYPE) {
-	this_._type = C.enum_C_RTM_TOPIC_EVENT_TYPE(_type)
+	this_.Type = _type
 }
 
 /**
  * The channel which the topic event was triggered
  */
 func (this_ *TopicEvent) GetChannelName() string {
-	return C.GoString(this_.channelName)
+	return this_.ChannelName
 }
 
 /**
  * The channel which the topic event was triggered
  */
 func (this_ *TopicEvent) SetChannelName(channelName string) {
-	this_.channelName = C.CString(channelName)
+	this_.ChannelName = channelName
 }
 
 /**
  * The user who triggered this event.
  */
 func (this_ *TopicEvent) GetPublisher() string {
-	return C.GoString(this_.publisher)
+	return this_.Publisher
 }
 
 /**
  * The user who triggered this event.
  */
 func (this_ *TopicEvent) SetPublisher(publisher string) {
-	this_.publisher = C.CString(publisher)
+	this_.Publisher = publisher
 }
 
 /**
  * Topic information array.
  */
-func (this_ *TopicEvent) GetTopicInfos() []TopicInfo {
-	count := this_.GetTopicInfoCount()
-	return unsafe.Slice((*TopicInfo)(this_.topicInfos), count)
+func (this_ *TopicEvent) GetTopicInfos() []*TopicInfo {
+	return this_.TopicInfos
 }
 
 /**
  * Topic information array.
  */
-func (this_ *TopicEvent) SetTopicInfos(topicInfos []TopicInfo) {
-	this_.topicInfos = (*C.struct_C_TopicInfo)(unsafe.SliceData(topicInfos))
+func (this_ *TopicEvent) SetTopicInfos(topicInfos []*TopicInfo) {
+	this_.TopicInfos = topicInfos
 }
 
 /**
  * The count of topicInfos.
  */
 func (this_ *TopicEvent) GetTopicInfoCount() uint {
-	return uint(this_.topicInfoCount)
+	return this_.TopicInfoCount
 }
 
 /**
  * The count of topicInfos.
  */
 func (this_ *TopicEvent) SetTopicInfoCount(topicInfoCount uint) {
-	this_.topicInfoCount = C.size_t(topicInfoCount)
+	this_.TopicInfoCount = topicInfoCount
 }
 
 func NewTopicEvent() *TopicEvent {
-	return (*TopicEvent)(C.C_TopicEvent_New())
+	event := &TopicEvent{
+		Type:           RTM_TOPIC_EVENT_TYPE_NONE,
+		ChannelName:    "",
+		Publisher:      "",
+		TopicInfos:     make([]*TopicInfo, 0),
+		TopicInfoCount: 0,
+	}
+
+	return event
 }
-func (this_ *TopicEvent) Delete() {
-	C.C_TopicEvent_Delete((*C.struct_C_TopicEvent)(this_))
+
+func (this_ *TopicEvent) fromC(cEvent *C.struct_C_TopicEvent) {
+	if cEvent == nil {
+		return
+	}
+
+	if !IsValidMemory(unsafe.Pointer(cEvent)) {
+		return
+	}
+
+	// 从C对象读取数据
+	this_.Type = RTM_TOPIC_EVENT_TYPE(cEvent._type)
+
+	if cEvent.channelName != nil {
+		this_.ChannelName = C.GoString(cEvent.channelName)
+	}
+	if cEvent.publisher != nil {
+		this_.Publisher = C.GoString(cEvent.publisher)
+	}
+
+	// 处理TopicInfos数组
+	if cEvent.topicInfos != nil && cEvent.topicInfoCount > 0 {
+		// 检查数组指针是否有效
+		if IsValidMemory(unsafe.Pointer(cEvent.topicInfos)) {
+			infoCount := int(cEvent.topicInfoCount)
+			if infoCount > 0 {
+				this_.TopicInfos = make([]*TopicInfo, infoCount)
+				this_.TopicInfoCount = uint(infoCount)
+
+				// 安全地复制TopicInfo数据
+				for i := 0; i < infoCount; i++ {
+					cTopicInfo := (*C.struct_C_TopicInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.topicInfos)) + uintptr(i)*unsafe.Sizeof(C.struct_C_TopicInfo{})))
+					if cTopicInfo != nil && IsValidMemory(unsafe.Pointer(cTopicInfo)) {
+						topicInfo := NewTopicInfo()
+						if topicInfo != nil {
+							// 直接设置字段，因为TopicInfo结构相对简单
+							if cTopicInfo.topic != nil {
+								topicInfo.Topic = FastSafeCGoString(cTopicInfo.topic)
+							}
+							// 处理publishers数组
+							if cTopicInfo.publishers != nil && cTopicInfo.publisherCount > 0 {
+								// 检查publishers数组指针是否有效
+								if IsValidMemory(unsafe.Pointer(cTopicInfo.publishers)) {
+									pubCount := int(cTopicInfo.publisherCount)
+									if pubCount > 0 {
+										topicInfo.Publishers = make([]PublisherInfo, pubCount)
+										topicInfo.PublisherCount = uint(pubCount)
+
+										for j := 0; j < pubCount; j++ {
+											cPublisher := (*C.struct_C_PublisherInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cTopicInfo.publishers)) + uintptr(j)*unsafe.Sizeof(C.struct_C_PublisherInfo{})))
+											if cPublisher != nil && IsValidMemory(unsafe.Pointer(cPublisher)) {
+												publisherInfo := PublisherInfo{}
+												if cPublisher.publisherUserId != nil {
+													publisherInfo.PublisherUserId = FastSafeCGoString(cPublisher.publisherUserId)
+												}
+												if cPublisher.publisherMeta != nil {
+													publisherInfo.PublisherMeta = FastSafeCGoString(cPublisher.publisherMeta)
+												}
+												topicInfo.Publishers[j] = publisherInfo
+											}
+										}
+									}
+								} else {
+									topicInfo.Publishers = make([]PublisherInfo, 0)
+									topicInfo.PublisherCount = 0
+								}
+							} else {
+								topicInfo.Publishers = make([]PublisherInfo, 0)
+								topicInfo.PublisherCount = 0
+							}
+							this_.TopicInfos[i] = topicInfo
+						}
+					}
+				}
+			}
+		}
+	} else {
+		this_.TopicInfos = make([]*TopicInfo, 0)
+		this_.TopicInfoCount = 0
+	}
 }
 
 // #endregion TopicEvent
 
-type LockEvent C.struct_C_LockEvent
+type LockEvent struct {
+	ChannelType    RTM_CHANNEL_TYPE
+	EventType      RTM_LOCK_EVENT_TYPE
+	ChannelName    string
+	LockDetailList []*LockDetail
+	Count          uint
+}
 
 // #region LockEvent
 
@@ -678,83 +1162,145 @@ type LockEvent C.struct_C_LockEvent
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *LockEvent) GetChannelType() RTM_CHANNEL_TYPE {
-	return RTM_CHANNEL_TYPE(this_.channelType)
+	return this_.ChannelType
 }
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *LockEvent) SetChannelType(channelType RTM_CHANNEL_TYPE) {
-	this_.channelType = C.enum_C_RTM_CHANNEL_TYPE(channelType)
+	this_.ChannelType = channelType
 }
 
 /**
  * Lock event type, indicate lock states
  */
 func (this_ *LockEvent) GetEventType() RTM_LOCK_EVENT_TYPE {
-	return RTM_LOCK_EVENT_TYPE(this_.eventType)
+	return this_.EventType
 }
 
 /**
  * Lock event type, indicate lock states
  */
 func (this_ *LockEvent) SetEventType(eventType RTM_LOCK_EVENT_TYPE) {
-	this_.eventType = C.enum_C_RTM_LOCK_EVENT_TYPE(eventType)
+	this_.EventType = eventType
 }
 
 /**
  * The channel which the lock event was triggered
  */
 func (this_ *LockEvent) GetChannelName() string {
-	return C.GoString(this_.channelName)
+	return this_.ChannelName
 }
 
 /**
  * The channel which the lock event was triggered
  */
 func (this_ *LockEvent) SetChannelName(channelName string) {
-	this_.channelName = C.CString(channelName)
+	this_.ChannelName = channelName
 }
 
 /**
  * The detail information of locks
  */
-func (this_ *LockEvent) GetLockDetailList() []LockDetail {
-	count := this_.GetCount()
-	return unsafe.Slice((*LockDetail)(this_.lockDetailList), count)
+func (this_ *LockEvent) GetLockDetailList() []*LockDetail {
+	return this_.LockDetailList
 }
 
 /**
  * The detail information of locks
  */
-func (this_ *LockEvent) SetLockDetailList(lockDetailList []LockDetail) {
-	this_.lockDetailList = (*C.struct_C_LockDetail)(unsafe.SliceData(lockDetailList))
+func (this_ *LockEvent) SetLockDetailList(lockDetailList []*LockDetail) {
+	this_.LockDetailList = lockDetailList
 }
 
 /**
  * The count of locks
  */
 func (this_ *LockEvent) GetCount() uint {
-	return uint(this_.count)
+	return this_.Count
 }
 
 /**
  * The count of locks
  */
 func (this_ *LockEvent) SetCount(count uint) {
-	this_.count = C.size_t(count)
+	this_.Count = count
 }
 
 func NewLockEvent() *LockEvent {
-	return (*LockEvent)(C.C_LockEvent_New())
+	event := &LockEvent{
+		ChannelType:    RTM_CHANNEL_TYPE_NONE,
+		EventType:      RTM_LOCK_EVENT_TYPE_NONE,
+		ChannelName:    "",
+		LockDetailList: make([]*LockDetail, 0),
+		Count:          0,
+	}
+
+	return event
 }
-func (this_ *LockEvent) Delete() {
-	C.C_LockEvent_Delete((*C.struct_C_LockEvent)(this_))
+
+func (this_ *LockEvent) fromC(cEvent *C.struct_C_LockEvent) {
+	if cEvent == nil {
+		return
+	}
+
+	if !IsValidMemory(unsafe.Pointer(cEvent)) {
+		return
+	}
+
+	// 从C对象读取数据
+	this_.ChannelType = RTM_CHANNEL_TYPE(cEvent.channelType)
+	this_.EventType = RTM_LOCK_EVENT_TYPE(cEvent.eventType)
+
+	if cEvent.channelName != nil {
+		this_.ChannelName = C.GoString(cEvent.channelName)
+	}
+
+	// 处理LockDetailList数组
+	if cEvent.lockDetailList != nil && cEvent.count > 0 {
+		// 检查数组指针是否有效
+		if IsValidMemory(unsafe.Pointer(cEvent.lockDetailList)) {
+			detailCount := int(cEvent.count)
+			if detailCount > 0 {
+				this_.LockDetailList = make([]*LockDetail, detailCount)
+				this_.Count = uint(detailCount)
+
+				// 安全地复制LockDetail数据
+				for i := 0; i < detailCount; i++ {
+					cLockDetail := (*C.struct_C_LockDetail)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.lockDetailList)) + uintptr(i)*unsafe.Sizeof(C.struct_C_LockDetail{})))
+					if cLockDetail != nil && IsValidMemory(unsafe.Pointer(cLockDetail)) {
+						lockDetail := NewLockDetail()
+						if lockDetail != nil {
+							// 直接设置字段，因为LockDetail结构简单
+							if cLockDetail.lockName != nil {
+								lockDetail.SetLockName(FastSafeCGoString(cLockDetail.lockName))
+							}
+							if cLockDetail.owner != nil {
+								lockDetail.SetOwner(FastSafeCGoString(cLockDetail.owner))
+							}
+							lockDetail.SetTtl(uint32(cLockDetail.ttl))
+							this_.LockDetailList[i] = lockDetail
+						}
+					}
+				}
+			}
+		}
+	} else {
+		this_.LockDetailList = make([]*LockDetail, 0)
+		this_.Count = 0
+	}
 }
 
 // #endregion LockEvent
 
-type StorageEvent C.struct_C_StorageEvent
+type StorageEvent struct {
+	ChannelType RTM_CHANNEL_TYPE
+	StorageType RTM_STORAGE_TYPE
+	EventType   RTM_STORAGE_EVENT_TYPE
+	Target      string
+	Data        *IMetadata
+}
 
 // #region StorageEvent
 
@@ -762,854 +1308,109 @@ type StorageEvent C.struct_C_StorageEvent
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *StorageEvent) GetChannelType() RTM_CHANNEL_TYPE {
-	return RTM_CHANNEL_TYPE(this_.channelType)
+	return this_.ChannelType
 }
 
 /**
  * Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE
  */
 func (this_ *StorageEvent) SetChannelType(channelType RTM_CHANNEL_TYPE) {
-	this_.channelType = C.enum_C_RTM_CHANNEL_TYPE(channelType)
+	this_.ChannelType = channelType
 }
 
 /**
  * Storage type, RTM_STORAGE_TYPE_USER or RTM_STORAGE_TYPE_CHANNEL
  */
 func (this_ *StorageEvent) GetStorageType() RTM_STORAGE_TYPE {
-	return RTM_STORAGE_TYPE(this_.storageType)
+	return this_.StorageType
 }
 
 /**
  * Storage type, RTM_STORAGE_TYPE_USER or RTM_STORAGE_TYPE_CHANNEL
  */
 func (this_ *StorageEvent) SetStorageType(storageType RTM_STORAGE_TYPE) {
-	this_.storageType = C.enum_C_RTM_STORAGE_TYPE(storageType)
+	this_.StorageType = storageType
 }
 
 /**
  * Indicate storage event type
  */
 func (this_ *StorageEvent) GetEventType() RTM_STORAGE_EVENT_TYPE {
-	return RTM_STORAGE_EVENT_TYPE(this_.eventType)
+	return this_.EventType
 }
 
 /**
  * Indicate storage event type
  */
 func (this_ *StorageEvent) SetEventType(eventType RTM_STORAGE_EVENT_TYPE) {
-	this_.eventType = C.enum_C_RTM_STORAGE_EVENT_TYPE(eventType)
+	this_.EventType = eventType
 }
 
 /**
  * The target name of user or channel, depends on the RTM_STORAGE_TYPE
  */
 func (this_ *StorageEvent) GetTarget() string {
-	return C.GoString(this_.target)
+	return this_.Target
 }
 
 /**
  * The target name of user or channel, depends on the RTM_STORAGE_TYPE
  */
 func (this_ *StorageEvent) SetTarget(target string) {
-	this_.target = C.CString(target)
+	this_.Target = target
 }
 
 /**
  * The metadata information
  */
 func (this_ *StorageEvent) GetData() *IMetadata {
-	return (*IMetadata)(this_.data)
+	return this_.Data
 }
 
 /**
  * The metadata information
  */
 func (this_ *StorageEvent) SetData(data *IMetadata) {
-	this_.data = (*C.struct_C_Metadata)(unsafe.Pointer(data))
+	this_.Data = data
 }
 
 func NewStorageEvent() *StorageEvent {
-	return (*StorageEvent)(C.C_StorageEvent_New())
+	event := &StorageEvent{
+		ChannelType: RTM_CHANNEL_TYPE_NONE,
+		StorageType: RTM_STORAGE_TYPE_NONE,
+		EventType:   RTM_STORAGE_EVENT_TYPE_NONE,
+		Target:      "",
+		Data:        nil,
+	}
+
+	return event
 }
-func (this_ *StorageEvent) Delete() {
-	C.C_StorageEvent_Delete((*C.struct_C_StorageEvent)(this_))
+
+func (this_ *StorageEvent) fromC(cEvent *C.struct_C_StorageEvent) {
+	if cEvent == nil {
+		return
+	}
+
+	if !IsValidMemory(unsafe.Pointer(cEvent)) {
+		return
+	}
+
+	// 从C对象读取数据
+	this_.ChannelType = RTM_CHANNEL_TYPE(cEvent.channelType)
+	this_.StorageType = RTM_STORAGE_TYPE(cEvent.storageType)
+	this_.EventType = RTM_STORAGE_EVENT_TYPE(cEvent.eventType)
+
+	if cEvent.target != nil {
+		this_.Target = C.GoString(cEvent.target)
+	}
+
+	// 处理Metadata数据
+	if cEvent.data != nil {
+		this_.Data = CMetadataToIMetadata(cEvent.data)
+	}
 }
 
 // #endregion StorageEvent
-
-/**
- * Occurs when receive a message.
- *
- * @param event details of message event.
- */
-func (this_ *IRtmEventHandler) OnMessageEvent(event *MessageEvent) {
-	C.C_IRtmEventHandler_onMessageEvent(unsafe.Pointer(this_), (*C.struct_C_MessageEvent)(event))
-}
-
-/**
- * Occurs when remote user presence changed
- *
- * @param event details of presence event.
- */
-func (this_ *IRtmEventHandler) OnPresenceEvent(event *PresenceEvent) {
-	C.C_IRtmEventHandler_onPresenceEvent(unsafe.Pointer(this_), (*C.struct_C_PresenceEvent)(event))
-}
-
-/**
- * Occurs when remote user join/leave topic or when user first join this channel,
- * got snapshot of topics in this channel
- *
- * @param event details of topic event.
- */
-func (this_ *IRtmEventHandler) OnTopicEvent(event *TopicEvent) {
-	C.C_IRtmEventHandler_onTopicEvent(unsafe.Pointer(this_), (*C.struct_C_TopicEvent)(event))
-}
-
-/**
- * Occurs when lock state changed
- *
- * @param event details of lock event.
- */
-func (this_ *IRtmEventHandler) OnLockEvent(event *LockEvent) {
-	C.C_IRtmEventHandler_onLockEvent(unsafe.Pointer(this_), (*C.struct_C_LockEvent)(event))
-}
-
-/**
- * Occurs when receive storage event
- *
- * @param event details of storage event.
- */
-func (this_ *IRtmEventHandler) OnStorageEvent(event *StorageEvent) {
-	C.C_IRtmEventHandler_onStorageEvent(unsafe.Pointer(this_), (*C.struct_C_StorageEvent)(event))
-}
-
-/**
- * Occurs when user join a stream channel.
- *
- * @param channelName The name of the channel.
- * @param userId The id of the user.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnJoinResult(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cUserId := C.CString(userId)
-	C.C_IRtmEventHandler_onJoinResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName, cUserId,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cUserId))
-}
-
-/**
- * Occurs when user leave a stream channel.
- *
- * @param channelName The name of the channel.
- * @param userId The id of the user.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnLeaveResult(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cUserId := C.CString(userId)
-	C.C_IRtmEventHandler_onLeaveResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName, cUserId,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cUserId))
-}
-
-/**
- * Occurs when user join topic.
- *
- * @param channelName The name of the channel.
- * @param userId The id of the user.
- * @param topic The name of the topic.
- * @param meta The meta of the topic.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnJoinTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cUserId := C.CString(userId)
-	cTopic := C.CString(topic)
-	cMeta := C.CString(meta)
-	C.C_IRtmEventHandler_onJoinTopicResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName, cUserId,
-		cTopic,
-		cMeta,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cUserId))
-	C.free(unsafe.Pointer(cTopic))
-	C.free(unsafe.Pointer(cMeta))
-}
-
-/**
- * Occurs when user leave topic.
- *
- * @param channelName The name of the channel.
- * @param userId The id of the user.
- * @param topic The name of the topic.
- * @param meta The meta of the topic.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnLeaveTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cUserId := C.CString(userId)
-	cTopic := C.CString(topic)
-	cMeta := C.CString(meta)
-	C.C_IRtmEventHandler_onLeaveTopicResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		cUserId,
-		cTopic,
-		cMeta,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cUserId))
-	C.free(unsafe.Pointer(cTopic))
-	C.free(unsafe.Pointer(cMeta))
-}
-
-/**
- * Occurs when user subscribe topic.
- *
- * @param channelName The name of the channel.
- * @param userId The id of the user.
- * @param topic The name of the topic.
- * @param succeedUsers The subscribed users.
- * @param failedUser The failed to subscribe users.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnSubscribeTopicResult(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cUserId := C.CString(userId)
-	cTopic := C.CString(topic)
-	C.C_IRtmEventHandler_onSubscribeTopicResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		cUserId,
-		cTopic,
-		C.struct_C_UserList(succeedUsers),
-		C.struct_C_UserList(failedUsers),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cUserId))
-	C.free(unsafe.Pointer(cTopic))
-}
-
-/**
- * Occurs when the connection state changes between rtm sdk and agora service.
- *
- * @param channelName The name of the channel.
- * @param state The new connection state.
- * @param reason The reason for the connection state change.
- */
-func (this_ *IRtmEventHandler) OnConnectionStateChanged(channelName string, state RTM_CONNECTION_STATE, reason RTM_CONNECTION_CHANGE_REASON) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onConnectionStateChanged(unsafe.Pointer(this_),
-		cChannelName,
-		C.enum_C_RTM_CONNECTION_STATE(state),
-		C.enum_C_RTM_CONNECTION_CHANGE_REASON(reason),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when token will expire in 30 seconds.
- *
- * @param channelName The name of the channel.
- */
-func (this_ *IRtmEventHandler) OnTokenPrivilegeWillExpire(channelName string) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onTokenPrivilegeWillExpire(unsafe.Pointer(this_),
-		cChannelName,
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when subscribe a channel
- *
- * @param channelName The name of the channel.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnSubscribeResult(requestId uint64, channelName string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onSubscribeResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when user publish message.
- *
- * @param requestId The related request id when user publish message
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnPublishResult(requestId uint64, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onPublishResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user login.
- *
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnLoginResult(requestId uint64, errorCode RTM_ERROR_CODE) {
-
-	C.C_IRtmEventHandler_onLoginResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user setting the channel metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnSetChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onSetChannelMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when user updating the channel metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnUpdateChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onUpdateChannelMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when user removing the channel metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnRemoveChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onRemoveChannelMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when user try to get the channel metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param data The result metadata of getting operation.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnGetChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, data *IMetadata, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onGetChannelMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		(*C.struct_C_Metadata)(unsafe.Pointer(data)),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when user setting the user metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param userId The id of the user.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnSetUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
-	cUserId := C.CString(userId)
-	C.C_IRtmEventHandler_onSetUserMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cUserId,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cUserId))
-}
-
-/**
- * Occurs when user updating the user metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param userId The id of the user.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnUpdateUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
-	cUserId := C.CString(userId)
-	C.C_IRtmEventHandler_onUpdateUserMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cUserId,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cUserId))
-}
-
-/**
- * Occurs when user removing the user metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param userId The id of the user.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnRemoveUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
-	cUserId := C.CString(userId)
-	C.C_IRtmEventHandler_onRemoveUserMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cUserId,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cUserId))
-}
-
-/**
- * Occurs when user try to get the user metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param userId The id of the user.
- * @param data The result metadata of getting operation.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnGetUserMetadataResult(requestId uint64, userId string, data *IMetadata, errorCode RTM_ERROR_CODE) {
-	cUserId := C.CString(userId)
-	C.C_IRtmEventHandler_onGetUserMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cUserId,
-		(*C.struct_C_Metadata)(unsafe.Pointer(data)),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cUserId))
-}
-
-/**
- * Occurs when user subscribe a user metadata
- *
- * @param userId The id of the user.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnSubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
-	cUserId := C.CString(userId)
-	C.C_IRtmEventHandler_onSubscribeUserMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cUserId,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cUserId))
-}
-
-/**
- * Occurs when user set a lock
- *
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param lockName The name of the lock.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnSetLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cLockName := C.CString(lockName)
-	C.C_IRtmEventHandler_onSetLockResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		cLockName,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cLockName))
-}
-
-/**
- * Occurs when user delete a lock
- *
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param lockName The name of the lock.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnRemoveLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cLockName := C.CString(lockName)
-	C.C_IRtmEventHandler_onRemoveLockResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		cLockName,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cLockName))
-}
-
-/**
- * Occurs when user release a lock
- *
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param lockName The name of the lock.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnReleaseLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cLockName := C.CString(lockName)
-	C.C_IRtmEventHandler_onReleaseLockResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		cLockName,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cLockName))
-}
-
-/**
- * Occurs when user acquire a lock
- *
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param lockName The name of the lock.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnAcquireLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE, errorDetails string) {
-	cChannelName := C.CString(channelName)
-	cLockName := C.CString(lockName)
-	cErrorDetails := C.CString(errorDetails)
-	C.C_IRtmEventHandler_onAcquireLockResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		cLockName,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-		cErrorDetails,
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cLockName))
-	C.free(unsafe.Pointer(cErrorDetails))
-}
-
-/**
- * Occurs when user revoke a lock
- *
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param lockName The name of the lock.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnRevokeLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	cLockName := C.CString(lockName)
-	C.C_IRtmEventHandler_onRevokeLockResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		cLockName,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cLockName))
-}
-
-/**
- * Occurs when user try to get locks from the channel
- *
- * @param channelName The name of the channel.
- * @param channelType The type of the channel.
- * @param lockDetailList The details of the locks.
- * @param count The count of the locks.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnGetLocksResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockDetailList []LockDetail, count uint, errorCode RTM_ERROR_CODE) {
-	cChannelName := C.CString(channelName)
-	C.C_IRtmEventHandler_onGetLocksResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		cChannelName,
-		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		(*C.struct_C_LockDetail)(unsafe.SliceData(lockDetailList)),
-		C.size_t(count),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cChannelName))
-}
-
-/**
- * Occurs when query who joined this channel
- *
- * @param requestId The related request id when user perform this operation
- * @param userStatesList The states the users.
- * @param count The user count.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnWhoNowResult(requestId uint64, userStateList []UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE) {
-	cNextPage := C.CString(nextPage)
-	C.C_IRtmEventHandler_onWhoNowResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		(*C.struct_C_UserState)(unsafe.SliceData(userStateList)),
-		C.size_t(count),
-		cNextPage,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cNextPage))
-}
-
-/**
- * Occurs when query who joined this channel
- *
- * @param requestId The related request id when user perform this operation
- * @param userStatesList The states the users.
- * @param count The user count.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnGetOnlineUsersResult(requestId uint64, userStateList []UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE) {
-	cNextPage := C.CString(nextPage)
-	C.C_IRtmEventHandler_onGetOnlineUsersResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		(*C.struct_C_UserState)(unsafe.SliceData(userStateList)),
-		C.size_t(count),
-		cNextPage,
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-	C.free(unsafe.Pointer(cNextPage))
-}
-
-/**
- * Occurs when query which channels the user joined
- *
- * @param requestId The related request id when user perform this operation
- * @param channels The channel informations.
- * @param count The channel count.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnWhereNowResult(requestId uint64, channels []ChannelInfo, count uint, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onWhereNowResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		(*C.struct_C_ChannelInfo)(unsafe.SliceData(channels)),
-		C.size_t(count),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when query which channels the user joined
- *
- * @param requestId The related request id when user perform this operation
- * @param channels The channel informations.
- * @param count The channel count.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnGetUserChannelsResult(requestId uint64, channels []ChannelInfo, count uint, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onGetUserChannelsResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		(*C.struct_C_ChannelInfo)(unsafe.SliceData(channels)),
-		C.size_t(count),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when set user presence
- *
- * @param requestId The related request id when user perform this operation
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnPresenceSetStateResult(requestId uint64, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onPresenceSetStateResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when delete user presence
- *
- * @param requestId The related request id when user perform this operation
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnPresenceRemoveStateResult(requestId uint64, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onPresenceRemoveStateResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when get user presence
- *
- * @param requestId The related request id when user perform this operation
- * @param states The user states
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnPresenceGetStateResult(requestId uint64, state *UserState, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onPresenceGetStateResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		(*C.struct_C_UserState)(state),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user logout
- *
- * @param requestId The related request id when user perform this operation
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnLogoutResult(requestId uint64, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onLogoutResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user renew token
- *
- * @param requestId The related request id when user perform this operation
- * @param serverType The type of server.
- * @param channelName The name of the channel.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnRenewTokenResult(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onRenewTokenResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.enum_C_RTM_SERVICE_TYPE(serverType),
-		C.CString(channelName),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user publish topic message
- *
- * @param requestId The related request id when user perform this operation
- * @param channelName The name of the channel.
- * @param topic The name of the topic.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onPublishTopicMessageResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.CString(channelName),
-		C.CString(topic),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user unsubscribe topic
- *
- * @param requestId The related request id when user perform this operation
- * @param channelName The name of the channel.
- * @param topic The name of the topic.
- * @param errorCode The error code.
- */
-
-func (this_ *IRtmEventHandler) OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onUnsubscribeTopicResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.CString(channelName),
-		C.CString(topic),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user get subscribed user list
- *
- * @param requestId The related request id when user perform this operation
- * @param channelName The name of the channel.
- * @param topic The name of the topic.
- * @param users The subscribed user list.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user UserList, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onGetSubscribedUserListResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.CString(channelName),
-		C.CString(topic),
-		(C.struct_C_UserList)(user),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user get history messages
- *
- * @param requestId The related request id when user perform this operation
- * @param errorCode The error code.
- * @param messageList The history message list.
- * @param count The message count.
- * @param newStart The timestamp of next history message. If newStart is 0, means there are no more history messages
- */
-
-func (this_ *IRtmEventHandler) OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, count uint, newStart uint64, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onGetHistoryMessagesResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		(*C.struct_C_HistoryMessage)(unsafe.SliceData(messageList)),
-		C.size_t(count),
-		C.uint64_t(newStart),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-/**
- * Occurs when user unsubscribe user metadata
- *
- * @param requestId The related request id when user perform this operation
- * @param userId The id of the user.
- * @param errorCode The error code.
- */
-func (this_ *IRtmEventHandler) OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
-	C.C_IRtmEventHandler_onUnsubscribeUserMetadataResult(unsafe.Pointer(this_),
-		C.uint64_t(requestId),
-		C.CString(userId),
-		C.enum_C_RTM_ERROR_CODE(errorCode),
-	)
-}
-
-// #endregion IRtmEventHandler
 
 /**
  * The IRtmClient class.
@@ -1620,7 +1421,10 @@ func (this_ *IRtmEventHandler) OnUnsubscribeUserMetadataResult(requestId uint64,
  * Creating an IRtmClient object and then calling the methods of
  * this object enables you to use Agora RTM SDK's functionality.
  */
-type IRtmClient C.C_IRtmClient
+
+type IRtmClient struct {
+	rtmClient unsafe.Pointer
+}
 
 // #region IRtmClient
 
@@ -1639,8 +1443,50 @@ type IRtmClient C.C_IRtmClient
  * @return Pointer of the rtm client object.
  */
 func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
-	err := 0
-	return (*IRtmClient)(C.agora_rtm_client_create((*C.struct_C_RtmConfig)(config), (*C.int)(unsafe.Pointer(&err))))
+	if config == nil {
+		return nil
+	}
+
+	cConfig := C.C_RtmConfig_New()
+	if cConfig == nil {
+		return nil
+	}
+
+	// 设置所有必要的字段
+	cConfig.appId = C.CString(config.AppId)
+	defer C.free(unsafe.Pointer(cConfig.appId))
+	cConfig.userId = C.CString(config.UserId)
+	defer C.free(unsafe.Pointer(cConfig.userId))
+	cConfig.areaCode = C.enum_C_RTM_AREA_CODE(config.AreaCode)
+	cConfig.protocolType = config.ProtocolType
+	cConfig.presenceTimeout = C.uint32_t(config.PresenceTimeout)
+	cConfig.heartbeatInterval = C.uint32_t(config.HeartbeatInterval)
+	cConfig.multipath = C.bool(config.Multipath)
+	cConfig.context = config.Context
+	cConfig.useStringUserId = C.bool(config.UseStringUserId)
+
+	// 设置事件处理器
+	if config.EventHandler != nil {
+		// 自动创建适配器，让用户只需要实现需要的方法
+		adapter := NewEventHandlerAdapter(config.EventHandler)
+		bridge := NewRtmEventHandlerBridge(adapter)
+		if bridge != nil {
+			cConfig.eventHandler = unsafe.Pointer(bridge.cBridge)
+		} else {
+			cConfig.eventHandler = nil
+		}
+	} else {
+		cConfig.eventHandler = nil
+	}
+
+	var errorCode C.int
+	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
+
+	if rtmClient == nil {
+		return nil
+	}
+
+	return &IRtmClient{rtmClient: rtmClient}
 }
 
 /**
@@ -1651,7 +1497,7 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
  * - < 0: Failure.
  */
 func (this_ *IRtmClient) Release() int {
-	return int(C.agora_rtm_client_release(unsafe.Pointer(this_)))
+	return int(C.agora_rtm_client_release(this_.rtmClient))
 }
 
 /**
@@ -1665,11 +1511,11 @@ func (this_ *IRtmClient) Release() int {
 func (this_ *IRtmClient) Login(token string) int {
 	var requestId uint64
 	cToken := C.CString(token)
-	ret := int(C.agora_rtm_client_login(unsafe.Pointer(this_),
+	defer C.free(unsafe.Pointer(cToken))
+	ret := int(C.agora_rtm_client_login(this_.rtmClient,
 		cToken,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
 	))
-	C.free(unsafe.Pointer(cToken))
 	return int(ret)
 }
 
@@ -1682,7 +1528,7 @@ func (this_ *IRtmClient) Login(token string) int {
  */
 func (this_ *IRtmClient) Logout() int {
 	var requestId uint64
-	return int(C.agora_rtm_client_logout(unsafe.Pointer(this_),
+	return int(C.agora_rtm_client_logout(this_.rtmClient,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
 	))
 }
@@ -1694,7 +1540,11 @@ func (this_ *IRtmClient) Logout() int {
  * - return NULL if error occurred
  */
 func (this_ *IRtmClient) GetStorage() *IRtmStorage {
-	return (*IRtmStorage)(C.agora_rtm_client_get_storage(unsafe.Pointer(this_)))
+	cStorage := C.agora_rtm_client_get_storage(this_.rtmClient)
+	if cStorage == nil {
+		return nil
+	}
+	return &IRtmStorage{rtmStorage: unsafe.Pointer(cStorage)}
 }
 
 /**
@@ -1704,7 +1554,11 @@ func (this_ *IRtmClient) GetStorage() *IRtmStorage {
  * - return NULL if error occurred
  */
 func (this_ *IRtmClient) GetLock() *IRtmLock {
-	return (*IRtmLock)(C.agora_rtm_client_get_lock(unsafe.Pointer(this_)))
+	cLock := C.agora_rtm_client_get_lock(this_.rtmClient)
+	if cLock == nil {
+		return nil
+	}
+	return &IRtmLock{rtmLock: unsafe.Pointer(cLock)}
 }
 
 /**
@@ -1714,7 +1568,19 @@ func (this_ *IRtmClient) GetLock() *IRtmLock {
  * - return NULL if error occurred
  */
 func (this_ *IRtmClient) GetPresence() *IRtmPresence {
-	return (*IRtmPresence)(C.agora_rtm_client_get_presence(unsafe.Pointer(this_)))
+	cPresence := C.agora_rtm_client_get_presence(this_.rtmClient)
+	if cPresence == nil {
+		return nil
+	}
+	return &IRtmPresence{rtmPresence: unsafe.Pointer(cPresence)}
+}
+
+func (this_ *IRtmClient) GetHistory() *IRtmHistory {
+	cHistory := C.agora_rtm_client_get_history(this_.rtmClient)
+	if cHistory == nil {
+		return nil
+	}
+	return &IRtmHistory{rtmHistory: unsafe.Pointer(cHistory)}
 }
 
 /**
@@ -1727,12 +1593,12 @@ func (this_ *IRtmClient) GetPresence() *IRtmPresence {
  */
 func (this_ *IRtmClient) RenewToken(token string) int {
 	cToken := C.CString(token)
+	defer C.free(unsafe.Pointer(cToken))
 	var requestId uint64
-	ret := int(C.agora_rtm_client_renew_token(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_renew_token(this_.rtmClient,
 		cToken,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
 	))
-	C.free(unsafe.Pointer(cToken))
 	return int(ret)
 }
 
@@ -1750,54 +1616,52 @@ func (this_ *IRtmClient) RenewToken(token string) int {
  */
 func (this_ *IRtmClient) Publish(channelName string, message []byte, length uint, option *PublishOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
+	defer C.free(unsafe.Pointer(cChannelName))
 	cMessage := C.CBytes(message)
-	ret := int(C.agora_rtm_client_publish(unsafe.Pointer(this_),
+	defer C.free(unsafe.Pointer(cMessage))
+	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
 		cChannelName,
 		(*C.char)(cMessage),
 		C.size_t(length),
-		(*C.struct_C_PublishOptions)(option),
+		(*C.struct_C_PublishOptions)(unsafe.Pointer(option)),
 		(*C.uint64_t)(requestId),
 	))
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cMessage))
 	return ret
 }
 func (this_ *IRtmClient) SendChannelMessage(channelName string, message []byte, length uint, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
+	defer C.free(unsafe.Pointer(cChannelName))
 	cMessage := C.CBytes(message)
+	defer C.free(unsafe.Pointer(cMessage))
 	opt := NewPublishOptions()
 	opt.SetChannelType(RTM_CHANNEL_TYPE_MESSAGE)
 	opt.SetMessageType(RTM_MESSAGE_TYPE_BINARY)
 
-	ret := int(C.agora_rtm_client_publish(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
 		cChannelName,
 		(*C.char)(cMessage),
 		C.size_t(length),
-		(*C.struct_C_PublishOptions)(opt),
+		(*C.struct_C_PublishOptions)(unsafe.Pointer(opt)),
 		(*C.uint64_t)(requestId),
 	))
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cMessage))
-	opt.Delete()
 	return ret
 }
 func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length uint, requestId *uint64) int {
 	cUserId := C.CString(userId)
+	defer C.free(unsafe.Pointer(cUserId))
 	cMessage := C.CBytes(message)
+	defer C.free(unsafe.Pointer(cMessage))
 	opt := NewPublishOptions()
 	opt.SetChannelType(RTM_CHANNEL_TYPE_USER)
 	opt.SetMessageType(RTM_MESSAGE_TYPE_BINARY)
 
-	ret := int(C.agora_rtm_client_publish(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
 		cUserId,
 		(*C.char)(cMessage),
 		C.size_t(length),
-		(*C.struct_C_PublishOptions)(opt),
+		(*C.struct_C_PublishOptions)(unsafe.Pointer(opt)),
 		(*C.uint64_t)(requestId),
 	))
-	C.free(unsafe.Pointer(cUserId))
-	C.free(unsafe.Pointer(cMessage))
-	opt.Delete()
 	return ret
 }
 
@@ -1812,12 +1676,12 @@ func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length u
  */
 func (this_ *IRtmClient) Subscribe(channelName string, option *SubscribeOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
-	ret := int(C.agora_rtm_client_subscribe(unsafe.Pointer(this_),
+	defer C.free(unsafe.Pointer(cChannelName))
+	ret := int(C.agora_rtm_client_subscribe(this_.rtmClient,
 		cChannelName,
-		(*C.struct_C_SubscribeOptions)(option),
+		(*C.struct_C_SubscribeOptions)(unsafe.Pointer(option)),
 		(*C.uint64_t)(requestId),
 	))
-	C.free(unsafe.Pointer(cChannelName))
 	return ret
 }
 
@@ -1831,12 +1695,12 @@ func (this_ *IRtmClient) Subscribe(channelName string, option *SubscribeOptions,
  */
 func (this_ *IRtmClient) Unsubscribe(channelName string) int {
 	cChannelName := C.CString(channelName)
+	defer C.free(unsafe.Pointer(cChannelName))
 	var requestId uint64
-	ret := int(C.agora_rtm_client_unsubscribe(unsafe.Pointer(this_),
+	ret := int(C.agora_rtm_client_unsubscribe(this_.rtmClient,
 		cChannelName,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
 	))
-	C.free(unsafe.Pointer(cChannelName))
 	return int(ret)
 }
 
@@ -1849,14 +1713,19 @@ func (this_ *IRtmClient) Unsubscribe(channelName string) int {
  */
 func (this_ *IRtmClient) CreateStreamChannel(channelName string) *IStreamChannel {
 	cChannelName := C.CString(channelName)
-	var errorCode int
-	ret := C.agora_rtm_client_create_stream_channel(unsafe.Pointer(this_),
-		cChannelName,
-		(*C.int)(unsafe.Pointer(&errorCode)),
-	)
-	C.free(unsafe.Pointer(cChannelName))
+	defer C.free(unsafe.Pointer(cChannelName))
 
-	streamChannel := &IStreamChannel{ptr: (*C.C_IStreamChannel)(ret)}
+	var errorCode C.int
+	ret := C.agora_rtm_client_create_stream_channel(this_.rtmClient,
+		cChannelName,
+		&errorCode,
+	)
+
+	if ret == nil || errorCode != 0 {
+		return nil
+	}
+
+	streamChannel := &IStreamChannel{streamChannel: unsafe.Pointer(ret)}
 	return streamChannel
 }
 
@@ -1870,10 +1739,11 @@ func (this_ *IRtmClient) CreateStreamChannel(channelName string) *IStreamChannel
  */
 func (this_ *IRtmClient) SetParameters(parameters string) int {
 	cParameters := C.CString(parameters)
-	ret := int(C.agora_rtm_client_set_parameters(unsafe.Pointer(this_),
+	defer C.free(unsafe.Pointer(cParameters))
+
+	ret := int(C.agora_rtm_client_set_parameters(this_.rtmClient,
 		cParameters,
 	))
-	C.free(unsafe.Pointer(cParameters))
 	return ret
 }
 

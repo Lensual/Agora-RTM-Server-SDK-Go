@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-	"net/http"
-	_ "net/http/pprof"
 
 	agrtm "github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/go_sdk/rtm"
 )
@@ -19,7 +19,7 @@ func main() {
 		// but local host is not accessible from outside!!
 		http.ListenAndServe("0.0.0.0:6060", nil)
 	}()
-	// rtm start 
+	// rtm start
 	appId := os.Getenv("APPID")
 	userId := os.Getenv("USER_ID")
 	token := os.Getenv("TOKEN")
@@ -48,23 +48,20 @@ func main() {
 		os.Exit(1)
 	}
 	ret := 0
-	// 适用于没有token的情况
+
 	myEventHandler := &MyRtmEventHandler{}
-	rtmEventHandler := agrtm.NewRtmEventHandlerBridge(myEventHandler)
-	fmt.Printf("NewRtmEventHandlerBridge: %p\n", rtmEventHandler) //DEBUG
-	//defer rtmEventHandler.Delete()
 
 	rtmConfig := agrtm.NewRtmConfig()
 	//defer rtmConfig.Delete()
 	rtmConfig.SetAppId(appId)
 	rtmConfig.SetUserId(userId)
-	rtmConfig.SetEventHandler(rtmEventHandler.ToAgoraEventHandler())
+	rtmConfig.SetEventHandler(myEventHandler)
 
 	logConfig := agrtm.NewRtmLogConfig()
 	logConfig.SetFilePath("./logs/rtm.log")
 	logConfig.SetFileSizeInKB(1024)
 	logConfig.SetLevel(agrtm.RTM_LOG_LEVEL_INFO)
-	rtmConfig.SetLogConfig(*logConfig)
+	rtmConfig.SetLogConfig(logConfig)
 	fmt.Printf("NewRtmConfig: %+v\n", rtmConfig) //DEBUG
 
 	rtmClient := agrtm.CreateAgoraRtmClient(rtmConfig)
@@ -73,15 +70,13 @@ func main() {
 	// set user channel info to event handler
 	sign := make(chan struct{})
 	myEventHandler.ChannelName = channelName
-	myEventHandler.UserId = userId	
+	myEventHandler.UserId = userId
 	myEventHandler.RtmClient = rtmClient
 	myEventHandler.Sign = sign
-	
-
 
 	logWithTime("Login Start: %d\n", ret)
 	ret = rtmClient.Login(token)
-	
+
 	if ret != 0 {
 		panic(ret)
 	}
@@ -98,7 +93,6 @@ func main() {
 
 	opt.SetWithPresence(false)
 	opt.SetWithQuiet(true)
-	
 
 	logWithTime("Subscribe start: %d\n", ret)
 	ret = rtmClient.Subscribe(channelName, opt, &reqId)
@@ -113,8 +107,6 @@ func main() {
 		panic("subscribe timeout")
 	}
 	logWithTime("subscribe success")
-
-	
 
 	//阻塞直到有信号传入
 	c := make(chan os.Signal, 1)
@@ -140,17 +132,14 @@ waitSignal:
 	//clean
 	rtmClient.Logout()
 	// wait for logout
-//	time.Sleep(time.Second * 3)
+	//	time.Sleep(time.Second * 3)
 	//unregister event handler
-	
+
 	//release
 	rtmClient.Release()
 	rtmClient = nil
 
-	// release rtmEventHandler
-	rtmEventHandler.Delete()
-	rtmEventHandler = nil
-	// release rtmConfig
-	rtmConfig.Delete()
+	// release myEventHandler
+	myEventHandler = nil
 	rtmConfig = nil
 }

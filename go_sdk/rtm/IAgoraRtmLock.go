@@ -19,7 +19,9 @@ import "unsafe"
  *
  * This class provides the rtm lock methods that can be invoked by your app.
  */
-type IRtmLock C.C_IRtmLock
+type IRtmLock struct {
+	rtmLock unsafe.Pointer
+}
 
 // #region IRtmLock
 
@@ -34,16 +36,17 @@ type IRtmLock C.C_IRtmLock
  */
 func (this_ *IRtmLock) SetLock(channelName string, channelType RTM_CHANNEL_TYPE, lockName string, ttl uint32, requestId *uint64) {
 	cChannelName := C.CString(channelName)
+	defer C.free(unsafe.Pointer(cChannelName))
 	cLockName := C.CString(lockName)
-	C.agora_rtm_lock_set_lock(unsafe.Pointer(this_),
+	defer C.free(unsafe.Pointer(cLockName))
+
+	C.agora_rtm_lock_set_lock(this_.rtmLock,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cLockName,
 		C.uint32_t(ttl),
 		(*C.uint64_t)(requestId),
 	)
-	C.free(unsafe.Pointer(cChannelName))
-	C.free(unsafe.Pointer(cLockName))
 }
 
 /**
@@ -55,7 +58,7 @@ func (this_ *IRtmLock) SetLock(channelName string, channelType RTM_CHANNEL_TYPE,
  */
 func (this_ *IRtmLock) GetLocks(channelName string, channelType RTM_CHANNEL_TYPE, requestId *uint64) {
 	cChannelName := C.CString(channelName)
-	C.agora_rtm_lock_get_locks(unsafe.Pointer(this_),
+	C.agora_rtm_lock_get_locks(this_.rtmLock,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		(*C.uint64_t)(requestId),
@@ -74,7 +77,7 @@ func (this_ *IRtmLock) GetLocks(channelName string, channelType RTM_CHANNEL_TYPE
 func (this_ *IRtmLock) RemoveLock(channelName string, channelType RTM_CHANNEL_TYPE, lockName string, requestId *uint64) {
 	cChannelName := C.CString(channelName)
 	cLockName := C.CString(lockName)
-	C.agora_rtm_lock_remove_lock(unsafe.Pointer(this_),
+	C.agora_rtm_lock_remove_lock(this_.rtmLock,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cLockName,
@@ -96,7 +99,7 @@ func (this_ *IRtmLock) RemoveLock(channelName string, channelType RTM_CHANNEL_TY
 func (this_ *IRtmLock) AcquireLock(channelName string, channelType RTM_CHANNEL_TYPE, lockName string, retry bool, requestId *uint64) {
 	cChannelName := C.CString(channelName)
 	cLockName := C.CString(lockName)
-	C.agora_rtm_lock_acquire_lock(unsafe.Pointer(this_),
+	C.agora_rtm_lock_acquire_lock(this_.rtmLock,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cLockName,
@@ -118,7 +121,7 @@ func (this_ *IRtmLock) AcquireLock(channelName string, channelType RTM_CHANNEL_T
 func (this_ *IRtmLock) ReleaseLock(channelName string, channelType RTM_CHANNEL_TYPE, lockName string, requestId *uint64) {
 	cChannelName := C.CString(channelName)
 	cLockName := C.CString(lockName)
-	C.agora_rtm_lock_release_lock(unsafe.Pointer(this_),
+	C.agora_rtm_lock_release_lock(this_.rtmLock,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cLockName,
@@ -141,7 +144,7 @@ func (this_ *IRtmLock) RevokeLock(channelName string, channelType RTM_CHANNEL_TY
 	cChannelName := C.CString(channelName)
 	cLockName := C.CString(lockName)
 	cOwner := C.CString(owner)
-	C.agora_rtm_lock_revoke_lock(unsafe.Pointer(this_),
+	C.agora_rtm_lock_revoke_lock(this_.rtmLock,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cLockName,
