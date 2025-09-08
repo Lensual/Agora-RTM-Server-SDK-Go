@@ -229,48 +229,47 @@ func NewRtmConfig() *RtmConfig {
  * only some of the required events instead of all. In the callback methods, the app should avoid
  * time-consuming tasks or calling blocking APIs, otherwise the SDK may not work properly.
  */
-// 旧的 IRtmEventHandler 已删除，请使用新的 RtmEventHandler 接口
+// old IRtmEventHandler is deleted, please use new RtmEventHandler interface
 
-// 新的用户友好的事件处理器接口设计
+// new user friendly event handler interface design
 
-// RtmEventHandler 定义用户可以实现的事件处理器接口
-// 用户只需要实现需要的方法，未实现的方法会被SDK自动忽略
+// RtmEventHandler define the event handler interface that user can implement
+// user only need to implement the needed methods, the methods that are not implemented will be ignored by SDK
 //
-// 常用的回调方法：
-//   - OnLoginResult: 登录结果回调
-//   - OnLogoutResult: 登出结果回调
-//   - OnMessageEvent: 消息事件回调
-//   - OnPresenceEvent: 在线状态事件回调
-//   - OnSubscribeResult: 订阅结果回调
-//   - OnPublishResult: 发布结果回调
+// commonly used callback methods:
+//   - OnLoginResult: login result callback
+//   - OnLogoutResult: logout result callback
+//   - OnMessageEvent: message event callback
+//   - OnPresenceEvent: online status event callback
+//   - OnSubscribeResult: subscribe result callback
+//   - OnPublishResult: publish result callback
 //
-// 使用方式一（面向对象）：
+// usage one (object oriented):
 //
 //	type MyEventHandler struct{}
 //	func (h *MyEventHandler) OnLoginResult(requestId uint64, errorCode RTM_ERROR_CODE) {
-//	    // 处理登录结果
+//	    // handle login result
 //	}
 //	rtmConfig.SetEventHandler(&MyEventHandler{})
 //
-// 使用方式二（函数式）：
+// usage two (functional):
 //
 //	handler := &RtmEventHandlerConfig{
 //	    OnLoginResult: func(requestId uint64, errorCode RTM_ERROR_CODE) {
-//	        // 处理登录结果
+//	        // handle login result
 //	    },
 //	}
 //	rtmConfig.SetEventHandler(handler)
 type RtmEventHandler interface {
-	// 标记接口，用于类型约束
-	// 用户必须实现此方法来标识自己是一个事件处理器，空实现即可
-	// 这样可以确保类型安全，防止传入错误的类型
+	// mark interface, for type constraint
+	// user must implement this method to identify itself as an event handler, empty implementation is enough
+	// this can ensure type safety, prevent passing wrong type
 	IsRtmEventHandler()
 }
 
-// RtmEventHandlerConfig 提供函数式的事件处理器配置
-// 用户只需要设置需要的回调函数，其他保持 nil 即可
+// RtmEventHandlerConfig provide function style event handler config
+// user only need to set the needed callback functions, others keep nil
 type RtmEventHandlerConfig struct {
-	// 基础回调
 	OnLoginResult     func(requestId uint64, errorCode RTM_ERROR_CODE)
 	OnLogoutResult    func(requestId uint64, errorCode RTM_ERROR_CODE)
 	OnMessageEvent    func(event *MessageEvent)
@@ -278,7 +277,6 @@ type RtmEventHandlerConfig struct {
 	OnSubscribeResult func(requestId uint64, channelName string, errorCode RTM_ERROR_CODE)
 	OnPublishResult   func(requestId uint64, errorCode RTM_ERROR_CODE)
 
-	// 高级回调
 	OnTopicEvent               func(event *TopicEvent)
 	OnLockEvent                func(event *LockEvent)
 	OnStorageEvent             func(event *StorageEvent)
@@ -290,7 +288,6 @@ type RtmEventHandlerConfig struct {
 	OnLeaveTopicResult         func(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE)
 	OnSubscribeTopicResult     func(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode RTM_ERROR_CODE)
 
-	// 元数据回调
 	OnSetChannelMetadataResult      func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
 	OnUpdateChannelMetadataResult   func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
 	OnRemoveChannelMetadataResult   func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
@@ -302,7 +299,6 @@ type RtmEventHandlerConfig struct {
 	OnSubscribeUserMetadataResult   func(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
 	OnUnsubscribeUserMetadataResult func(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
 
-	// 锁回调
 	OnSetLockResult     func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
 	OnRemoveLockResult  func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
 	OnReleaseLockResult func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
@@ -310,7 +306,6 @@ type RtmEventHandlerConfig struct {
 	OnRevokeLockResult  func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
 	OnGetLocksResult    func(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockDetailList *LockDetail, count uint, errorCode RTM_ERROR_CODE)
 
-	// 在线状态回调
 	OnWhoNowResult              func(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE)
 	OnGetOnlineUsersResult      func(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE)
 	OnWhereNowResult            func(requestId uint64, channels *ChannelInfo, count uint, errorCode RTM_ERROR_CODE)
@@ -319,7 +314,6 @@ type RtmEventHandlerConfig struct {
 	OnPresenceRemoveStateResult func(requestId uint64, errorCode RTM_ERROR_CODE)
 	OnPresenceGetStateResult    func(requestId uint64, state *UserState, errorCode RTM_ERROR_CODE)
 
-	// 其他回调
 	OnLinkStateEvent              func(event *LinkStateEvent)
 	OnPublishTopicMessageResult   func(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
 	OnRenewTokenResult            func(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE)
@@ -328,7 +322,7 @@ type RtmEventHandlerConfig struct {
 	OnGetHistoryMessagesResult    func(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode RTM_ERROR_CODE)
 }
 
-// 让函数式配置实现接口
+// implement RtmEventHandler interface
 func (config *RtmEventHandlerConfig) IsRtmEventHandler() {}
 
 // #region MessageEvent
@@ -471,7 +465,6 @@ func NewMessageEvent() *MessageEvent {
 	return event
 }
 
-// 从C结构体安全转换
 func (this_ *MessageEvent) fromC(cEvent *C.struct_C_MessageEvent) {
 	if cEvent == nil {
 		return
@@ -498,7 +491,6 @@ func (this_ *MessageEvent) fromC(cEvent *C.struct_C_MessageEvent) {
 	}
 
 	if cEvent.message != nil && cEvent.messageLength > 0 {
-		// 检查消息指针是否有效
 		if IsValidMemory(unsafe.Pointer(cEvent.message)) {
 			messageSize := int(cEvent.messageLength)
 			if messageSize > 0 {
@@ -812,7 +804,6 @@ func (this_ *PresenceEvent) fromC(cEvent *C.struct_C_PresenceEvent) {
 		return
 	}
 
-	// 从C对象读取数据
 	this_.Type = RTM_PRESENCE_EVENT_TYPE(cEvent._type)
 	this_.ChannelType = RTM_CHANNEL_TYPE(cEvent.channelType)
 
@@ -823,22 +814,18 @@ func (this_ *PresenceEvent) fromC(cEvent *C.struct_C_PresenceEvent) {
 		this_.Publisher = C.GoString(cEvent.publisher)
 	}
 
-	// 处理StateItems数组
 	if cEvent.stateItems != nil && cEvent.stateItemCount > 0 {
-		// 检查数组指针是否有效
 		if IsValidMemory(unsafe.Pointer(cEvent.stateItems)) {
 			itemCount := int(cEvent.stateItemCount)
 			if itemCount > 0 {
 				this_.StateItems = make([]*StateItem, itemCount)
 				this_.StateItemCount = uint(itemCount)
 
-				// 安全地复制StateItem数据
 				for i := 0; i < itemCount; i++ {
 					cItem := (*C.struct_C_StateItem)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.stateItems)) + uintptr(i)*unsafe.Sizeof(C.struct_C_StateItem{})))
 					if cItem != nil && IsValidMemory(unsafe.Pointer(cItem)) {
 						stateItem := NewStateItem()
 						if stateItem != nil {
-							// 直接设置字段，因为StateItem结构简单
 							if cItem.key != nil {
 								stateItem.Key = FastSafeCGoString(cItem.key)
 							}
@@ -862,12 +849,9 @@ func (this_ *PresenceEvent) fromC(cEvent *C.struct_C_PresenceEvent) {
 		this_.StateItemCount = 0
 	}
 
-	// 处理Interval信息 - 注意这是值类型，不是指针
 	this_.Interval = NewIntervalInfo()
 	if this_.Interval != nil {
-		// 直接设置字段，因为IntervalInfo结构相对简单
 		if cEvent.interval.userStateList != nil && cEvent.interval.userStateCount > 0 {
-			// 检查数组指针是否有效
 			if IsValidMemory(unsafe.Pointer(cEvent.interval.userStateList)) {
 				userCount := int(cEvent.interval.userStateCount)
 				if userCount > 0 {
@@ -882,9 +866,7 @@ func (this_ *PresenceEvent) fromC(cEvent *C.struct_C_PresenceEvent) {
 								if cUserState.userId != nil {
 									userState.UserId = FastSafeCGoString(cUserState.userId)
 								}
-								// 处理states数组
 								if cUserState.states != nil && cUserState.statesCount > 0 {
-									// 检查states数组指针是否有效
 									if IsValidMemory(unsafe.Pointer(cUserState.states)) {
 										stateCount := int(cUserState.statesCount)
 										if stateCount > 0 {
@@ -916,12 +898,9 @@ func (this_ *PresenceEvent) fromC(cEvent *C.struct_C_PresenceEvent) {
 		}
 	}
 
-	// 处理Snapshot信息 - 注意这是值类型，不是指针
 	this_.Snapshot = NewSnapshotInfo()
 	if this_.Snapshot != nil {
-		// 直接设置字段，因为SnapshotInfo结构相对简单
 		if cEvent.snapshot.userStateList != nil && cEvent.snapshot.userCount > 0 {
-			// 检查数组指针是否有效
 			if IsValidMemory(unsafe.Pointer(cEvent.snapshot.userStateList)) {
 				userCount := int(cEvent.snapshot.userCount)
 				if userCount > 0 {
@@ -936,9 +915,7 @@ func (this_ *PresenceEvent) fromC(cEvent *C.struct_C_PresenceEvent) {
 								if cUserState.userId != nil {
 									userState.UserId = FastSafeCGoString(cUserState.userId)
 								}
-								// 处理states数组
 								if cUserState.states != nil && cUserState.statesCount > 0 {
-									// 检查states数组指针是否有效
 									if IsValidMemory(unsafe.Pointer(cUserState.states)) {
 										stateCount := int(cUserState.statesCount)
 										if stateCount > 0 {
@@ -1074,7 +1051,6 @@ func (this_ *TopicEvent) fromC(cEvent *C.struct_C_TopicEvent) {
 		return
 	}
 
-	// 从C对象读取数据
 	this_.Type = RTM_TOPIC_EVENT_TYPE(cEvent._type)
 
 	if cEvent.channelName != nil {
@@ -1084,28 +1060,22 @@ func (this_ *TopicEvent) fromC(cEvent *C.struct_C_TopicEvent) {
 		this_.Publisher = C.GoString(cEvent.publisher)
 	}
 
-	// 处理TopicInfos数组
 	if cEvent.topicInfos != nil && cEvent.topicInfoCount > 0 {
-		// 检查数组指针是否有效
 		if IsValidMemory(unsafe.Pointer(cEvent.topicInfos)) {
 			infoCount := int(cEvent.topicInfoCount)
 			if infoCount > 0 {
 				this_.TopicInfos = make([]*TopicInfo, infoCount)
 				this_.TopicInfoCount = uint(infoCount)
 
-				// 安全地复制TopicInfo数据
 				for i := 0; i < infoCount; i++ {
 					cTopicInfo := (*C.struct_C_TopicInfo)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.topicInfos)) + uintptr(i)*unsafe.Sizeof(C.struct_C_TopicInfo{})))
 					if cTopicInfo != nil && IsValidMemory(unsafe.Pointer(cTopicInfo)) {
 						topicInfo := NewTopicInfo()
 						if topicInfo != nil {
-							// 直接设置字段，因为TopicInfo结构相对简单
 							if cTopicInfo.topic != nil {
 								topicInfo.Topic = FastSafeCGoString(cTopicInfo.topic)
 							}
-							// 处理publishers数组
 							if cTopicInfo.publishers != nil && cTopicInfo.publisherCount > 0 {
-								// 检查publishers数组指针是否有效
 								if IsValidMemory(unsafe.Pointer(cTopicInfo.publishers)) {
 									pubCount := int(cTopicInfo.publisherCount)
 									if pubCount > 0 {
@@ -1249,7 +1219,6 @@ func (this_ *LockEvent) fromC(cEvent *C.struct_C_LockEvent) {
 		return
 	}
 
-	// 从C对象读取数据
 	this_.ChannelType = RTM_CHANNEL_TYPE(cEvent.channelType)
 	this_.EventType = RTM_LOCK_EVENT_TYPE(cEvent.eventType)
 
@@ -1257,22 +1226,18 @@ func (this_ *LockEvent) fromC(cEvent *C.struct_C_LockEvent) {
 		this_.ChannelName = C.GoString(cEvent.channelName)
 	}
 
-	// 处理LockDetailList数组
 	if cEvent.lockDetailList != nil && cEvent.count > 0 {
-		// 检查数组指针是否有效
 		if IsValidMemory(unsafe.Pointer(cEvent.lockDetailList)) {
 			detailCount := int(cEvent.count)
 			if detailCount > 0 {
 				this_.LockDetailList = make([]*LockDetail, detailCount)
 				this_.Count = uint(detailCount)
 
-				// 安全地复制LockDetail数据
 				for i := 0; i < detailCount; i++ {
 					cLockDetail := (*C.struct_C_LockDetail)(unsafe.Pointer(uintptr(unsafe.Pointer(cEvent.lockDetailList)) + uintptr(i)*unsafe.Sizeof(C.struct_C_LockDetail{})))
 					if cLockDetail != nil && IsValidMemory(unsafe.Pointer(cLockDetail)) {
 						lockDetail := NewLockDetail()
 						if lockDetail != nil {
-							// 直接设置字段，因为LockDetail结构简单
 							if cLockDetail.lockName != nil {
 								lockDetail.SetLockName(FastSafeCGoString(cLockDetail.lockName))
 							}
@@ -1395,7 +1360,6 @@ func (this_ *StorageEvent) fromC(cEvent *C.struct_C_StorageEvent) {
 		return
 	}
 
-	// 从C对象读取数据
 	this_.ChannelType = RTM_CHANNEL_TYPE(cEvent.channelType)
 	this_.StorageType = RTM_STORAGE_TYPE(cEvent.storageType)
 	this_.EventType = RTM_STORAGE_EVENT_TYPE(cEvent.eventType)
@@ -1404,7 +1368,6 @@ func (this_ *StorageEvent) fromC(cEvent *C.struct_C_StorageEvent) {
 		this_.Target = C.GoString(cEvent.target)
 	}
 
-	// 处理Metadata数据
 	if cEvent.data != nil {
 		this_.Data = CMetadataToIMetadata(cEvent.data)
 	}
@@ -1455,7 +1418,6 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
 	}
 	defer C.C_RtmConfig_Delete(cConfig)
 
-	// 设置所有必要的字段
 	cConfig.appId = C.CString(config.AppId)
 	defer C.free(unsafe.Pointer(cConfig.appId))
 	cConfig.userId = C.CString(config.UserId)
@@ -1468,11 +1430,9 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
 	cConfig.context = config.Context
 	cConfig.useStringUserId = C.bool(config.UseStringUserId)
 
-	// 设置事件处理器
 	var adapter *EventHandlerAdapter
 	var bridge *RtmEventHandlerBridge
 	if config.EventHandler != nil {
-		// 自动创建适配器，让用户只需要实现需要的方法
 		adapter = NewEventHandlerAdapter(config.EventHandler)
 		bridge = NewRtmEventHandlerBridge(adapter)
 		if bridge != nil {
@@ -1488,7 +1448,6 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
 	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
 
 	if rtmClient == nil {
-		// 如果创建失败，需要清理已创建的对象
 		if bridge != nil {
 			bridge.Delete()
 		}
@@ -1510,10 +1469,8 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
  * - < 0: Failure.
  */
 func (this_ *IRtmClient) Release() int {
-	// 先释放C层的客户端
 	ret := int(C.agora_rtm_client_release(this_.rtmClient))
 	
-	// 然后释放Go层的对象
 	if this_.bridge != nil {
 		this_.bridge.Delete()
 		this_.bridge = nil
@@ -1599,6 +1556,12 @@ func (this_ *IRtmClient) GetPresence() *IRtmPresence {
 	return &IRtmPresence{rtmPresence: unsafe.Pointer(cPresence)}
 }
 
+/**
+ * Get the history instance.
+ *
+ * @return
+ * - return NULL if error occurred
+ */
 func (this_ *IRtmClient) GetHistory() *IRtmHistory {
 	cHistory := C.agora_rtm_client_get_history(this_.rtmClient)
 	if cHistory == nil {
@@ -1739,9 +1702,11 @@ func (this_ *IRtmClient) SendUserMessage(userId string, message []byte, length u
 func (this_ *IRtmClient) Subscribe(channelName string, option *SubscribeOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
+	cOption := option.toC()
+	defer freeSubscribeOptions(cOption)
 	ret := int(C.agora_rtm_client_subscribe(this_.rtmClient,
 		cChannelName,
-		(*C.struct_C_SubscribeOptions)(unsafe.Pointer(option)),
+		(*C.struct_C_SubscribeOptions)(cOption),
 		(*C.uint64_t)(requestId),
 	))
 	return ret

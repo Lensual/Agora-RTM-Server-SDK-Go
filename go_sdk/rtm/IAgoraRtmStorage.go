@@ -159,7 +159,7 @@ func NewMetadataItem() *MetadataItem {
 
 // #endregion MetadataItem
 
-// added by wei only 向后兼容到0.0.1
+// added by wei only for backward compatibility to 0.0.1 version
 type IMetadata struct {
 	majorRevision int64
 	items         []MetadataItem
@@ -273,8 +273,11 @@ func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType RTM
 			cItems[i] = C.C_MetadataItem_New()
 			defer C.C_MetadataItem_Delete(cItems[i])
 			cItems[i].key = C.CString(data.items[i].Key)
+			defer C.free(unsafe.Pointer(cItems[i].key))
 			cItems[i].value = C.CString(data.items[i].Value)
+			defer C.free(unsafe.Pointer(cItems[i].value))
 			cItems[i].authorUserId = C.CString(data.items[i].AuthorUserId)
+			defer C.free(unsafe.Pointer(cItems[i].authorUserId))
 			cItems[i].revision = C.int64_t(data.items[i].Revision)
 			cItems[i].updateTs = C.int64_t(data.items[i].UpdateTs)
 		}
@@ -333,8 +336,11 @@ func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType 
 			cItems[i] = C.C_MetadataItem_New()
 			defer C.C_MetadataItem_Delete(cItems[i])
 			cItems[i].key = C.CString(data.items[i].Key)
+			defer C.free(unsafe.Pointer(cItems[i].key))
 			cItems[i].value = C.CString(data.items[i].Value)
+			defer C.free(unsafe.Pointer(cItems[i].value))
 			cItems[i].authorUserId = C.CString(data.items[i].AuthorUserId)
+			defer C.free(unsafe.Pointer(cItems[i].authorUserId))
 			cItems[i].revision = C.int64_t(data.items[i].Revision)
 			cItems[i].updateTs = C.int64_t(data.items[i].UpdateTs)
 		}
@@ -392,8 +398,11 @@ func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType 
 			cItems[i] = C.C_MetadataItem_New()
 			defer C.C_MetadataItem_Delete(cItems[i])
 			cItems[i].key = C.CString(data.items[i].Key)
+			defer C.free(unsafe.Pointer(cItems[i].key))
 			cItems[i].value = C.CString(data.items[i].Value)
+			defer C.free(unsafe.Pointer(cItems[i].value))
 			cItems[i].authorUserId = C.CString(data.items[i].AuthorUserId)
+			defer C.free(unsafe.Pointer(cItems[i].authorUserId))
 			cItems[i].revision = C.int64_t(data.items[i].Revision)
 			cItems[i].updateTs = C.int64_t(data.items[i].UpdateTs)
 		}
@@ -469,8 +478,11 @@ func (this_ *IRtmStorage) SetUserMetadata(userId string, data *IMetadata, option
 			cItems[i] = C.C_MetadataItem_New()
 			defer C.C_MetadataItem_Delete(cItems[i])
 			cItems[i].key = C.CString(data.items[i].Key)
+			defer C.free(unsafe.Pointer(cItems[i].key))
 			cItems[i].value = C.CString(data.items[i].Value)
+			defer C.free(unsafe.Pointer(cItems[i].value))
 			cItems[i].authorUserId = C.CString(data.items[i].AuthorUserId)
+			defer C.free(unsafe.Pointer(cItems[i].authorUserId))
 			cItems[i].revision = C.int64_t(data.items[i].Revision)
 			cItems[i].updateTs = C.int64_t(data.items[i].UpdateTs)
 		}
@@ -522,8 +534,11 @@ func (this_ *IRtmStorage) UpdateUserMetadata(userId string, data *IMetadata, opt
 			cItems[i] = C.C_MetadataItem_New()
 			defer C.C_MetadataItem_Delete(cItems[i])
 			cItems[i].key = C.CString(data.items[i].Key)
+			defer C.free(unsafe.Pointer(cItems[i].key))
 			cItems[i].value = C.CString(data.items[i].Value)
+			defer C.free(unsafe.Pointer(cItems[i].value))
 			cItems[i].authorUserId = C.CString(data.items[i].AuthorUserId)
+			defer C.free(unsafe.Pointer(cItems[i].authorUserId))
 			cItems[i].revision = C.int64_t(data.items[i].Revision)
 			cItems[i].updateTs = C.int64_t(data.items[i].UpdateTs)
 		}
@@ -575,8 +590,11 @@ func (this_ *IRtmStorage) RemoveUserMetadata(userId string, data *IMetadata, opt
 			cItems[i] = C.C_MetadataItem_New()
 			defer C.C_MetadataItem_Delete(cItems[i])
 			cItems[i].key = C.CString(data.items[i].Key)
+			defer C.free(unsafe.Pointer(cItems[i].key))
 			cItems[i].value = C.CString(data.items[i].Value)
+			defer C.free(unsafe.Pointer(cItems[i].value))
 			cItems[i].authorUserId = C.CString(data.items[i].AuthorUserId)
+			defer C.free(unsafe.Pointer(cItems[i].authorUserId))
 			cItems[i].revision = C.int64_t(data.items[i].Revision)
 			cItems[i].updateTs = C.int64_t(data.items[i].UpdateTs)
 		}

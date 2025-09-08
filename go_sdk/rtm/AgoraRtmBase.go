@@ -1610,6 +1610,28 @@ func NewSubscribeOptions() *SubscribeOptions {
 	}
 }
 
+func (this_ *SubscribeOptions) toC() unsafe.Pointer {
+	if this_ == nil {
+		return nil
+	}
+	cOpt := C.C_SubscribeOptions_New()
+	if cOpt == nil {
+		return nil
+	}
+	cOpt.withMessage = C.bool(this_.WithMessage)
+	cOpt.withMetadata = C.bool(this_.WithMetadata)
+	cOpt.withPresence = C.bool(this_.WithPresence)
+	cOpt.withLock = C.bool(this_.WithLock)
+	cOpt.beQuiet = C.bool(this_.BeQuiet)
+	return unsafe.Pointer(cOpt)
+}
+
+func freeSubscribeOptions(cOpt unsafe.Pointer) {
+	if cOpt != nil {
+		C.C_SubscribeOptions_Delete((*C.struct_C_SubscribeOptions)(cOpt))
+	}
+}
+
 // #endregion SubscribeOptions
 
 /**

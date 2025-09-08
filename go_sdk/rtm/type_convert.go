@@ -12,17 +12,17 @@ package agorartm
 int is_valid_memory(const void* ptr) {
     if (ptr == NULL) return 0;
 
-    // 获取页面大小
+    // get page size
     long page_size = sysconf(_SC_PAGESIZE);
     if (page_size <= 0) return 0;
 
-    // 计算指针所在页面的起始地址
+    // calculate the start address of the page where the pointer is located
     void* page_start = (void*)((uintptr_t)ptr & ~(page_size - 1));
 
-    // 检查页面是否可访问
+    // check if the page is accessible
     if (msync(page_start, page_size, MS_ASYNC) == -1) {
         if (errno == ENOMEM) {
-            return 0; // 页面不存在或不可访问
+            return 0; // page does not exist or is not accessible
         }
     }
 
@@ -38,7 +38,7 @@ void segv_handler(int sig) {
 int safe_strlen(const char* str) {
     struct sigaction old_action, new_action;
 
-    // 设置信号处理器
+    // set the signal handler
     new_action.sa_handler = segv_handler;
     sigemptyset(&new_action.sa_mask);
     new_action.sa_flags = 0;
@@ -49,10 +49,10 @@ int safe_strlen(const char* str) {
     if (setjmp(segv_buf) == 0) {
         result = strlen(str);
     } else {
-        result = -1; // 段错误
+        result = -1; // segment fault
     }
 
-    // 恢复原来的信号处理器
+    // restore the original signal handler
     sigaction(SIGSEGV, &old_action, NULL);
 
     return result;
@@ -65,13 +65,13 @@ func IsValidMemory(ptr unsafe.Pointer) bool {
 	return C.is_valid_memory(ptr) != 0
 }
 
-// FastSafeCGoString - 快速版本，只做基本检查
+// FastSafeCGoString - fast version, only do basic check
 func FastSafeCGoString(cstr *C.char) string {
 	if cstr == nil {
 		return ""
 	}
 
-	// 只做简单的内存页面检查，避免信号处理开销
+	// only do simple memory page check, avoid signal processing overhead
 	if C.is_valid_memory(unsafe.Pointer(cstr)) == 0 {
 		return ""
 	}
@@ -79,13 +79,13 @@ func FastSafeCGoString(cstr *C.char) string {
 	return C.GoString(cstr)
 }
 
-// SafeCGoString - 完整安全检查版本
+// SafeCGoString - full security check version
 func SafeCGoString(cstr *C.char) string {
 	if cstr == nil {
 		return ""
 	}
 
-	// 检查内存是否可访问
+	// check if the memory is accessible
 	if C.is_valid_memory(unsafe.Pointer(cstr)) == 0 {
 		return ""
 	}
@@ -111,7 +111,7 @@ func CUserListToUserList(cUserList *C.struct_C_UserList) *UserList {
 	userCount := int(cUserList.userCount)
 	users := make([]string, userCount)
 
-	// 使用 unsafe.Slice 创建字符串指针切片
+	// use unsafe.Slice to create a string pointer slice
 	cUsers := unsafe.Slice((**C.char)(unsafe.Pointer(cUserList.users)), userCount)
 
 	for i := 0; i < userCount; i++ {
@@ -157,7 +157,7 @@ func CMetadataToIMetadata(cMetadata *C.struct_C_Metadata) *IMetadata {
 
 	items := make([]MetadataItem, itemCount)
 
-	// 使用 unsafe.Slice 创建 MetadataItem 指针切片
+	// use unsafe.Slice to create MetadataItem pointer slice
 	cItems := unsafe.Slice((**C.struct_C_MetadataItem)(itemsPtr), itemCount)
 
 	for i := 0; i < int(itemCount); i++ {
@@ -216,7 +216,7 @@ func CUserStateToUserState(cUserState *C.struct_C_UserState) *UserState {
 		}
 	}
 
-	// 使用 unsafe.Slice 创建 StateItem 指针切片
+	// use unsafe.Slice to create StateItem pointer slice
 	cStates := unsafe.Slice((**C.struct_C_StateItem)(unsafe.Pointer(cUserState.states)), cUserState.statesCount)
 
 	for i := 0; i < int(cUserState.statesCount); i++ {
@@ -263,7 +263,7 @@ func CLinkStateEventToLinkStateEvent(cLinkStateEvent *C.struct_C_LinkStateEvent)
 
 	affectedChannels := make([]string, cLinkStateEvent.affectedChannelCount)
 
-	// 使用 unsafe.Slice 创建字符串指针切片
+	// use unsafe.Slice to create string pointer slice
 	cAffectedChannels := unsafe.Slice((**C.char)(unsafe.Pointer(cLinkStateEvent.affectedChannels)), cLinkStateEvent.affectedChannelCount)
 
 	for i := 0; i < int(cLinkStateEvent.affectedChannelCount); i++ {
@@ -276,7 +276,7 @@ func CLinkStateEventToLinkStateEvent(cLinkStateEvent *C.struct_C_LinkStateEvent)
 
 	unrestoredChannels := make([]string, cLinkStateEvent.unrestoredChannelCount)
 
-	// 使用 unsafe.Slice 创建字符串指针切片
+	// use unsafe.Slice to create string pointer slice
 	cUnrestoredChannels := unsafe.Slice((**C.char)(unsafe.Pointer(cLinkStateEvent.unrestoredChannels)), cLinkStateEvent.unrestoredChannelCount)
 
 	for i := 0; i < int(cLinkStateEvent.unrestoredChannelCount); i++ {

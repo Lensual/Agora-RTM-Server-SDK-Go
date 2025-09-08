@@ -2,16 +2,16 @@ package agorartm
 
 import "reflect"
 
-// EventHandlerAdapter 适配器，将用户的事件处理器转换为内部接口
+// EventHandlerAdapter adapter, convert the user's event handler to the internal interface
 type EventHandlerAdapter struct {
 	userHandler RtmEventHandler
 	userValue   reflect.Value
 	userType    reflect.Type
 }
 
-// NewEventHandlerAdapter 创建事件处理器适配器
+// NewEventHandlerAdapter create event handler adapter
 func NewEventHandlerAdapter(userHandler RtmEventHandler) *EventHandlerAdapter {
-	// 安全检查：如果 userHandler 为 nil，创建一个安全的默认适配器
+	// security check: if userHandler is nil, create a safe default adapter
 	if userHandler == nil {
 		return &EventHandlerAdapter{
 			userHandler: nil,
@@ -27,60 +27,60 @@ func NewEventHandlerAdapter(userHandler RtmEventHandler) *EventHandlerAdapter {
 	}
 }
 
-// callUserMethod 使用反射调用用户的方法（如果存在）
+// callUserMethod use reflection to call the user's method (if exists)
 func (adapter *EventHandlerAdapter) callUserMethod(methodName string, args ...interface{}) {
-	// 安全检查：如果 userHandler 为 nil，直接返回
+	// security check: if userHandler is nil, return directly
 	if adapter.userHandler == nil {
 		return
 	}
 
-	// 安全检查：如果方法名为空，直接返回
+	// security check: if methodName is empty, return directly
 	if methodName == "" {
 		return
 	}
 
-	// 首先检查是否是函数式配置
+	// first check if it is a functional configuration
 	if config, ok := adapter.userHandler.(*RtmEventHandlerConfig); ok {
 		adapter.callFunctionConfig(config, methodName, args...)
 		return
 	}
 
-	// 否则使用反射调用用户方法
+	// otherwise use reflection to call the user's method
 	method := adapter.userValue.MethodByName(methodName)
 	if !method.IsValid() {
-		// 用户没有实现这个方法，直接返回
+		// user did not implement this method, return directly
 		return
 	}
 
-	// 安全检查：检查参数数量是否匹配
+	// security check: check if the parameter quantity matches
 	methodType := method.Type()
 	numIn := methodType.NumIn()
 	if len(args) != numIn {
-		// 参数数量不匹配，直接返回
+		// parameter quantity does not match, return directly
 		return
 	}
 
-	// 准备参数，并进行类型安全检查
+	// prepare parameters, and perform type safety check
 	values := make([]reflect.Value, len(args))
 	for i, arg := range args {
 		argValue := reflect.ValueOf(arg)
 		expectedType := methodType.In(i)
 
-		// 类型安全检查
+		// type safety check
 		if arg == nil {
-			// 如果参数为 nil，检查方法是否接受 nil
+			// if the parameter is nil, check if the method accepts nil
 			if expectedType.Kind() == reflect.Ptr || expectedType.Kind() == reflect.Interface {
 				values[i] = reflect.Zero(expectedType)
 			} else {
-				// 类型不匹配，直接返回
+				// type does not match, return directly
 				return
 			}
 		} else if !argValue.Type().AssignableTo(expectedType) {
-			// 类型不匹配，尝试类型转换
+			// type does not match, try type conversion
 			if argValue.Type().ConvertibleTo(expectedType) {
 				values[i] = argValue.Convert(expectedType)
 			} else {
-				// 无法转换，直接返回
+				// cannot convert, return directly
 				return
 			}
 		} else {
@@ -88,29 +88,29 @@ func (adapter *EventHandlerAdapter) callUserMethod(methodName string, args ...in
 		}
 	}
 
-	// 安全调用方法
+	// security call method
 	defer func() {
 		if r := recover(); r != nil {
-			// 如果方法调用 panic，记录日志但不影响程序运行
-			// 这里可以添加日志记录
+			// if the method call panic, record log but do not affect the program running
+			// here can add log record
 		}
 	}()
 
 	method.Call(values)
 }
 
-// callFunctionConfig 调用函数式配置中的回调函数
+// callFunctionConfig call the callback function in the functional configuration
 func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerConfig, methodName string, args ...interface{}) {
-	// 安全检查：如果 config 为 nil，直接返回
+	// security check: if config is nil, return directly
 	if config == nil {
 		return
 	}
 
-	// 安全调用函数，防止 panic
+	// security call function, prevent panic
 	defer func() {
 		if r := recover(); r != nil {
-			// 如果函数调用 panic，记录日志但不影响程序运行
-			// 这里可以添加日志记录
+			// if the function call panic, record log but do not affect the program running
+			// here can add log record
 		}
 	}()
 
