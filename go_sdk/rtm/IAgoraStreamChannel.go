@@ -302,6 +302,7 @@ type IStreamChannel struct {
  */
 func (this_ *IStreamChannel) Join(options *JoinChannelOptions, requestId *uint64) int {
 	cOptions := C.C_JoinChannelOptions_New()
+	defer C.C_JoinChannelOptions_Delete(cOptions)
 	cOptions.token = C.CString(options.Token)
 	defer C.free(unsafe.Pointer(cOptions.token))
 	cOptions.withMetadata = C.bool(options.WithMetadata)
@@ -371,6 +372,7 @@ func (this_ *IStreamChannel) JoinTopic(topic string, options *JoinTopicOptions, 
 	cTopic := C.CString(topic)
 	defer C.free(unsafe.Pointer(cTopic))
 	cOptions := C.C_JoinTopicOptions_New()
+	defer C.C_JoinTopicOptions_Delete(cOptions)
 	if options != nil {
 		cOptions.qos = C.enum_C_RTM_MESSAGE_QOS(options.qos)
 		cOptions.priority = C.enum_C_RTM_MESSAGE_PRIORITY(options.priority)
@@ -409,6 +411,7 @@ func (this_ *IStreamChannel) PublishTopicMessage(topic string, message string, l
 	defer C.free(unsafe.Pointer(cMessage))
 	var requestId uint64
 	cOption := C.C_TopicMessageOptions_New()
+	defer C.C_TopicMessageOptions_Delete(cOption)
 	if option != nil {
 		cOption.messageType = C.enum_C_RTM_MESSAGE_TYPE(option.MessageType)
 		cOption.sendTs = C.uint64_t(option.SendTs)
@@ -460,6 +463,7 @@ func (this_ *IStreamChannel) SubscribeTopic(topic string, options *TopicOptions,
 	cTopic := C.CString(topic)
 	defer C.free(unsafe.Pointer(cTopic))
 	cOptions := C.C_TopicOptions_New()
+	defer C.C_TopicOptions_Delete(cOptions)
 	if options != nil {
 		if len(options.users) > 0 {
 			users := make([]*C.char, len(options.users))
@@ -501,6 +505,7 @@ func (this_ *IStreamChannel) UnsubscribeTopic(topic string, options *TopicOption
 	cTopic := C.CString(topic)
 	defer C.free(unsafe.Pointer(cTopic))
 	cOptions := C.C_TopicOptions_New()
+	defer C.C_TopicOptions_Delete(cOptions)
 	if options != nil {
 		if len(options.users) > 0 {
 			users := make([]*C.char, len(options.users))

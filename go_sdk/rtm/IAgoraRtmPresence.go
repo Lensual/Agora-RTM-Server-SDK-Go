@@ -41,6 +41,7 @@ func (this_ *IRtmPresence) WhoNow(channelName string, channelType RTM_CHANNEL_TY
 	defer C.free(unsafe.Pointer(cChannelName))
 
 	cOptions := C.C_PresenceOptions_New()
+	defer C.C_PresenceOptions_Delete(cOptions)
 	if options != nil {
 		cOptions.includeUserId = C.bool(options.IncludeUserId)
 		cOptions.includeState = C.bool(options.IncludeState)
@@ -108,6 +109,7 @@ func (this_ *IRtmPresence) SetState(channelName string, channelType RTM_CHANNEL_
 		for i := uint(0); i < actualCount; i++ {
 			if items[i] != nil {
 				cItemsArr[i] = C.C_StateItem_New()
+				defer C.C_StateItem_Delete(cItemsArr[i])
 				cItemsArr[i].key = C.CString(items[i].Key)
 				cItemsArr[i].value = C.CString(items[i].Value)
 				defer C.free(unsafe.Pointer(cItemsArr[i].key))
@@ -217,6 +219,7 @@ func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RTM_CH
 	defer C.free(unsafe.Pointer(cChannelName))
 
 	cOptions := C.C_GetOnlineUsersOptions_New()
+	defer C.C_GetOnlineUsersOptions_Delete(cOptions)
 	if options != nil {
 		cOptions.includeUserId = C.bool(options.IncludeUserId)
 		cOptions.includeState = C.bool(options.IncludeState)

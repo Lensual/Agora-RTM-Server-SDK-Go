@@ -1424,6 +1424,8 @@ func (this_ *StorageEvent) fromC(cEvent *C.struct_C_StorageEvent) {
 
 type IRtmClient struct {
 	rtmClient unsafe.Pointer
+	adapter   *EventHandlerAdapter
+	bridge    *RtmEventHandlerBridge
 }
 
 // #region IRtmClient
@@ -1451,6 +1453,7 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
 	if cConfig == nil {
 		return nil
 	}
+	defer C.C_RtmConfig_Delete(cConfig)
 
 	// 设置所有必要的字段
 	cConfig.appId = C.CString(config.AppId)
@@ -1466,10 +1469,12 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
 	cConfig.useStringUserId = C.bool(config.UseStringUserId)
 
 	// 设置事件处理器
+	var adapter *EventHandlerAdapter
+	var bridge *RtmEventHandlerBridge
 	if config.EventHandler != nil {
 		// 自动创建适配器，让用户只需要实现需要的方法
-		adapter := NewEventHandlerAdapter(config.EventHandler)
-		bridge := NewRtmEventHandlerBridge(adapter)
+		adapter = NewEventHandlerAdapter(config.EventHandler)
+		bridge = NewRtmEventHandlerBridge(adapter)
 		if bridge != nil {
 			cConfig.eventHandler = unsafe.Pointer(bridge.cBridge)
 		} else {
@@ -1483,10 +1488,18 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
 	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
 
 	if rtmClient == nil {
+		// 如果创建失败，需要清理已创建的对象
+		if bridge != nil {
+			bridge.Delete()
+		}
 		return nil
 	}
 
-	return &IRtmClient{rtmClient: rtmClient}
+	return &IRtmClient{
+		rtmClient: rtmClient,
+		adapter:   adapter,
+		bridge:    bridge,
+	}
 }
 
 /**
@@ -1497,7 +1510,18 @@ func CreateAgoraRtmClient(config *RtmConfig) *IRtmClient {
  * - < 0: Failure.
  */
 func (this_ *IRtmClient) Release() int {
-	return int(C.agora_rtm_client_release(this_.rtmClient))
+	// 先释放C层的客户端
+	ret := int(C.agora_rtm_client_release(this_.rtmClient))
+	
+	// 然后释放Go层的对象
+	if this_.bridge != nil {
+		this_.bridge.Delete()
+		this_.bridge = nil
+	}
+	this_.adapter = nil
+	this_.rtmClient = nil
+	
+	return ret
 }
 
 /**
