@@ -98,7 +98,7 @@ func NewGetHistoryMessagesOptions() *GetHistoryMessagesOptions {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmHistory) GetMessages(channelName string, channelType RTM_CHANNEL_TYPE, options *GetHistoryMessagesOptions, requestId *uint64) int {
+func (this_ *IRtmHistory) GetMessages(channelName string, channelType RtmChannelType, options *GetHistoryMessagesOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 

@@ -16,7 +16,7 @@ linux + mac
 for Linux:
 export LD_LIBRARY_PATH=./agora_sdk/
 for mac:
-export DYLD_LIBRARY_PATH=./agora_sdk/
+export DYLD_LIBRARY_PATH=./agora_sdk_mac/
 
 如何编译？
 1、资源下载：只需要在初始化的时候/或者是更新仓库版本的时候，执行一次即可

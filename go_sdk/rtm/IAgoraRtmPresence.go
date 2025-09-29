@@ -36,7 +36,7 @@ type IRtmPresence struct {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) WhoNow(channelName string, channelType RTM_CHANNEL_TYPE, options *PresenceOptions, requestId *uint64) int {
+func (this_ *IRtmPresence) WhoNow(channelName string, channelType RtmChannelType, options *PresenceOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -94,7 +94,7 @@ func (this_ *IRtmPresence) WhereNow(userId string, requestId *uint64) int {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) SetState(channelName string, channelType RTM_CHANNEL_TYPE, items []*StateItem, count uint, requestId *uint64) int {
+func (this_ *IRtmPresence) SetState(channelName string, channelType RtmChannelType, items []*StateItem, count uint, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -147,7 +147,7 @@ func (this_ *IRtmPresence) SetState(channelName string, channelType RTM_CHANNEL_
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) RemoveState(channelName string, channelType RTM_CHANNEL_TYPE, keys []string, count uint, requestId *uint64) int {
+func (this_ *IRtmPresence) RemoveState(channelName string, channelType RtmChannelType, keys []string, count uint, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -186,7 +186,7 @@ func (this_ *IRtmPresence) RemoveState(channelName string, channelType RTM_CHANN
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) GetState(channelName string, channelType RTM_CHANNEL_TYPE, userId string, requestId *uint64) int {
+func (this_ *IRtmPresence) GetState(channelName string, channelType RtmChannelType, userId string, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -214,7 +214,7 @@ func (this_ *IRtmPresence) GetState(channelName string, channelType RTM_CHANNEL_
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RTM_CHANNEL_TYPE, options *GetOnlineUsersOptions, requestId *uint64) int {
+func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RtmChannelType, options *GetOnlineUsersOptions, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 

@@ -123,8 +123,7 @@ func CUserListToUserList(cUserList *C.struct_C_UserList) *UserList {
 	}
 
 	return &UserList{
-		Users:     users,
-		UserCount: uint(userCount),
+		Users: users,
 	}
 }
 
@@ -190,9 +189,9 @@ func CLockDetailToLockDetail(cLockDetail *C.struct_C_LockDetail) *LockDetail {
 	}
 
 	return &LockDetail{
-		lockName: FastSafeCGoString(cLockDetail.lockName),
-		owner:    FastSafeCGoString(cLockDetail.owner),
-		ttl:      uint32(cLockDetail.ttl),
+		LockName: FastSafeCGoString(cLockDetail.lockName),
+		Owner:    FastSafeCGoString(cLockDetail.owner),
+		Ttl:      uint32(cLockDetail.ttl),
 	}
 }
 
@@ -210,9 +209,8 @@ func CUserStateToUserState(cUserState *C.struct_C_UserState) *UserState {
 
 	if cUserState.states == nil || cUserState.statesCount == 0 || !IsValidMemory(unsafe.Pointer(cUserState.states)) {
 		return &UserState{
-			UserId:      C.GoString(cUserState.userId),
-			States:      make([]StateItem, 0),
-			StatesCount: 0,
+			UserId: C.GoString(cUserState.userId),
+			States: make([]StateItem, 0),
 		}
 	}
 
@@ -229,9 +227,8 @@ func CUserStateToUserState(cUserState *C.struct_C_UserState) *UserState {
 	}
 
 	return &UserState{
-		UserId:      FastSafeCGoString(cUserState.userId),
-		States:      states,
-		StatesCount: uint(cUserState.statesCount),
+		UserId: FastSafeCGoString(cUserState.userId),
+		States: states,
 	}
 }
 
@@ -247,7 +244,7 @@ func CChannelInfoToChannelInfo(cChannelInfo *C.struct_C_ChannelInfo) *ChannelInf
 
 	return &ChannelInfo{
 		ChannelName: FastSafeCGoString(cChannelInfo.channelName),
-		ChannelType: RTM_CHANNEL_TYPE(cChannelInfo.channelType),
+		ChannelType: RtmChannelType(cChannelInfo.channelType),
 	}
 }
 
@@ -288,18 +285,16 @@ func CLinkStateEventToLinkStateEvent(cLinkStateEvent *C.struct_C_LinkStateEvent)
 	}
 
 	return &LinkStateEvent{
-		CurrentState:           RTM_LINK_STATE(cLinkStateEvent.currentState),
-		PreviousState:          RTM_LINK_STATE(cLinkStateEvent.previousState),
-		ServiceType:            RTM_SERVICE_TYPE(cLinkStateEvent.serviceType),
-		Operation:              RTM_LINK_OPERATION(cLinkStateEvent.operation),
-		ReasonCode:             RTM_LINK_STATE_CHANGE_REASON(cLinkStateEvent.reasonCode),
-		Reason:                 FastSafeCGoString(cLinkStateEvent.reason),
-		AffectedChannels:       affectedChannels,
-		AffectedChannelCount:   uint(cLinkStateEvent.affectedChannelCount),
-		UnrestoredChannels:     unrestoredChannels,
-		UnrestoredChannelCount: uint(cLinkStateEvent.unrestoredChannelCount),
-		IsResumed:              bool(cLinkStateEvent.isResumed),
-		Timestamp:              uint64(cLinkStateEvent.timestamp),
+		CurrentState:       int(cLinkStateEvent.currentState),
+		PreviousState:      int(cLinkStateEvent.previousState),
+		ServiceType:        RtmServiceType(cLinkStateEvent.serviceType),
+		Operation:          int(cLinkStateEvent.operation),
+		ReasonCode:         int(cLinkStateEvent.reasonCode),
+		Reason:             FastSafeCGoString(cLinkStateEvent.reason),
+		AffectedChannels:   affectedChannels,
+		UnrestoredChannels: unrestoredChannels,
+		IsResumed:          bool(cLinkStateEvent.isResumed),
+		Timestamp:          uint64(cLinkStateEvent.timestamp),
 	}
 }
 
@@ -314,7 +309,7 @@ func CHistoryMessageToHistoryMessage(cHistoryMessage *C.struct_C_HistoryMessage)
 	}
 
 	return &HistoryMessage{
-		MessageType:   RTM_MESSAGE_TYPE(cHistoryMessage.messageType),
+		MessageType:   RtmMessageType(cHistoryMessage.messageType),
 		Message:       FastSafeCGoString(cHistoryMessage.message),
 		MessageLength: uint(cHistoryMessage.messageLength),
 		Timestamp:     uint64(cHistoryMessage.timestamp),

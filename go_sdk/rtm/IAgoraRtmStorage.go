@@ -238,7 +238,7 @@ func (this_ *IRtmStorage) CreateMetadata() *IMetadata {
  * Set the metadata of a specified channel.
  *
  * @param [in] channelName The name of the channel.
- * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE.
+ * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RtmChannelTypeMESSAGE.
  * @param [in] data Metadata data.
  * @param [in] options The options of operate metadata.
  * @param [in] lock lock for operate channel metadata.
@@ -248,7 +248,7 @@ func (this_ *IRtmStorage) CreateMetadata() *IMetadata {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType RTM_CHANNEL_TYPE, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) int {
+func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) int {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cLockName := C.CString(lockName)
@@ -301,7 +301,7 @@ func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType RTM
  * Update the metadata of a specified channel.
  *
  * @param [in] channelName The channel Name of the specified channel.
- * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE.
+ * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RtmChannelTypeMESSAGE.
  * @param [in] data Metadata data.
  * @param [in] options The options of operate metadata.
  * @param [in] lock lock for operate channel metadata.
@@ -311,7 +311,7 @@ func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType RTM
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType RTM_CHANNEL_TYPE, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) {
+func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cLockName := C.CString(lockName)
@@ -363,7 +363,7 @@ func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType 
  * Remove the metadata of a specified channel.
  *
  * @param [in] channelName The channel Name of the specified channel.
- * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE.
+ * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RtmChannelTypeMESSAGE.
  * @param [in] data Metadata data.
  * @param [in] options The options of operate metadata.
  * @param [in] lock lock for operate channel metadata.
@@ -373,7 +373,7 @@ func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType 
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType RTM_CHANNEL_TYPE, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) {
+func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cLockName := C.CString(lockName)
@@ -425,14 +425,14 @@ func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType 
  * Get the metadata of a specified channel.
  *
  * @param [in] channelName The channel Name of the specified channel.
- * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RTM_CHANNEL_TYPE_MESSAGE.
+ * @param [in] channelType Which channel type, RTM_CHANNEL_TYPE_STREAM or RtmChannelTypeMESSAGE.
  * @param requestId The unique ID of this request.
  *
  * @return
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) GetChannelMetadata(channelName string, channelType RTM_CHANNEL_TYPE, requestId *uint64) {
+func (this_ *IRtmStorage) GetChannelMetadata(channelName string, channelType RtmChannelType, requestId *uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 

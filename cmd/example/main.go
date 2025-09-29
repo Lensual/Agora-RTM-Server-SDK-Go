@@ -37,7 +37,7 @@ func main() {
 
 	if lenArgs >= 5 {
 		token = os.Args[4]
-	} 
+	}
 	logWithTime("appId: %s, channelName: %s, userId: %s, token: %s\n", appId, channelName, userId, token)
 
 	// 检查参数
@@ -45,24 +45,25 @@ func main() {
 		fmt.Println("参数错误")
 		os.Exit(1)
 	}
-	ret := 0
+	ret := int(0)
+	var requestId uint64
 
 	myEventHandler := &MyRtmEventHandler{}
 
 	rtmConfig := agrtm.NewRtmConfig()
 	//defer rtmConfig.Delete()
-	rtmConfig.SetAppId(appId)
-	rtmConfig.SetUserId(userId)
-	rtmConfig.SetEventHandler(myEventHandler)
+	rtmConfig.AppId = appId
+	rtmConfig.UserId = userId
+	rtmConfig.EventHandler = myEventHandler
 
 	logConfig := agrtm.NewRtmLogConfig()
-	logConfig.SetFilePath("./logs/rtm.log")
-	logConfig.SetFileSizeInKB(1024)
-	logConfig.SetLevel(agrtm.RTM_LOG_LEVEL_INFO)
-	rtmConfig.SetLogConfig(logConfig)
+	logConfig.FilePath = "./logs/rtm.log"
+	logConfig.FileSizeInKB = 1024
+	logConfig.Level = agrtm.RtmLogLevelINFO
+	rtmConfig.LogConfig = logConfig
 	fmt.Printf("NewRtmConfig: %+v\n", rtmConfig) //DEBUG
 
-	rtmClient := agrtm.CreateAgoraRtmClient(rtmConfig)
+	rtmClient := agrtm.NewRtmClient(rtmConfig)
 	logWithTime("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
 
 	// set user channel info to event handler
@@ -73,7 +74,12 @@ func main() {
 	myEventHandler.Sign = sign
 
 	logWithTime("Login Start: %d\n", ret)
-	ret = rtmClient.Login(token)
+	if token == "" {
+		token = appId
+	}
+	ret, requestId = rtmClient.Login(token)
+
+	fmt.Printf("Login ret: %d, requestId: %d, token: %s\n", ret, requestId, token)	
 
 	if ret != 0 {
 		panic(ret)
@@ -86,11 +92,12 @@ func main() {
 	}
 	logWithTime("login success")
 
-	var reqId uint64
+
 	opt := agrtm.NewSubscribeOptions()
 
 	logWithTime("Subscribe start: %d\n", ret)
-	ret = rtmClient.Subscribe(channelName, opt, &reqId)
+	ret, requestId = rtmClient.Subscribe(channelName, opt)
+	fmt.Printf("Subscribe ret: %d, requestId: %d\n", ret, requestId)
 
 	if ret != 0 {
 		panic(ret)

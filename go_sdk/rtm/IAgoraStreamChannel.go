@@ -19,41 +19,41 @@ import (
 /**
  * The qos of rtm message.
  */
-type RTM_MESSAGE_QOS C.enum_C_RTM_MESSAGE_QOS
+type RtmMessageQos C.enum_C_RTM_MESSAGE_QOS
 
 const (
 	/**
 	 * Will not ensure that messages arrive in order.
 	 */
-	RTM_MESSAGE_QOS_UNORDERED RTM_MESSAGE_QOS = C.RTM_MESSAGE_QOS_UNORDERED
+	RtmMessageQosUNORDERED RtmMessageQos = C.RTM_MESSAGE_QOS_UNORDERED
 	/**
 	 * Will ensure that messages arrive in order.
 	 */
-	RTM_MESSAGE_QOS_ORDERED RTM_MESSAGE_QOS = C.RTM_MESSAGE_QOS_ORDERED
+	RtmMessageQosORDERED RtmMessageQos = C.RTM_MESSAGE_QOS_ORDERED
 )
 
 /**
  * The priority of rtm message.
  */
-type RTM_MESSAGE_PRIORITY C.enum_C_RTM_MESSAGE_PRIORITY
+type RtmMessagePriority C.enum_C_RTM_MESSAGE_PRIORITY
 
 const (
 	/**
 	 * The highest priority
 	 */
-	RTM_MESSAGE_PRIORITY_HIGHEST RTM_MESSAGE_PRIORITY = C.RTM_MESSAGE_PRIORITY_HIGHEST
+	RtmMessagePriorityHIGHEST RtmMessagePriority = C.RTM_MESSAGE_PRIORITY_HIGHEST
 	/**
 	 * The high priority
 	 */
-	RTM_MESSAGE_PRIORITY_HIGH RTM_MESSAGE_PRIORITY = C.RTM_MESSAGE_PRIORITY_HIGH
+	RtmMessagePriorityHIGH RtmMessagePriority = C.RTM_MESSAGE_PRIORITY_HIGH
 	/**
 	 * The normal priority (Default)
 	 */
-	RTM_MESSAGE_PRIORITY_NORMAL RTM_MESSAGE_PRIORITY = C.RTM_MESSAGE_PRIORITY_NORMAL
+	RtmMessagePriorityNORMAL RtmMessagePriority = C.RTM_MESSAGE_PRIORITY_NORMAL
 	/**
 	 * The low priority
 	 */
-	RTM_MESSAGE_PRIORITY_LOW RTM_MESSAGE_PRIORITY = C.RTM_MESSAGE_PRIORITY_LOW
+	RtmMessagePriorityLOW RtmMessagePriority = C.RTM_MESSAGE_PRIORITY_LOW
 )
 
 /**
@@ -157,8 +157,8 @@ func NewJoinChannelOptions() *JoinChannelOptions {
 * Join topic options.
  */
 type JoinTopicOptions struct {
-	qos           RTM_MESSAGE_QOS
-	priority      RTM_MESSAGE_PRIORITY
+	qos           RtmMessageQos
+	priority      RtmMessagePriority
 	meta          string
 	syncWithMedia bool
 }
@@ -168,28 +168,28 @@ type JoinTopicOptions struct {
 /**
  * The qos of rtm message.
  */
-func (this_ *JoinTopicOptions) GetQos() RTM_MESSAGE_QOS {
+func (this_ *JoinTopicOptions) GetQos() RtmMessageQos {
 	return this_.qos
 }
 
 /**
  * The qos of rtm message.
  */
-func (this_ *JoinTopicOptions) SetQos(qos RTM_MESSAGE_QOS) {
+func (this_ *JoinTopicOptions) SetQos(qos RtmMessageQos) {
 	this_.qos = qos
 }
 
 /**
  * The priority of rtm message.
  */
-func (this_ *JoinTopicOptions) GetPriority() RTM_MESSAGE_PRIORITY {
+func (this_ *JoinTopicOptions) GetPriority() RtmMessagePriority {
 	return this_.priority
 }
 
 /**
  * The priority of rtm message.
  */
-func (this_ *JoinTopicOptions) SetPriority(priority RTM_MESSAGE_PRIORITY) {
+func (this_ *JoinTopicOptions) SetPriority(priority RtmMessagePriority) {
 	this_.priority = priority
 }
 
@@ -223,8 +223,8 @@ func (this_ *JoinTopicOptions) SetSyncWithMedia(syncWithMedia bool) {
 
 func NewJoinTopicOptions() *JoinTopicOptions {
 	return &JoinTopicOptions{
-		qos:           RTM_MESSAGE_QOS_UNORDERED,
-		priority:      RTM_MESSAGE_PRIORITY_NORMAL,
+		qos:           RtmMessageQosUNORDERED,
+		priority:      RtmMessagePriorityNORMAL,
 		meta:          "",
 		syncWithMedia: false,
 	}
@@ -380,8 +380,8 @@ func (this_ *IStreamChannel) JoinTopic(topic string, options *JoinTopicOptions, 
 		defer C.free(unsafe.Pointer(cOptions.meta))
 		cOptions.syncWithMedia = C.bool(options.syncWithMedia)
 	} else {
-		cOptions.qos = C.enum_C_RTM_MESSAGE_QOS(RTM_MESSAGE_QOS_UNORDERED)
-		cOptions.priority = C.enum_C_RTM_MESSAGE_PRIORITY(RTM_MESSAGE_PRIORITY_NORMAL)
+		cOptions.qos = C.enum_C_RTM_MESSAGE_QOS(RtmMessageQosUNORDERED)
+		cOptions.priority = C.enum_C_RTM_MESSAGE_PRIORITY(RtmMessagePriorityNORMAL)
 		cOptions.meta = nil
 		cOptions.syncWithMedia = C.bool(false)
 	}
@@ -418,7 +418,7 @@ func (this_ *IStreamChannel) PublishTopicMessage(topic string, message string, l
 		cOption.customType = C.CString(option.CustomType)
 		defer C.free(unsafe.Pointer(cOption.customType))
 	} else {
-		cOption.messageType = C.enum_C_RTM_MESSAGE_TYPE(RTM_MESSAGE_TYPE_BINARY)
+		cOption.messageType = C.enum_C_RTM_MESSAGE_TYPE(RtmMessageTypeBINARY)
 		cOption.sendTs = 0
 		cOption.customType = nil
 	}

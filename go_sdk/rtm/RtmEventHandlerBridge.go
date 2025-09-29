@@ -158,50 +158,50 @@ type IRtmEventHandlerBridgeHandler interface {
 	OnTopicEvent(event *TopicEvent)
 	OnLockEvent(event *LockEvent)
 	OnStorageEvent(event *StorageEvent)
-	OnJoinResult(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE)
-	OnLeaveResult(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE)
-	OnJoinTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE)
-	OnLeaveTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE)
-	OnSubscribeTopicResult(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode RTM_ERROR_CODE)
-	OnConnectionStateChanged(channelName string, state RTM_CONNECTION_STATE, reason RTM_CONNECTION_CHANGE_REASON)
+	OnJoinResult(requestId uint64, channelName string, userId string, errorCode int)
+	OnLeaveResult(requestId uint64, channelName string, userId string, errorCode int)
+	OnJoinTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode int)
+	OnLeaveTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode int)
+	OnSubscribeTopicResult(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode int)
+	OnConnectionStateChanged(channelName string, state int, reason int)
 	OnTokenPrivilegeWillExpire(channelName string)
-	OnSubscribeResult(requestId uint64, channelName string, errorCode RTM_ERROR_CODE)
-	OnPublishResult(requestId uint64, errorCode RTM_ERROR_CODE)
-	OnLoginResult(requestId uint64, errorCode RTM_ERROR_CODE)
-	OnSetChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
-	OnUpdateChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
-	OnRemoveChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE)
-	OnGetChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, data *IMetadata, errorCode RTM_ERROR_CODE)
-	OnSetUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
-	OnUpdateUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
-	OnRemoveUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
-	OnGetUserMetadataResult(requestId uint64, userId string, data *IMetadata, errorCode RTM_ERROR_CODE)
-	OnSubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
-	OnSetLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
-	OnRemoveLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
-	OnReleaseLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
-	OnAcquireLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE, errorDetails string)
-	OnRevokeLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE)
-	OnGetLocksResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockDetailList *LockDetail, count uint, errorCode RTM_ERROR_CODE)
-	OnWhoNowResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE)
-	OnGetOnlineUsersResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE)
-	OnWhereNowResult(requestId uint64, channels *ChannelInfo, count uint, errorCode RTM_ERROR_CODE)
-	OnGetUserChannelsResult(requestId uint64, channels *ChannelInfo, count uint, errorCode RTM_ERROR_CODE)
-	OnPresenceSetStateResult(requestId uint64, errorCode RTM_ERROR_CODE)
-	OnPresenceRemoveStateResult(requestId uint64, errorCode RTM_ERROR_CODE)
-	OnPresenceGetStateResult(requestId uint64, state *UserState, errorCode RTM_ERROR_CODE)
+	OnSubscribeResult(requestId uint64, channelName string, errorCode int)
+	OnPublishResult(requestId uint64, errorCode int)
+	OnLoginResult(requestId uint64, errorCode int)
+	OnSetChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, errorCode int)
+	OnUpdateChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, errorCode int)
+	OnRemoveChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, errorCode int)
+	OnGetChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, data *IMetadata, errorCode int)
+	OnSetUserMetadataResult(requestId uint64, userId string, errorCode int)
+	OnUpdateUserMetadataResult(requestId uint64, userId string, errorCode int)
+	OnRemoveUserMetadataResult(requestId uint64, userId string, errorCode int)
+	OnGetUserMetadataResult(requestId uint64, userId string, data *IMetadata, errorCode int)
+	OnSubscribeUserMetadataResult(requestId uint64, userId string, errorCode int)
+	OnSetLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
+	OnRemoveLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
+	OnReleaseLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
+	OnAcquireLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int, errorDetails string)
+	OnRevokeLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
+	OnGetLocksResult(requestId uint64, channelName string, channelType RtmChannelType, lockDetailList *LockDetail, count uint, errorCode int)
+	OnWhoNowResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode int)
+	OnGetOnlineUsersResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode int)
+	OnWhereNowResult(requestId uint64, channels *ChannelInfo, count uint, errorCode int)
+	OnGetUserChannelsResult(requestId uint64, channels *ChannelInfo, count uint, errorCode int)
+	OnPresenceSetStateResult(requestId uint64, errorCode int)
+	OnPresenceRemoveStateResult(requestId uint64, errorCode int)
+	OnPresenceGetStateResult(requestId uint64, state *UserState, errorCode int)
 	// newly added callback functions
 	OnLinkStateEvent(event *LinkStateEvent)
-	OnLogoutResult(requestId uint64, errorCode RTM_ERROR_CODE)
-	OnRenewTokenResult(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE)
-	OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
-	OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE)
-	OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user *UserList, errorCode RTM_ERROR_CODE)
+	OnLogoutResult(requestId uint64, errorCode int)
+	OnRenewTokenResult(requestId uint64, serverType RtmServiceType, channelName string, errorCode int)
+	OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode int)
+	OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode int)
+	OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user *UserList, errorCode int)
 	// note： 可以将messageList转换为HistoryMessage切片，也就是将C的HistoryMessage数组转换为Go的HistoryMessage切片
 	// 使用unsafe.Slice将C的HistoryMessage数组转换为Go的HistoryMessage切片,也就是参数为：messageList *HistoryMessage,count uint,newStart uint64
 	// 这样就不需要做拷贝之类的，效率高，不过也没有多大影响。参考channelInfo的转换
-	OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode RTM_ERROR_CODE)
-	OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE)
+	OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode int)
+	OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode int)
 }
 type RtmEventHandlerBridge struct {
 	handler IRtmEventHandlerBridgeHandler
@@ -374,7 +374,7 @@ func cgo_RtmEventHandlerBridge_onJoinResult(_ *C.C_RtmEventHandlerBridge, userDa
 		uint64(requestId),
 		C.GoString(channelName),
 		C.GoString(userId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -391,7 +391,7 @@ func cgo_RtmEventHandlerBridge_onLeaveResult(_ *C.C_RtmEventHandlerBridge, userD
 		uint64(requestId),
 		C.GoString(channelName),
 		C.GoString(userId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -410,7 +410,7 @@ func cgo_RtmEventHandlerBridge_onJoinTopicResult(_ *C.C_RtmEventHandlerBridge, u
 		C.GoString(userId),
 		C.GoString(topic),
 		C.GoString(meta),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -429,7 +429,7 @@ func cgo_RtmEventHandlerBridge_onLeaveTopicResult(_ *C.C_RtmEventHandlerBridge, 
 		C.GoString(userId),
 		C.GoString(topic),
 		C.GoString(meta),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -464,7 +464,7 @@ func cgo_RtmEventHandlerBridge_onSubscribeTopicResult(_ *C.C_RtmEventHandlerBrid
 		C.GoString(topic),
 		safeSucceedUsers,
 		safeFailedUsers,
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -479,8 +479,8 @@ func cgo_RtmEventHandlerBridge_onConnectionStateChanged(_ *C.C_RtmEventHandlerBr
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnConnectionStateChanged(
 		C.GoString(channelName),
-		RTM_CONNECTION_STATE(state),
-		RTM_CONNECTION_CHANGE_REASON(reason),
+		int(state),
+		int(reason),
 	)
 }
 
@@ -510,7 +510,7 @@ func cgo_RtmEventHandlerBridge_onSubscribeResult(_ *C.C_RtmEventHandlerBridge, u
 	bridge.handler.OnSubscribeResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -525,7 +525,7 @@ func cgo_RtmEventHandlerBridge_onPublishResult(_ *C.C_RtmEventHandlerBridge, use
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnPublishResult(
 		uint64(requestId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -545,7 +545,7 @@ func cgo_RtmEventHandlerBridge_onLoginResult(_ *C.C_RtmEventHandlerBridge, userD
 
 	bridge.handler.OnLoginResult(
 		uint64(requestId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 	fmt.Printf("[DEBUG] Go事件处理器OnLoginResult调用完成\n")
 }
@@ -562,8 +562,8 @@ func cgo_RtmEventHandlerBridge_onSetChannelMetadataResult(_ *C.C_RtmEventHandler
 	bridge.handler.OnSetChannelMetadataResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
-		RTM_ERROR_CODE(errorCode),
+		RtmChannelType(channelType),
+		int(errorCode),
 	)
 }
 
@@ -579,8 +579,8 @@ func cgo_RtmEventHandlerBridge_onUpdateChannelMetadataResult(_ *C.C_RtmEventHand
 	bridge.handler.OnUpdateChannelMetadataResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
-		RTM_ERROR_CODE(errorCode),
+		RtmChannelType(channelType),
+		int(errorCode),
 	)
 }
 
@@ -596,8 +596,8 @@ func cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult(_ *C.C_RtmEventHand
 	bridge.handler.OnRemoveChannelMetadataResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
-		RTM_ERROR_CODE(errorCode),
+		RtmChannelType(channelType),
+		int(errorCode),
 	)
 }
 
@@ -614,9 +614,9 @@ func cgo_RtmEventHandlerBridge_onGetChannelMetadataResult(_ *C.C_RtmEventHandler
 	bridge.handler.OnGetChannelMetadataResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
+		RtmChannelType(channelType),
 		goData,
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -632,7 +632,7 @@ func cgo_RtmEventHandlerBridge_onSetUserMetadataResult(_ *C.C_RtmEventHandlerBri
 	bridge.handler.OnSetUserMetadataResult(
 		uint64(requestId),
 		C.GoString(userId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -648,7 +648,7 @@ func cgo_RtmEventHandlerBridge_onUpdateUserMetadataResult(_ *C.C_RtmEventHandler
 	bridge.handler.OnUpdateUserMetadataResult(
 		uint64(requestId),
 		C.GoString(userId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -664,7 +664,7 @@ func cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult(_ *C.C_RtmEventHandler
 	bridge.handler.OnRemoveUserMetadataResult(
 		uint64(requestId),
 		C.GoString(userId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -681,7 +681,7 @@ func cgo_RtmEventHandlerBridge_onGetUserMetadataResult(_ *C.C_RtmEventHandlerBri
 		uint64(requestId),
 		C.GoString(userId),
 		(*IMetadata)(unsafe.Pointer(data)),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -697,7 +697,7 @@ func cgo_RtmEventHandlerBridge_onSubscribeUserMetadataResult(_ *C.C_RtmEventHand
 	bridge.handler.OnSubscribeUserMetadataResult(
 		uint64(requestId),
 		C.GoString(userId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -713,9 +713,9 @@ func cgo_RtmEventHandlerBridge_onSetLockResult(_ *C.C_RtmEventHandlerBridge, use
 	bridge.handler.OnSetLockResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
+		RtmChannelType(channelType),
 		C.GoString(lockName),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -731,9 +731,9 @@ func cgo_RtmEventHandlerBridge_onRemoveLockResult(_ *C.C_RtmEventHandlerBridge, 
 	bridge.handler.OnRemoveLockResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
+		RtmChannelType(channelType),
 		C.GoString(lockName),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -749,9 +749,9 @@ func cgo_RtmEventHandlerBridge_onReleaseLockResult(_ *C.C_RtmEventHandlerBridge,
 	bridge.handler.OnReleaseLockResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
+		RtmChannelType(channelType),
 		C.GoString(lockName),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -767,9 +767,9 @@ func cgo_RtmEventHandlerBridge_onAcquireLockResult(_ *C.C_RtmEventHandlerBridge,
 	bridge.handler.OnAcquireLockResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
+		RtmChannelType(channelType),
 		C.GoString(lockName),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 		C.GoString(errorDetails),
 	)
 }
@@ -786,9 +786,9 @@ func cgo_RtmEventHandlerBridge_onRevokeLockResult(_ *C.C_RtmEventHandlerBridge, 
 	bridge.handler.OnRevokeLockResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
+		RtmChannelType(channelType),
 		C.GoString(lockName),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -805,10 +805,10 @@ func cgo_RtmEventHandlerBridge_onGetLocksResult(_ *C.C_RtmEventHandlerBridge, us
 	bridge.handler.OnGetLocksResult(
 		uint64(requestId),
 		C.GoString(channelName),
-		RTM_CHANNEL_TYPE(channelType),
+		RtmChannelType(channelType),
 		goLockDetail,
 		uint(count),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -827,7 +827,7 @@ func cgo_RtmEventHandlerBridge_onWhoNowResult(_ *C.C_RtmEventHandlerBridge, user
 		goUserState,
 		uint(count),
 		C.GoString(nextPage),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -846,7 +846,7 @@ func cgo_RtmEventHandlerBridge_onGetOnlineUsersResult(_ *C.C_RtmEventHandlerBrid
 		goUserState,
 		uint(count),
 		C.GoString(nextPage),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -864,7 +864,7 @@ func cgo_RtmEventHandlerBridge_onWhereNowResult(_ *C.C_RtmEventHandlerBridge, us
 		uint64(requestId),
 		goChannelInfo,
 		uint(count),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -882,7 +882,7 @@ func cgo_RtmEventHandlerBridge_onGetUserChannelsResult(_ *C.C_RtmEventHandlerBri
 		uint64(requestId),
 		goChannelInfo,
 		uint(count),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -897,7 +897,7 @@ func cgo_RtmEventHandlerBridge_onPresenceSetStateResult(_ *C.C_RtmEventHandlerBr
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnPresenceSetStateResult(
 		uint64(requestId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -912,7 +912,7 @@ func cgo_RtmEventHandlerBridge_onPresenceRemoveStateResult(_ *C.C_RtmEventHandle
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnPresenceRemoveStateResult(
 		uint64(requestId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -929,7 +929,7 @@ func cgo_RtmEventHandlerBridge_onPresenceGetStateResult(_ *C.C_RtmEventHandlerBr
 	bridge.handler.OnPresenceGetStateResult(
 		uint64(requestId),
 		goUserState,
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -961,7 +961,7 @@ func cgo_RtmEventHandlerBridge_onLogoutResult(_ *C.C_RtmEventHandlerBridge, user
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnLogoutResult(
 		uint64(requestId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -976,9 +976,9 @@ func cgo_RtmEventHandlerBridge_onRenewTokenResult(_ *C.C_RtmEventHandlerBridge, 
 	bridge := (*RtmEventHandlerBridge)(userData)
 	bridge.handler.OnRenewTokenResult(
 		uint64(requestId),
-		RTM_SERVICE_TYPE(serverType),
+		RtmServiceType(serverType),
 		C.GoString(channelName),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -995,7 +995,7 @@ func cgo_RtmEventHandlerBridge_onPublishTopicMessageResult(_ *C.C_RtmEventHandle
 		uint64(requestId),
 		C.GoString(channelName),
 		C.GoString(topic),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -1012,7 +1012,7 @@ func cgo_RtmEventHandlerBridge_onUnsubscribeTopicResult(_ *C.C_RtmEventHandlerBr
 		uint64(requestId),
 		C.GoString(channelName),
 		C.GoString(topic),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -1033,7 +1033,7 @@ func cgo_RtmEventHandlerBridge_onGetSubscribedUserListResult(_ *C.C_RtmEventHand
 		C.GoString(channelName),
 		C.GoString(topic),
 		goUserList,
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -1059,7 +1059,7 @@ func cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult(_ *C.C_RtmEventHandler
 		uint64(requestId),
 		messages,
 		uint64(newStart),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }
 
@@ -1075,6 +1075,6 @@ func cgo_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult(_ *C.C_RtmEventHa
 	bridge.handler.OnUnsubscribeUserMetadataResult(
 		uint64(requestId),
 		C.GoString(userId),
-		RTM_ERROR_CODE(errorCode),
+		int(errorCode),
 	)
 }

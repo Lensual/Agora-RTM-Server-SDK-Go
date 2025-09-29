@@ -150,7 +150,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
 					if userId, ok := args[2].(string); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnJoinResult(requestId, channelName, userId, errorCode)
 						}
 					}
@@ -162,7 +162,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
 					if userId, ok := args[2].(string); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnLeaveResult(requestId, channelName, userId, errorCode)
 						}
 					}
@@ -176,7 +176,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 					if userId, ok := args[2].(string); ok {
 						if topic, ok := args[3].(string); ok {
 							if meta, ok := args[4].(string); ok {
-								if errorCode, ok := args[5].(RTM_ERROR_CODE); ok {
+								if errorCode, ok := args[5].(int); ok {
 									config.OnJoinTopicResult(requestId, channelName, userId, topic, meta, errorCode)
 								}
 							}
@@ -192,7 +192,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 					if userId, ok := args[2].(string); ok {
 						if topic, ok := args[3].(string); ok {
 							if meta, ok := args[4].(string); ok {
-								if errorCode, ok := args[5].(RTM_ERROR_CODE); ok {
+								if errorCode, ok := args[5].(int); ok {
 									config.OnLeaveTopicResult(requestId, channelName, userId, topic, meta, errorCode)
 								}
 							}
@@ -209,7 +209,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 						if topic, ok := args[3].(string); ok {
 							if succeedUsers, ok := args[4].(UserList); ok {
 								if failedUsers, ok := args[5].(UserList); ok {
-									if errorCode, ok := args[6].(RTM_ERROR_CODE); ok {
+									if errorCode, ok := args[6].(int); ok {
 										config.OnSubscribeTopicResult(requestId, channelName, userId, topic, succeedUsers, failedUsers, errorCode)
 									}
 								}
@@ -222,8 +222,8 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 	case "OnConnectionStateChanged":
 		if config.OnConnectionStateChanged != nil && len(args) >= 3 {
 			if channelName, ok := args[0].(string); ok {
-				if state, ok := args[1].(RTM_CONNECTION_STATE); ok {
-					if reason, ok := args[2].(RTM_CONNECTION_CHANGE_REASON); ok {
+				if state, ok := args[1].(int); ok {
+					if reason, ok := args[2].(int); ok {
 						config.OnConnectionStateChanged(channelName, state, reason)
 					}
 				}
@@ -239,7 +239,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnSubscribeResult != nil && len(args) >= 3 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if errorCode, ok := args[2].(RTM_ERROR_CODE); ok {
+					if errorCode, ok := args[2].(int); ok {
 						config.OnSubscribeResult(requestId, channelName, errorCode)
 					}
 				}
@@ -248,7 +248,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 	case "OnPublishResult":
 		if config.OnPublishResult != nil && len(args) >= 2 {
 			if requestId, ok := args[0].(uint64); ok {
-				if errorCode, ok := args[1].(RTM_ERROR_CODE); ok {
+				if errorCode, ok := args[1].(int); ok {
 					config.OnPublishResult(requestId, errorCode)
 				}
 			}
@@ -256,7 +256,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 	case "OnLoginResult":
 		if config.OnLoginResult != nil && len(args) >= 2 {
 			if requestId, ok := args[0].(uint64); ok {
-				if errorCode, ok := args[1].(RTM_ERROR_CODE); ok {
+				if errorCode, ok := args[1].(int); ok {
 					config.OnLoginResult(requestId, errorCode)
 				}
 			}
@@ -265,8 +265,8 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnSetChannelMetadataResult != nil && len(args) >= 4 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnSetChannelMetadataResult(requestId, channelName, channelType, errorCode)
 						}
 					}
@@ -277,8 +277,8 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnUpdateChannelMetadataResult != nil && len(args) >= 4 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnUpdateChannelMetadataResult(requestId, channelName, channelType, errorCode)
 						}
 					}
@@ -289,8 +289,8 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnRemoveChannelMetadataResult != nil && len(args) >= 4 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnRemoveChannelMetadataResult(requestId, channelName, channelType, errorCode)
 						}
 					}
@@ -301,9 +301,9 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnGetChannelMetadataResult != nil && len(args) >= 5 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
 						if data, ok := args[3].(*IMetadata); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnGetChannelMetadataResult(requestId, channelName, channelType, data, errorCode)
 							}
 						}
@@ -315,7 +315,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnSetUserMetadataResult != nil && len(args) >= 3 {
 			if requestId, ok := args[0].(uint64); ok {
 				if userId, ok := args[1].(string); ok {
-					if errorCode, ok := args[2].(RTM_ERROR_CODE); ok {
+					if errorCode, ok := args[2].(int); ok {
 						config.OnSetUserMetadataResult(requestId, userId, errorCode)
 					}
 				}
@@ -325,7 +325,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnUpdateUserMetadataResult != nil && len(args) >= 3 {
 			if requestId, ok := args[0].(uint64); ok {
 				if userId, ok := args[1].(string); ok {
-					if errorCode, ok := args[2].(RTM_ERROR_CODE); ok {
+					if errorCode, ok := args[2].(int); ok {
 						config.OnUpdateUserMetadataResult(requestId, userId, errorCode)
 					}
 				}
@@ -335,7 +335,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnRemoveUserMetadataResult != nil && len(args) >= 3 {
 			if requestId, ok := args[0].(uint64); ok {
 				if userId, ok := args[1].(string); ok {
-					if errorCode, ok := args[2].(RTM_ERROR_CODE); ok {
+					if errorCode, ok := args[2].(int); ok {
 						config.OnRemoveUserMetadataResult(requestId, userId, errorCode)
 					}
 				}
@@ -346,7 +346,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if userId, ok := args[1].(string); ok {
 					if data, ok := args[2].(*IMetadata); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnGetUserMetadataResult(requestId, userId, data, errorCode)
 						}
 					}
@@ -357,7 +357,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnSubscribeUserMetadataResult != nil && len(args) >= 3 {
 			if requestId, ok := args[0].(uint64); ok {
 				if userId, ok := args[1].(string); ok {
-					if errorCode, ok := args[2].(RTM_ERROR_CODE); ok {
+					if errorCode, ok := args[2].(int); ok {
 						config.OnSubscribeUserMetadataResult(requestId, userId, errorCode)
 					}
 				}
@@ -367,9 +367,9 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnSetLockResult != nil && len(args) >= 5 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
 						if lockName, ok := args[3].(string); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnSetLockResult(requestId, channelName, channelType, lockName, errorCode)
 							}
 						}
@@ -381,9 +381,9 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnRemoveLockResult != nil && len(args) >= 5 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
 						if lockName, ok := args[3].(string); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnRemoveLockResult(requestId, channelName, channelType, lockName, errorCode)
 							}
 						}
@@ -395,9 +395,9 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnReleaseLockResult != nil && len(args) >= 5 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
 						if lockName, ok := args[3].(string); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnReleaseLockResult(requestId, channelName, channelType, lockName, errorCode)
 							}
 						}
@@ -409,9 +409,9 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnAcquireLockResult != nil && len(args) >= 6 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
 						if lockName, ok := args[3].(string); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								if errorDetails, ok := args[5].(string); ok {
 									config.OnAcquireLockResult(requestId, channelName, channelType, lockName, errorCode, errorDetails)
 								}
@@ -425,9 +425,9 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnRevokeLockResult != nil && len(args) >= 5 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
 						if lockName, ok := args[3].(string); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnRevokeLockResult(requestId, channelName, channelType, lockName, errorCode)
 							}
 						}
@@ -439,10 +439,10 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnGetLocksResult != nil && len(args) >= 6 {
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
-					if channelType, ok := args[2].(RTM_CHANNEL_TYPE); ok {
+					if channelType, ok := args[2].(RtmChannelType); ok {
 						if lockDetailList, ok := args[3].(*LockDetail); ok {
 							if count, ok := args[4].(uint); ok {
-								if errorCode, ok := args[5].(RTM_ERROR_CODE); ok {
+								if errorCode, ok := args[5].(int); ok {
 									config.OnGetLocksResult(requestId, channelName, channelType, lockDetailList, count, errorCode)
 								}
 							}
@@ -457,7 +457,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 				if userStateList, ok := args[1].(*UserState); ok {
 					if count, ok := args[2].(uint); ok {
 						if nextPage, ok := args[3].(string); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnWhoNowResult(requestId, userStateList, count, nextPage, errorCode)
 							}
 						}
@@ -471,7 +471,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 				if userStateList, ok := args[1].(*UserState); ok {
 					if count, ok := args[2].(uint); ok {
 						if nextPage, ok := args[3].(string); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnGetOnlineUsersResult(requestId, userStateList, count, nextPage, errorCode)
 							}
 						}
@@ -484,7 +484,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if channels, ok := args[1].(*ChannelInfo); ok {
 					if count, ok := args[2].(uint); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnWhereNowResult(requestId, channels, count, errorCode)
 						}
 					}
@@ -496,7 +496,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if channels, ok := args[1].(*ChannelInfo); ok {
 					if count, ok := args[2].(uint); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnGetUserChannelsResult(requestId, channels, count, errorCode)
 						}
 					}
@@ -506,7 +506,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 	case "OnPresenceSetStateResult":
 		if config.OnPresenceSetStateResult != nil && len(args) >= 2 {
 			if requestId, ok := args[0].(uint64); ok {
-				if errorCode, ok := args[1].(RTM_ERROR_CODE); ok {
+				if errorCode, ok := args[1].(int); ok {
 					config.OnPresenceSetStateResult(requestId, errorCode)
 				}
 			}
@@ -514,7 +514,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 	case "OnPresenceRemoveStateResult":
 		if config.OnPresenceRemoveStateResult != nil && len(args) >= 2 {
 			if requestId, ok := args[0].(uint64); ok {
-				if errorCode, ok := args[1].(RTM_ERROR_CODE); ok {
+				if errorCode, ok := args[1].(int); ok {
 					config.OnPresenceRemoveStateResult(requestId, errorCode)
 				}
 			}
@@ -523,7 +523,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnPresenceGetStateResult != nil && len(args) >= 3 {
 			if requestId, ok := args[0].(uint64); ok {
 				if state, ok := args[1].(*UserState); ok {
-					if errorCode, ok := args[2].(RTM_ERROR_CODE); ok {
+					if errorCode, ok := args[2].(int); ok {
 						config.OnPresenceGetStateResult(requestId, state, errorCode)
 					}
 				}
@@ -538,7 +538,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 	case "OnLogoutResult":
 		if config.OnLogoutResult != nil && len(args) >= 2 {
 			if requestId, ok := args[0].(uint64); ok {
-				if errorCode, ok := args[1].(RTM_ERROR_CODE); ok {
+				if errorCode, ok := args[1].(int); ok {
 					config.OnLogoutResult(requestId, errorCode)
 				}
 			}
@@ -546,9 +546,9 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 	case "OnRenewTokenResult":
 		if config.OnRenewTokenResult != nil && len(args) >= 4 {
 			if requestId, ok := args[0].(uint64); ok {
-				if serverType, ok := args[1].(RTM_SERVICE_TYPE); ok {
+				if serverType, ok := args[1].(RtmServiceType); ok {
 					if channelName, ok := args[2].(string); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnRenewTokenResult(requestId, serverType, channelName, errorCode)
 						}
 					}
@@ -560,7 +560,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
 					if topic, ok := args[2].(string); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnPublishTopicMessageResult(requestId, channelName, topic, errorCode)
 						}
 					}
@@ -572,7 +572,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if channelName, ok := args[1].(string); ok {
 					if topic, ok := args[2].(string); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnUnsubscribeTopicResult(requestId, channelName, topic, errorCode)
 						}
 					}
@@ -585,7 +585,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 				if channelName, ok := args[1].(string); ok {
 					if topic, ok := args[2].(string); ok {
 						if user, ok := args[3].(*UserList); ok {
-							if errorCode, ok := args[4].(RTM_ERROR_CODE); ok {
+							if errorCode, ok := args[4].(int); ok {
 								config.OnGetSubscribedUserListResult(requestId, channelName, topic, user, errorCode)
 							}
 						}
@@ -598,7 +598,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 			if requestId, ok := args[0].(uint64); ok {
 				if messageList, ok := args[1].([]HistoryMessage); ok {
 					if newStart, ok := args[2].(uint64); ok {
-						if errorCode, ok := args[3].(RTM_ERROR_CODE); ok {
+						if errorCode, ok := args[3].(int); ok {
 							config.OnGetHistoryMessagesResult(requestId, messageList, newStart, errorCode)
 						}
 					}
@@ -609,7 +609,7 @@ func (adapter *EventHandlerAdapter) callFunctionConfig(config *RtmEventHandlerCo
 		if config.OnUnsubscribeUserMetadataResult != nil && len(args) >= 3 {
 			if requestId, ok := args[0].(uint64); ok {
 				if userId, ok := args[1].(string); ok {
-					if errorCode, ok := args[2].(RTM_ERROR_CODE); ok {
+					if errorCode, ok := args[2].(int); ok {
 						config.OnUnsubscribeUserMetadataResult(requestId, userId, errorCode)
 					}
 				}
@@ -639,27 +639,27 @@ func (adapter *EventHandlerAdapter) OnStorageEvent(event *StorageEvent) {
 	adapter.callUserMethod("OnStorageEvent", event)
 }
 
-func (adapter *EventHandlerAdapter) OnJoinResult(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnJoinResult(requestId uint64, channelName string, userId string, errorCode int) {
 	adapter.callUserMethod("OnJoinResult", requestId, channelName, userId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnLeaveResult(requestId uint64, channelName string, userId string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnLeaveResult(requestId uint64, channelName string, userId string, errorCode int) {
 	adapter.callUserMethod("OnLeaveResult", requestId, channelName, userId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnJoinTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnJoinTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode int) {
 	adapter.callUserMethod("OnJoinTopicResult", requestId, channelName, userId, topic, meta, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnLeaveTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnLeaveTopicResult(requestId uint64, channelName string, userId string, topic string, meta string, errorCode int) {
 	adapter.callUserMethod("OnLeaveTopicResult", requestId, channelName, userId, topic, meta, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnSubscribeTopicResult(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnSubscribeTopicResult(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode int) {
 	adapter.callUserMethod("OnSubscribeTopicResult", requestId, channelName, userId, topic, succeedUsers, failedUsers, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnConnectionStateChanged(channelName string, state RTM_CONNECTION_STATE, reason RTM_CONNECTION_CHANGE_REASON) {
+func (adapter *EventHandlerAdapter) OnConnectionStateChanged(channelName string, state int, reason int) {
 	adapter.callUserMethod("OnConnectionStateChanged", channelName, state, reason)
 }
 
@@ -667,103 +667,103 @@ func (adapter *EventHandlerAdapter) OnTokenPrivilegeWillExpire(channelName strin
 	adapter.callUserMethod("OnTokenPrivilegeWillExpire", channelName)
 }
 
-func (adapter *EventHandlerAdapter) OnSubscribeResult(requestId uint64, channelName string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnSubscribeResult(requestId uint64, channelName string, errorCode int) {
 	adapter.callUserMethod("OnSubscribeResult", requestId, channelName, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnPublishResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnPublishResult(requestId uint64, errorCode int) {
 	adapter.callUserMethod("OnPublishResult", requestId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnLoginResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnLoginResult(requestId uint64, errorCode int) {
 	adapter.callUserMethod("OnLoginResult", requestId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnSetChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnSetChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, errorCode int) {
 	adapter.callUserMethod("OnSetChannelMetadataResult", requestId, channelName, channelType, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnUpdateChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnUpdateChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, errorCode int) {
 	adapter.callUserMethod("OnUpdateChannelMetadataResult", requestId, channelName, channelType, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnRemoveChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnRemoveChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, errorCode int) {
 	adapter.callUserMethod("OnRemoveChannelMetadataResult", requestId, channelName, channelType, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnGetChannelMetadataResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, data *IMetadata, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnGetChannelMetadataResult(requestId uint64, channelName string, channelType RtmChannelType, data *IMetadata, errorCode int) {
 	adapter.callUserMethod("OnGetChannelMetadataResult", requestId, channelName, channelType, data, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnSetUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnSetUserMetadataResult(requestId uint64, userId string, errorCode int) {
 	adapter.callUserMethod("OnSetUserMetadataResult", requestId, userId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnUpdateUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnUpdateUserMetadataResult(requestId uint64, userId string, errorCode int) {
 	adapter.callUserMethod("OnUpdateUserMetadataResult", requestId, userId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnRemoveUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnRemoveUserMetadataResult(requestId uint64, userId string, errorCode int) {
 	adapter.callUserMethod("OnRemoveUserMetadataResult", requestId, userId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnGetUserMetadataResult(requestId uint64, userId string, data *IMetadata, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnGetUserMetadataResult(requestId uint64, userId string, data *IMetadata, errorCode int) {
 	adapter.callUserMethod("OnGetUserMetadataResult", requestId, userId, data, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnSubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnSubscribeUserMetadataResult(requestId uint64, userId string, errorCode int) {
 	adapter.callUserMethod("OnSubscribeUserMetadataResult", requestId, userId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnSetLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnSetLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int) {
 	adapter.callUserMethod("OnSetLockResult", requestId, channelName, channelType, lockName, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnRemoveLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnRemoveLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int) {
 	adapter.callUserMethod("OnRemoveLockResult", requestId, channelName, channelType, lockName, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnReleaseLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnReleaseLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int) {
 	adapter.callUserMethod("OnReleaseLockResult", requestId, channelName, channelType, lockName, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnAcquireLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE, errorDetails string) {
+func (adapter *EventHandlerAdapter) OnAcquireLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int, errorDetails string) {
 	adapter.callUserMethod("OnAcquireLockResult", requestId, channelName, channelType, lockName, errorCode, errorDetails)
 }
 
-func (adapter *EventHandlerAdapter) OnRevokeLockResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockName string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnRevokeLockResult(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int) {
 	adapter.callUserMethod("OnRevokeLockResult", requestId, channelName, channelType, lockName, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnGetLocksResult(requestId uint64, channelName string, channelType RTM_CHANNEL_TYPE, lockDetailList *LockDetail, count uint, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnGetLocksResult(requestId uint64, channelName string, channelType RtmChannelType, lockDetailList *LockDetail, count uint, errorCode int) {
 	adapter.callUserMethod("OnGetLocksResult", requestId, channelName, channelType, lockDetailList, count, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnWhoNowResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnWhoNowResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode int) {
 	adapter.callUserMethod("OnWhoNowResult", requestId, userStateList, count, nextPage, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnGetOnlineUsersResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnGetOnlineUsersResult(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode int) {
 	adapter.callUserMethod("OnGetOnlineUsersResult", requestId, userStateList, count, nextPage, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnWhereNowResult(requestId uint64, channels *ChannelInfo, count uint, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnWhereNowResult(requestId uint64, channels *ChannelInfo, count uint, errorCode int) {
 	adapter.callUserMethod("OnWhereNowResult", requestId, channels, count, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnGetUserChannelsResult(requestId uint64, channels *ChannelInfo, count uint, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnGetUserChannelsResult(requestId uint64, channels *ChannelInfo, count uint, errorCode int) {
 	adapter.callUserMethod("OnGetUserChannelsResult", requestId, channels, count, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnPresenceSetStateResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnPresenceSetStateResult(requestId uint64, errorCode int) {
 	adapter.callUserMethod("OnPresenceSetStateResult", requestId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnPresenceRemoveStateResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnPresenceRemoveStateResult(requestId uint64, errorCode int) {
 	adapter.callUserMethod("OnPresenceRemoveStateResult", requestId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnPresenceGetStateResult(requestId uint64, state *UserState, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnPresenceGetStateResult(requestId uint64, state *UserState, errorCode int) {
 	adapter.callUserMethod("OnPresenceGetStateResult", requestId, state, errorCode)
 }
 
@@ -771,30 +771,30 @@ func (adapter *EventHandlerAdapter) OnLinkStateEvent(event *LinkStateEvent) {
 	adapter.callUserMethod("OnLinkStateEvent", event)
 }
 
-func (adapter *EventHandlerAdapter) OnLogoutResult(requestId uint64, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnLogoutResult(requestId uint64, errorCode int) {
 	adapter.callUserMethod("OnLogoutResult", requestId, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnRenewTokenResult(requestId uint64, serverType RTM_SERVICE_TYPE, channelName string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnRenewTokenResult(requestId uint64, serverType RtmServiceType, channelName string, errorCode int) {
 	adapter.callUserMethod("OnRenewTokenResult", requestId, serverType, channelName, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnPublishTopicMessageResult(requestId uint64, channelName string, topic string, errorCode int) {
 	adapter.callUserMethod("OnPublishTopicMessageResult", requestId, channelName, topic, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnUnsubscribeTopicResult(requestId uint64, channelName string, topic string, errorCode int) {
 	adapter.callUserMethod("OnUnsubscribeTopicResult", requestId, channelName, topic, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user *UserList, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnGetSubscribedUserListResult(requestId uint64, channelName string, topic string, user *UserList, errorCode int) {
 	adapter.callUserMethod("OnGetSubscribedUserListResult", requestId, channelName, topic, user, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnGetHistoryMessagesResult(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode int) {
 	adapter.callUserMethod("OnGetHistoryMessagesResult", requestId, messageList, newStart, errorCode)
 }
 
-func (adapter *EventHandlerAdapter) OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode RTM_ERROR_CODE) {
+func (adapter *EventHandlerAdapter) OnUnsubscribeUserMetadataResult(requestId uint64, userId string, errorCode int) {
 	adapter.callUserMethod("OnUnsubscribeUserMetadataResult", requestId, userId, errorCode)
 }
