@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"unsafe"
 )
+//note: MUST dec cgo_xxx_xxx in this file and include C_IAgoraRtmClient.h, or the callback will not be called
+//like the following: 
 
 /*
-
-
 #include "C_IAgoraRtmClient.h"
 
 void cgo_RtmEventHandlerBridge_onMessageEvent(struct C_IRtmEventHandler *this,struct C_MessageEvent *event);

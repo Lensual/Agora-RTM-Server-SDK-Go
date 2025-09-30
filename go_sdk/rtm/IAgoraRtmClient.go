@@ -27,7 +27,7 @@ type RtmConfig struct {
 	Context           unsafe.Pointer
 	UseStringUserId   bool
 	Multipath         bool
-	EventHandler      RtmEventHandler
+	EventHandler      *RtmEventHandler
 	LogConfig         *RtmLogConfig
 	ProxyConfig       *RtmProxyConfig
 	EncryptionConfig  *RtmEncryptionConfig
@@ -50,7 +50,7 @@ func NewRtmConfig() *RtmConfig {
 		Context:           nil,
 		UseStringUserId:   false,
 		Multipath:         false,
-		EventHandler:      nil,
+		EventHandler: nil,
 		LogConfig:         nil,
 		ProxyConfig:       nil,
 		EncryptionConfig:  nil,
@@ -101,71 +101,11 @@ func NewRtmConfig() *RtmConfig {
 //	        // handle login result
 //	    },
 //	}
-//	rtmConfig.SetEventHandler(handler)
-type RtmEventHandler interface {
-	// mark interface, for type constraint
-	// user must implement this method to identify itself as an event handler, empty implementation is enough
-	// this can ensure type safety, prevent passing wrong type
-	IsRtmEventHandler()
-}
 
-// RtmEventHandlerConfig provide function style event handler config
-// user only need to set the needed callback functions, others keep nil
-type RtmEventHandlerConfig struct {
-	OnLoginResult     func(requestId uint64, errorCode int)
-	OnLogoutResult    func(requestId uint64, errorCode int)
-	OnMessageEvent    func(event *MessageEvent)
-	OnPresenceEvent   func(event *PresenceEvent)
-	OnSubscribeResult func(requestId uint64, channelName string, errorCode int)
-	OnPublishResult   func(requestId uint64, errorCode int)
 
-	OnTopicEvent               func(event *TopicEvent)
-	OnLockEvent                func(event *LockEvent)
-	OnStorageEvent             func(event *StorageEvent)
-	OnConnectionStateChanged   func(channelName string, state int, reason int)
-	OnTokenPrivilegeWillExpire func(channelName string)
-	OnJoinResult               func(requestId uint64, channelName string, userId string, errorCode int)
-	OnLeaveResult              func(requestId uint64, channelName string, userId string, errorCode int)
-	OnJoinTopicResult          func(requestId uint64, channelName string, userId string, topic string, meta string, errorCode int)
-	OnLeaveTopicResult         func(requestId uint64, channelName string, userId string, topic string, meta string, errorCode int)
-	OnSubscribeTopicResult     func(requestId uint64, channelName string, userId string, topic string, succeedUsers UserList, failedUsers UserList, errorCode int)
 
-	OnSetChannelMetadataResult      func(requestId uint64, channelName string, channelType RtmChannelType, errorCode int)
-	OnUpdateChannelMetadataResult   func(requestId uint64, channelName string, channelType RtmChannelType, errorCode int)
-	OnRemoveChannelMetadataResult   func(requestId uint64, channelName string, channelType RtmChannelType, errorCode int)
-	OnGetChannelMetadataResult      func(requestId uint64, channelName string, channelType RtmChannelType, data *IMetadata, errorCode int)
-	OnSetUserMetadataResult         func(requestId uint64, userId string, errorCode int)
-	OnUpdateUserMetadataResult      func(requestId uint64, userId string, errorCode int)
-	OnRemoveUserMetadataResult      func(requestId uint64, userId string, errorCode int)
-	OnGetUserMetadataResult         func(requestId uint64, userId string, data *IMetadata, errorCode int)
-	OnSubscribeUserMetadataResult   func(requestId uint64, userId string, errorCode int)
-	OnUnsubscribeUserMetadataResult func(requestId uint64, userId string, errorCode int)
 
-	OnSetLockResult     func(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
-	OnRemoveLockResult  func(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
-	OnReleaseLockResult func(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
-	OnAcquireLockResult func(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int, errorDetails string)
-	OnRevokeLockResult  func(requestId uint64, channelName string, channelType RtmChannelType, lockName string, errorCode int)
-	OnGetLocksResult    func(requestId uint64, channelName string, channelType RtmChannelType, lockDetailList *LockDetail, count uint, errorCode int)
 
-	OnWhoNowResult              func(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode int)
-	OnGetOnlineUsersResult      func(requestId uint64, userStateList *UserState, count uint, nextPage string, errorCode int)
-	OnWhereNowResult            func(requestId uint64, channels *ChannelInfo, count uint, errorCode int)
-	OnGetUserChannelsResult     func(requestId uint64, channels *ChannelInfo, count uint, errorCode int)
-	OnPresenceSetStateResult    func(requestId uint64, errorCode int)
-	OnPresenceRemoveStateResult func(requestId uint64, errorCode int)
-	OnPresenceGetStateResult    func(requestId uint64, state *UserState, errorCode int)
-
-	OnLinkStateEvent              func(event *LinkStateEvent)
-	OnPublishTopicMessageResult   func(requestId uint64, channelName string, topic string, errorCode int)
-	OnRenewTokenResult            func(requestId uint64, serverType RtmServiceType, channelName string, errorCode int)
-	OnUnsubscribeTopicResult      func(requestId uint64, channelName string, topic string, errorCode int)
-	OnGetSubscribedUserListResult func(requestId uint64, channelName string, topic string, user *UserList, errorCode int)
-	OnGetHistoryMessagesResult    func(requestId uint64, messageList []HistoryMessage, newStart uint64, errorCode int)
-}
-
-// implement RtmEventHandler interface
-func (config *RtmEventHandlerConfig) IsRtmEventHandler() {}
 
 // #region MessageEvent
 type MessageEvent struct {
@@ -652,13 +592,13 @@ func (this_ *StorageEvent) fromC(cEvent *C.struct_C_StorageEvent) {
 
 type IRtmClient struct {
 	rtmClient  unsafe.Pointer
-	adapter    *EventHandlerAdapter
-	bridge     *RtmEventHandlerBridge
+	handler     *RtmEventHandler
 	history    *IRtmHistory
 	presence   *IRtmPresence
 	lock       *IRtmLock
 	storage    *IRtmStorage
 	isLoggedIn bool
+	cEventHandler *C.struct_C_IRtmEventHandler
 }
 
 /**
@@ -738,16 +678,13 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 	}
 	defer freeRtmPrivateConfig(unsafe.Pointer(cPrivateConfig))
 
-	var adapter *EventHandlerAdapter
-	var bridge *RtmEventHandlerBridge
+	
+	var cEventHandler *C.struct_C_IRtmEventHandler = nil
 	if config.EventHandler != nil {
-		adapter = NewEventHandlerAdapter(config.EventHandler)
-		bridge = NewRtmEventHandlerBridge(adapter)
-		if bridge != nil {
-			cConfig.eventHandler = unsafe.Pointer(bridge.cBridge)
-		} else {
-			cConfig.eventHandler = nil
-		}
+		// allocate a c event handler, and keep it alive
+		//userData := unsafe.Pointer(config.EventHandlerConfig)
+		cEventHandler = CRtmEventHandler()
+		cConfig.eventHandler = cEventHandler
 	} else {
 		cConfig.eventHandler = nil
 	}
@@ -756,22 +693,26 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
 
 	if rtmClient == nil {
-		if bridge != nil {
-			bridge.Delete()
-		}
 		return nil
 	}
 
 	client := &IRtmClient{
 		rtmClient:  rtmClient,
-		adapter:    adapter,
-		bridge:     bridge,
+		handler:    config.EventHandler,
+		cEventHandler: cEventHandler,
 		history:    nil,
 		presence:   nil,
 		lock:       nil,
 		storage:    nil,
 		isLoggedIn: false,
 	}
+
+	//note : cEventHandler.userData will be equal to client!!
+	// assign userdata
+	if cEventHandler != nil {
+		cEventHandler.userData = unsafe.Pointer(client)
+	}
+
 
 	// get storage
 	cStorage := C.agora_rtm_client_get_storage(client.rtmClient)
@@ -820,11 +761,10 @@ func (this_ *IRtmClient) Release() int {
 	// do really release
 	ret := int(C.agora_rtm_client_release(this_.rtmClient))
 
-	if this_.bridge != nil {
-		this_.bridge.Delete()
-		this_.bridge = nil
+	if this_.cEventHandler != nil {
+		C.C_IRtmEventHandler_Delete(this_.cEventHandler)
+		this_.cEventHandler = nil
 	}
-	this_.adapter = nil
 	this_.rtmClient = nil
 	this_.history = nil
 	this_.presence = nil

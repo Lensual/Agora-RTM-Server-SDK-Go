@@ -11,7 +11,10 @@ import (
 
 	agrtm "github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go/go_sdk/rtm"
 )
-
+/*
+1. 不在需要MyRtmEventHandler，直接使用agrtm.RtmEventHandler
+2. event_handler_adapter.go 不在需要！
+*/
 func main() {
 	// start pprof
 	go func() {
@@ -48,13 +51,38 @@ func main() {
 	ret := int(0)
 	var requestId uint64
 
-	myEventHandler := &MyRtmEventHandler{}
+
+	sign := make(chan struct{})
+	msgChan := make(chan struct{})
+	var data []byte = make([]byte, 0)
 
 	rtmConfig := agrtm.NewRtmConfig()
 	//defer rtmConfig.Delete()
 	rtmConfig.AppId = appId
 	rtmConfig.UserId = userId
-	rtmConfig.EventHandler = myEventHandler
+	rtmConfig.EventHandler = &agrtm.RtmEventHandler{
+		OnLoginResult: func(requestId uint64, errorCode int) {
+			fmt.Printf("onLoginResult: requestId=%d, errorCode=%d\n", requestId, errorCode)
+			sign <- struct{}{}
+		},
+		OnLogoutResult: func(requestId uint64, errorCode int) {
+			fmt.Printf("onLogoutResult: requestId=%d, errorCode=%d\n", requestId, errorCode)
+		},
+		OnMessageEvent: func(event *agrtm.MessageEvent) {
+			fmt.Printf("onMessageEvent: event=%v\n", event)
+			data = event.Message
+			msgChan <- struct{}{}
+			
+
+		},
+		OnLinkStateEvent: func(event *agrtm.LinkStateEvent) {
+			fmt.Printf("onLinkStateEvent: event=%v\n", event)
+		},
+		OnSubscribeResult: func(requestId uint64, channelName string, errorCode int) {
+			fmt.Printf("onSubscribeResult: requestId=%d, channelName=%s, errorCode=%d\n", requestId, channelName, errorCode)
+			sign <- struct{}{}
+		},
+	}
 
 	logConfig := agrtm.NewRtmLogConfig()
 	logConfig.FilePath = "./logs/rtm.log"
@@ -67,11 +95,7 @@ func main() {
 	logWithTime("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
 
 	// set user channel info to event handler
-	sign := make(chan struct{})
-	myEventHandler.ChannelName = channelName
-	myEventHandler.UserId = userId
-	myEventHandler.RtmClient = rtmClient
-	myEventHandler.Sign = sign
+	
 
 	logWithTime("Login Start: %d\n", ret)
 	if token == "" {
@@ -79,7 +103,7 @@ func main() {
 	}
 	ret, requestId = rtmClient.Login(token)
 
-	fmt.Printf("Login ret: %d, requestId: %d, token: %s\n", ret, requestId, token)	
+	fmt.Printf("Login ret: %d, requestId: %d, token: %s\n", ret, requestId, token)
 
 	if ret != 0 {
 		panic(ret)
@@ -91,7 +115,6 @@ func main() {
 		panic("login timeout")
 	}
 	logWithTime("login success")
-
 
 	opt := agrtm.NewSubscribeOptions()
 
@@ -126,6 +149,9 @@ waitSignal:
 				logWithTime("exit signal: %v", signal)
 				break waitSignal
 			}
+			case <-msgChan:
+				fmt.Printf("msg: %s\n", string(data))
+				rtmClient.SendChannelMessage(channelName, data)
 		default:
 			time.Sleep(time.Second)
 		}
@@ -142,6 +168,6 @@ waitSignal:
 	rtmClient = nil
 
 	// release myEventHandler
-	myEventHandler = nil
+	
 	rtmConfig = nil
 }
