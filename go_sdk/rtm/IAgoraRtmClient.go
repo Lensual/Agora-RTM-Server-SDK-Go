@@ -689,15 +689,8 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 		cConfig.eventHandler = nil
 	}
 
-	var errorCode C.int
-	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
-
-	if rtmClient == nil {
-		return nil
-	}
-
 	client := &IRtmClient{
-		rtmClient:  rtmClient,
+		rtmClient:  nil,
 		handler:    config.EventHandler,
 		cEventHandler: cEventHandler,
 		history:    nil,
@@ -707,11 +700,21 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 		isLoggedIn: false,
 	}
 
+	cEventHandler.userData = unsafe.Pointer(client)
+
+
+	var errorCode C.int
+	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
+
+	if rtmClient == nil {
+		return nil
+	}
+
+	client.rtmClient = unsafe.Pointer(rtmClient)
+
 	//note : cEventHandler.userData will be equal to client!!
 	// assign userdata
-	if cEventHandler != nil {
-		cEventHandler.userData = unsafe.Pointer(client)
-	}
+	
 
 
 	// get storage
