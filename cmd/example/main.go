@@ -15,6 +15,11 @@ import (
 1. 不在需要MyRtmEventHandler，直接使用agrtm.RtmEventHandler
 2. event_handler_adapter.go 不在需要！
 */
+func logWithTime(format string, args ...interface{}) {
+	fmt.Printf("[%s] %s\n",
+		time.Now().Format("2006-01-02 15:04:05.000"),
+		fmt.Sprintf(format, args...))
+}
 func main() {
 	// start pprof
 	go func() {
