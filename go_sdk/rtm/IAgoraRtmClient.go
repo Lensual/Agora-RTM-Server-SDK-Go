@@ -774,6 +774,7 @@ func (this_ *IRtmClient) Release() int {
 	this_.lock = nil
 	this_.storage = nil
 	this_.isLoggedIn = false
+	this_.handler = nil
 
 	return ret
 }
