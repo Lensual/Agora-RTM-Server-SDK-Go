@@ -1,7 +1,7 @@
 package agorartm
 
 import (
-	"fmt"
+	//"fmt"
 	"unsafe"
 )
 //note: MUST dec cgo_xxx_xxx in this file and include C_IAgoraRtmClient.h, or the callback will not be called
@@ -264,7 +264,7 @@ func cgo_RtmEventHandlerBridge_onMessageEvent(handler *C.struct_C_IRtmEventHandl
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnMessageEvent == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnMessageEvent, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnMessageEvent, client值为nil\n")
 		return
 	}
 
@@ -286,7 +286,7 @@ func cgo_RtmEventHandlerBridge_onPresenceEvent(handler *C.struct_C_IRtmEventHand
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnPresenceEvent == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceEvent, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceEvent, client值为nil\n")
 		return
 	}
 
@@ -308,7 +308,7 @@ func cgo_RtmEventHandlerBridge_onTopicEvent(handler *C.struct_C_IRtmEventHandler
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnTopicEvent == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnTopicEvent, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnTopicEvent, client值为nil\n")
 		return
 	}
 
@@ -330,7 +330,7 @@ func cgo_RtmEventHandlerBridge_onLockEvent(handler *C.struct_C_IRtmEventHandler,
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnLockEvent == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnLockEvent, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnLockEvent, client值为nil\n")
 		return
 	}
 
@@ -352,7 +352,7 @@ func cgo_RtmEventHandlerBridge_onStorageEvent(handler *C.struct_C_IRtmEventHandl
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnStorageEvent == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnStorageEvent, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnStorageEvent, client值为nil\n")
 		return
 	}
 
@@ -374,7 +374,7 @@ func cgo_RtmEventHandlerBridge_onJoinResult(handler *C.struct_C_IRtmEventHandler
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnJoinResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnJoinResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnJoinResult, client值为nil\n")
 		return
 	}
 
@@ -397,7 +397,7 @@ func cgo_RtmEventHandlerBridge_onLeaveResult(handler *C.struct_C_IRtmEventHandle
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnLeaveResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnLeaveResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnLeaveResult, client值为nil\n")
 		return
 	}
 
@@ -420,7 +420,7 @@ func cgo_RtmEventHandlerBridge_onJoinTopicResult(handler *C.struct_C_IRtmEventHa
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnJoinTopicResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnJoinTopicResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnJoinTopicResult, client值为nil\n")
 		return
 	}
 
@@ -445,7 +445,7 @@ func cgo_RtmEventHandlerBridge_onLeaveTopicResult(handler *C.struct_C_IRtmEventH
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnLeaveTopicResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnLeaveTopicResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnLeaveTopicResult, client值为nil\n")
 		return
 	}
 
@@ -485,7 +485,7 @@ func cgo_RtmEventHandlerBridge_onSubscribeTopicResult(handler *C.struct_C_IRtmEv
 
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnSubscribeTopicResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnSubscribeTopicResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnSubscribeTopicResult, client值为nil\n")
 		return
 	}
 
@@ -511,7 +511,7 @@ func cgo_RtmEventHandlerBridge_onConnectionStateChanged(handler *C.struct_C_IRtm
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnConnectionStateChanged == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnConnectionStateChanged, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnConnectionStateChanged, client值为nil\n")
 		return
 	}
 
@@ -533,7 +533,7 @@ func cgo_RtmEventHandlerBridge_onTokenPrivilegeWillExpire(handler *C.struct_C_IR
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnTokenPrivilegeWillExpire == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnTokenPrivilegeWillExpire, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnTokenPrivilegeWillExpire, client值为nil\n")
 		return
 	}
 
@@ -553,7 +553,7 @@ func cgo_RtmEventHandlerBridge_onSubscribeResult(handler *C.struct_C_IRtmEventHa
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnSubscribeResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnSubscribeResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnSubscribeResult, client值为nil\n")
 		return
 	}
 
@@ -575,7 +575,7 @@ func cgo_RtmEventHandlerBridge_onPublishResult(handler *C.struct_C_IRtmEventHand
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnPublishResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnPublishResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnPublishResult, client值为nil\n")
 		return
 	}
 
@@ -589,19 +589,19 @@ func cgo_RtmEventHandlerBridge_onPublishResult(handler *C.struct_C_IRtmEventHand
 func cgo_RtmEventHandlerBridge_onLoginResult(handler *C.struct_C_IRtmEventHandler,
 	requestId C.uint64_t, errorCode C.enum_C_RTM_ERROR_CODE) {
 
-	fmt.Printf("[DEBUG] cgo_RtmEventHandlerBridge_onLoginResult被调用: requestId=%d, errorCode=%d\n", requestId, errorCode)
+	//fmt.Printf("[DEBUG] cgo_RtmEventHandlerBridge_onLoginResult被调用: requestId=%d, errorCode=%d\n", requestId, errorCode)
 
 	if handler == nil {
-		fmt.Printf("[DEBUG] userData为nil，返回\n")
+		//fmt.Printf("[DEBUG] userData为nil，返回\n")
 		return
 	}
 
 	client := (*IRtmClient)(handler.userData)
-	fmt.Printf("[DEBUG] 调用Go事件处理器OnLoginResult, client值: %v\n", client)
+	//fmt.Printf("[DEBUG] 调用Go事件处理器OnLoginResult, client值: %v\n", client)
 
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnLoginResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnLoginResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnLoginResult, client值为nil\n")
 		return
 	}
 
@@ -609,7 +609,7 @@ func cgo_RtmEventHandlerBridge_onLoginResult(handler *C.struct_C_IRtmEventHandle
 		uint64(requestId),
 		int(errorCode),
 	)
-	fmt.Printf("[DEBUG] Go事件处理器OnLoginResult调用完成\n")
+	//fmt.Printf("[DEBUG] Go事件处理器OnLoginResult调用完成\n")
 }
 
 //export cgo_RtmEventHandlerBridge_onSetChannelMetadataResult
@@ -623,7 +623,7 @@ func cgo_RtmEventHandlerBridge_onSetChannelMetadataResult(handler *C.struct_C_IR
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnSetChannelMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnSetChannelMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnSetChannelMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -646,7 +646,7 @@ func cgo_RtmEventHandlerBridge_onUpdateChannelMetadataResult(handler *C.struct_C
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnUpdateChannelMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnUpdateChannelMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnUpdateChannelMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -669,7 +669,7 @@ func cgo_RtmEventHandlerBridge_onRemoveChannelMetadataResult(handler *C.struct_C
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnRemoveChannelMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnRemoveChannelMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnRemoveChannelMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -693,7 +693,7 @@ func cgo_RtmEventHandlerBridge_onGetChannelMetadataResult(handler *C.struct_C_IR
 	goData := CMetadataToIMetadata(data)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnGetChannelMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnGetChannelMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnGetChannelMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -717,7 +717,7 @@ func cgo_RtmEventHandlerBridge_onSetUserMetadataResult(handler *C.struct_C_IRtmE
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnSetUserMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnSetUserMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnSetUserMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -739,7 +739,7 @@ func cgo_RtmEventHandlerBridge_onUpdateUserMetadataResult(handler *C.struct_C_IR
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnUpdateUserMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnUpdateUserMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnUpdateUserMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -761,7 +761,7 @@ func cgo_RtmEventHandlerBridge_onRemoveUserMetadataResult(handler *C.struct_C_IR
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnRemoveUserMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnRemoveUserMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnRemoveUserMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -783,7 +783,7 @@ func cgo_RtmEventHandlerBridge_onGetUserMetadataResult(handler *C.struct_C_IRtmE
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnGetUserMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnGetUserMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnGetUserMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -806,7 +806,7 @@ func cgo_RtmEventHandlerBridge_onSubscribeUserMetadataResult(handler *C.struct_C
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnSubscribeUserMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnSubscribeUserMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnSubscribeUserMetadataResult, client值为nil\n")
 		return
 	}
 
@@ -828,7 +828,7 @@ func cgo_RtmEventHandlerBridge_onSetLockResult(handler *C.struct_C_IRtmEventHand
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnSetLockResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnSetLockResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnSetLockResult, client值为nil\n")
 		return
 	}
 
@@ -852,7 +852,7 @@ func cgo_RtmEventHandlerBridge_onRemoveLockResult(handler *C.struct_C_IRtmEventH
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnRemoveLockResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnRemoveLockResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnRemoveLockResult, client值为nil\n")
 		return
 	}
 
@@ -876,7 +876,7 @@ func cgo_RtmEventHandlerBridge_onReleaseLockResult(handler *C.struct_C_IRtmEvent
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnReleaseLockResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnReleaseLockResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnReleaseLockResult, client值为nil\n")
 		return
 	}
 
@@ -900,7 +900,7 @@ func cgo_RtmEventHandlerBridge_onAcquireLockResult(handler *C.struct_C_IRtmEvent
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnAcquireLockResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnAcquireLockResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnAcquireLockResult, client值为nil\n")
 		return
 	}
 
@@ -925,7 +925,7 @@ func cgo_RtmEventHandlerBridge_onRevokeLockResult(handler *C.struct_C_IRtmEventH
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnRevokeLockResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnRevokeLockResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnRevokeLockResult, client值为nil\n")
 		return
 	}
 
@@ -950,7 +950,7 @@ func cgo_RtmEventHandlerBridge_onGetLocksResult(handler *C.struct_C_IRtmEventHan
 	goLockDetail := CLockDetailToLockDetail(lockDetailList)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnGetLocksResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnGetLocksResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnGetLocksResult, client值为nil\n")
 		return
 	}
 
@@ -976,7 +976,7 @@ func cgo_RtmEventHandlerBridge_onWhoNowResult(handler *C.struct_C_IRtmEventHandl
 	goUserState := CUserStateToUserState(userStateList)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnWhoNowResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnWhoNowResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnWhoNowResult, client值为nil\n")
 		return
 	}
 
@@ -1001,7 +1001,7 @@ func cgo_RtmEventHandlerBridge_onGetOnlineUsersResult(handler *C.struct_C_IRtmEv
 	goUserState := CUserStateToUserState(userStateList)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnGetOnlineUsersResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnGetOnlineUsersResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnGetOnlineUsersResult, client值为nil\n")
 		return
 	}
 
@@ -1026,7 +1026,7 @@ func cgo_RtmEventHandlerBridge_onWhereNowResult(handler *C.struct_C_IRtmEventHan
 	goChannelInfo := CChannelInfoToChannelInfo(channels)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnWhereNowResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnWhereNowResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnWhereNowResult, client值为nil\n")
 		return
 	}
 
@@ -1050,7 +1050,7 @@ func cgo_RtmEventHandlerBridge_onGetUserChannelsResult(handler *C.struct_C_IRtmE
 	goChannelInfo := CChannelInfoToChannelInfo(channels)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnGetUserChannelsResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnGetUserChannelsResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnGetUserChannelsResult, client值为nil\n")
 		return
 	}
 
@@ -1073,7 +1073,7 @@ func cgo_RtmEventHandlerBridge_onPresenceSetStateResult(handler *C.struct_C_IRtm
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnPresenceSetStateResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceSetStateResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceSetStateResult, client值为nil\n")
 		return
 	}
 
@@ -1094,7 +1094,7 @@ func cgo_RtmEventHandlerBridge_onPresenceRemoveStateResult(handler *C.struct_C_I
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnPresenceRemoveStateResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceRemoveStateResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceRemoveStateResult, client值为nil\n")
 		return
 	}
 
@@ -1116,7 +1116,7 @@ func cgo_RtmEventHandlerBridge_onPresenceGetStateResult(handler *C.struct_C_IRtm
 	goUserState := CUserStateToUserState(state)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnPresenceGetStateResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceGetStateResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnPresenceGetStateResult, client值为nil\n")
 		return
 	}
 
@@ -1141,11 +1141,11 @@ func cgo_RtmEventHandlerBridge_onLinkStateEvent(handler *C.struct_C_IRtmEventHan
 	goLinkStateEvent := CLinkStateEventToLinkStateEvent(event)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnLinkStateEvent == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnLinkStateEvent, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnLinkStateEvent, client值为nil\n")
 		return
 	}
 
-	fmt.Printf("[DEBUG] 调用Go事件处理器OnLinkStateEvent, client值: %v\n", client)
+	//fmt.Printf("[DEBUG] 调用Go事件处理器OnLinkStateEvent, client值: %v\n", client)
 	client.handler.OnLinkStateEvent(
 		goLinkStateEvent,
 	)
@@ -1162,7 +1162,7 @@ func cgo_RtmEventHandlerBridge_onLogoutResult(handler *C.struct_C_IRtmEventHandl
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnLogoutResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnLogoutResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnLogoutResult, client值为nil\n")
 		return
 	}
 
@@ -1183,7 +1183,7 @@ func cgo_RtmEventHandlerBridge_onRenewTokenResult(handler *C.struct_C_IRtmEventH
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnRenewTokenResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnRenewTokenResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnRenewTokenResult, client值为nil\n")
 		return
 	}
 
@@ -1206,7 +1206,7 @@ func cgo_RtmEventHandlerBridge_onPublishTopicMessageResult(handler *C.struct_C_I
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnPublishTopicMessageResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnPublishTopicMessageResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnPublishTopicMessageResult, client值为nil\n")
 		return
 	}
 
@@ -1229,7 +1229,7 @@ func cgo_RtmEventHandlerBridge_onUnsubscribeTopicResult(handler *C.struct_C_IRtm
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnUnsubscribeTopicResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnUnsubscribeTopicResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnUnsubscribeTopicResult, client值为nil\n")
 		return
 	}
 
@@ -1252,7 +1252,7 @@ func cgo_RtmEventHandlerBridge_onGetSubscribedUserListResult(handler *C.struct_C
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnGetSubscribedUserListResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnGetSubscribedUserListResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnGetSubscribedUserListResult, client值为nil\n")
 		return
 	}
 
@@ -1278,7 +1278,7 @@ func cgo_RtmEventHandlerBridge_onGetHistoryMessagesResult(handler *C.struct_C_IR
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnGetHistoryMessagesResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnGetHistoryMessagesResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnGetHistoryMessagesResult, client值为nil\n")
 		return
 	}
 
@@ -1309,7 +1309,7 @@ func cgo_RtmEventHandlerBridge_onUnsubscribeUserMetadataResult(handler *C.struct
 	client := (*IRtmClient)(handler.userData)
 	// 判断client是否为nil
 	if client == nil || client.handler == nil || client.handler.OnUnsubscribeUserMetadataResult == nil {
-		fmt.Printf("[DEBUG] 调用Go事件处理器OnUnsubscribeUserMetadataResult, client值为nil\n")
+		//fmt.Printf("[DEBUG] 调用Go事件处理器OnUnsubscribeUserMetadataResult, client值为nil\n")
 		return
 	}
 
