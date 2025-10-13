@@ -60,6 +60,7 @@ func main() {
 	sign := make(chan struct{})
 	msgChan := make(chan struct{})
 	var data []byte = make([]byte, 0)
+	var rtmClient *agrtm.IRtmClient = nil
 
 	rtmConfig := agrtm.NewRtmConfig()
 	//defer rtmConfig.Delete()
@@ -76,6 +77,7 @@ func main() {
 		OnMessageEvent: func(event *agrtm.MessageEvent) {
 			fmt.Printf("onMessageEvent: event=%v\n", event)
 			data = event.Message
+			logWithTime("send channel message recved: %s", string(data))
 			msgChan <- struct{}{}
 			
 
@@ -99,7 +101,7 @@ func main() {
 	rtmConfig.LogConfig = logConfig
 	fmt.Printf("NewRtmConfig: %+v\n", rtmConfig) //DEBUG
 
-	rtmClient := agrtm.NewRtmClient(rtmConfig)
+	rtmClient = agrtm.NewRtmClient(rtmConfig)
 	logWithTime("CreateAgoraRtmClient: %p\n", rtmClient) //DEBUG
 
 	// set user channel info to event handler
@@ -147,7 +149,7 @@ func main() {
 	logWithTime("rtm client start to work")
 
 waitSignal:
-	for {
+	for { // blocking mdel
 		select {
 		case signal := <-c:
 			if signal == os.Interrupt ||
@@ -158,10 +160,8 @@ waitSignal:
 				break waitSignal
 			}
 			case <-msgChan:
-				fmt.Printf("msg: %s\n", string(data))
 				rtmClient.SendChannelMessage(channelName, data)
-		default:
-			time.Sleep(time.Second)
+				logWithTime("send channel message send: %s", string(data))
 		}
 	}
 
