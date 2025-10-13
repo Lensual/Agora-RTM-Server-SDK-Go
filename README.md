@@ -31,6 +31,10 @@ go build -o ./bin/ ./cmd/example/
 ./bin/example <appid> <channelname> <usid> <token_option>
 
 版本历史记录：
+20251013 release 1.0.0
+-- 更新：更新接口、回调，符合go 语法规范
+-- updaete : update api and callback to fit go syntax
+
 20250729 release 0.0.7
 -- 更新：目录结构
 -- 增加：对rtm sdk，采用http下载模式

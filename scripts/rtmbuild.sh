@@ -24,7 +24,7 @@ go build -o ./bin/rtmdemo ./cmd/example/
 
 # check if build is successful
 if [ $? -eq 0 ]; then
-    echo "Build successful! Binary is located at ./bin/example"
+    echo "Build successful! Binary is located at ./bin/rtmdemo"
 else
     echo "Build failed!"
     exit 1
