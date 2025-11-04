@@ -4,7 +4,7 @@
 set -e
 
 # define variables
-RTM_URL="https://download.agora.io/sdk/release/rtm_agora_sdk.zip"
+RTM_URL="https://download.agora.io/sdk/release/rtm_agora_sdk_v2.2.5_20251021.zip"
 TEMP_DIR="/tmp/rtm_install_$$"
 AGORA_SDK_DIR="./agora_sdk"
 AGORA_SDK_DIR_MAC="./agora_sdk_mac"
