@@ -1,5 +1,9 @@
 # agora-rtm-sdk go
 
+![GitHub Tag](https://img.shields.io/github/v/tag/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go?label=latest&color=)
+![rtm_agora_sdk](https://img.shields.io/badge/rtm__agora__sdk-v2.2.5__20251021-blue)
+[![Go Report Card](https://goreportcard.com/badge/github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go)](https://goreportcard.com/report/github.com/AgoraIO-Extensions/Agora-RTM-Server-SDK-Go)
+
 ## 支持的os
 
 linux + mac
