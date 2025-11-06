@@ -11,7 +11,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -19,7 +18,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -30,7 +29,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -38,7 +36,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -49,7 +47,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -57,7 +54,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -68,7 +65,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -76,7 +72,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -88,7 +84,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -96,7 +91,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -112,7 +107,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -120,7 +114,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -131,7 +125,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -139,7 +132,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -150,7 +143,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -158,7 +150,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -172,7 +164,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -180,7 +171,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -191,7 +182,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -199,7 +189,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -215,7 +205,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -223,7 +212,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -234,7 +223,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -242,7 +230,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -253,7 +241,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -261,7 +248,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -272,7 +259,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -280,7 +266,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -291,7 +277,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -299,7 +284,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -310,7 +295,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -318,7 +302,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -336,7 +320,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -344,7 +327,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -355,7 +338,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -363,7 +345,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -374,7 +356,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -382,7 +363,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -393,7 +374,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -401,7 +381,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -412,7 +392,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -420,7 +399,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -436,7 +415,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -444,7 +422,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -455,7 +433,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -463,7 +440,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -474,7 +451,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -482,7 +458,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -493,7 +469,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -501,7 +476,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -513,7 +488,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -521,7 +495,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -532,7 +506,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -540,7 +513,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -551,7 +524,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -559,7 +531,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -570,7 +542,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -578,7 +549,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -590,7 +561,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -598,7 +568,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -609,7 +579,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -617,7 +586,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -633,7 +602,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -641,7 +609,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -652,7 +620,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -660,7 +627,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -671,7 +638,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -679,7 +645,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -690,7 +656,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -698,7 +663,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -709,7 +674,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -717,7 +681,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
@@ -728,7 +692,6 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			reqIdMapLocker.Lock()
 
 			iAsyncCall, ok := reqIdMap[requestId]
-			delete(reqIdMap, requestId)
 
 			reqIdMapLocker.Unlock()
 			//#endregion reqIdMapLocker.Lock()
@@ -736,7 +699,7 @@ func NewAsyncCallRtmEventHandler() *agrtm.RtmEventHandler {
 			if ok {
 				asyncCall := (iAsyncCall).(*asyncCallImpl[int])
 				if errorCode != 0 {
-					asyncCall.error(errorCode)
+					asyncCall.errorWithCode(errorCode)
 					return
 				}
 				asyncCall.complete(errorCode)
