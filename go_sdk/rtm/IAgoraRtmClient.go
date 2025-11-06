@@ -50,7 +50,7 @@ func NewRtmConfig() *RtmConfig {
 		Context:           nil,
 		UseStringUserId:   false,
 		Multipath:         false,
-		EventHandler: nil,
+		EventHandler:      nil,
 		LogConfig:         nil,
 		ProxyConfig:       nil,
 		EncryptionConfig:  nil,
@@ -101,11 +101,6 @@ func NewRtmConfig() *RtmConfig {
 //	        // handle login result
 //	    },
 //	}
-
-
-
-
-
 
 // #region MessageEvent
 type MessageEvent struct {
@@ -591,13 +586,13 @@ func (this_ *StorageEvent) fromC(cEvent *C.struct_C_StorageEvent) {
 }
 
 type IRtmClient struct {
-	rtmClient  unsafe.Pointer
-	handler     *RtmEventHandler
-	history    *IRtmHistory
-	presence   *IRtmPresence
-	lock       *IRtmLock
-	storage    *IRtmStorage
-	isLoggedIn bool
+	rtmClient     unsafe.Pointer
+	handler       *RtmEventHandler
+	history       *IRtmHistory
+	presence      *IRtmPresence
+	lock          *IRtmLock
+	storage       *IRtmStorage
+	isLoggedIn    bool
 	cEventHandler *C.struct_C_IRtmEventHandler
 }
 
@@ -678,7 +673,6 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 	}
 	defer freeRtmPrivateConfig(unsafe.Pointer(cPrivateConfig))
 
-	
 	var cEventHandler *C.struct_C_IRtmEventHandler = nil
 	if config.EventHandler != nil {
 		// allocate a c event handler, and keep it alive
@@ -690,18 +684,17 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 	}
 
 	client := &IRtmClient{
-		rtmClient:  nil,
-		handler:    config.EventHandler,
+		rtmClient:     nil,
+		handler:       config.EventHandler,
 		cEventHandler: cEventHandler,
-		history:    nil,
-		presence:   nil,
-		lock:       nil,
-		storage:    nil,
-		isLoggedIn: false,
+		history:       nil,
+		presence:      nil,
+		lock:          nil,
+		storage:       nil,
+		isLoggedIn:    false,
 	}
 
 	cEventHandler.userData = unsafe.Pointer(client)
-
 
 	var errorCode C.int
 	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
@@ -714,8 +707,6 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 
 	//note : cEventHandler.userData will be equal to client!!
 	// assign userdata
-	
-
 
 	// get storage
 	cStorage := C.agora_rtm_client_get_storage(client.rtmClient)

@@ -4,8 +4,9 @@ import (
 	//"fmt"
 	"unsafe"
 )
+
 //note: MUST dec cgo_xxx_xxx in this file and include C_IAgoraRtmClient.h, or the callback will not be called
-//like the following: 
+//like the following:
 
 /*
 #include "C_IAgoraRtmClient.h"
