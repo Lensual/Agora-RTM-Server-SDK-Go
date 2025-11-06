@@ -248,7 +248,7 @@ func (this_ *IRtmStorage) CreateMetadata() *IMetadata {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) int {
+func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string) uint64 {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cLockName := C.CString(lockName)
@@ -286,15 +286,17 @@ func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType Rtm
 		}
 	}
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_set_channel_metadata(this_.rtmStorage,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cData,
 		cOptions,
 		cLockName,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
-	return 0
+
+	return uint64(requestId)
 }
 
 /**
@@ -311,7 +313,7 @@ func (this_ *IRtmStorage) SetChannelMetadata(channelName string, channelType Rtm
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) {
+func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string) uint64 {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cLockName := C.CString(lockName)
@@ -349,14 +351,17 @@ func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType 
 		}
 	}
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_update_channel_metadata(this_.rtmStorage,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cData,
 		cOptions,
 		cLockName,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -373,7 +378,7 @@ func (this_ *IRtmStorage) UpdateChannelMetadata(channelName string, channelType 
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string, requestId *uint64) {
+func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType RtmChannelType, data *IMetadata, options *MetadataOptions, lockName string) uint64 {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cLockName := C.CString(lockName)
@@ -411,14 +416,17 @@ func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType 
 		}
 	}
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_remove_channel_metadata(this_.rtmStorage,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cData,
 		cOptions,
 		cLockName,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -432,15 +440,18 @@ func (this_ *IRtmStorage) RemoveChannelMetadata(channelName string, channelType 
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) GetChannelMetadata(channelName string, channelType RtmChannelType, requestId *uint64) {
+func (this_ *IRtmStorage) GetChannelMetadata(channelName string, channelType RtmChannelType) uint64 {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_get_channel_metadata(this_.rtmStorage,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -455,7 +466,7 @@ func (this_ *IRtmStorage) GetChannelMetadata(channelName string, channelType Rtm
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) SetUserMetadata(userId string, data *IMetadata, options *MetadataOptions, requestId *uint64) {
+func (this_ *IRtmStorage) SetUserMetadata(userId string, data *IMetadata, options *MetadataOptions) uint64 {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
@@ -491,12 +502,15 @@ func (this_ *IRtmStorage) SetUserMetadata(userId string, data *IMetadata, option
 		}
 	}
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_set_user_metadata(this_.rtmStorage,
 		cUserId,
 		cData,
 		cOptions,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -511,7 +525,7 @@ func (this_ *IRtmStorage) SetUserMetadata(userId string, data *IMetadata, option
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) UpdateUserMetadata(userId string, data *IMetadata, options *MetadataOptions, requestId *uint64) {
+func (this_ *IRtmStorage) UpdateUserMetadata(userId string, data *IMetadata, options *MetadataOptions) uint64 {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
@@ -547,12 +561,15 @@ func (this_ *IRtmStorage) UpdateUserMetadata(userId string, data *IMetadata, opt
 		}
 	}
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_update_user_metadata(this_.rtmStorage,
 		cUserId,
 		cData,
 		cOptions,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -567,7 +584,7 @@ func (this_ *IRtmStorage) UpdateUserMetadata(userId string, data *IMetadata, opt
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) RemoveUserMetadata(userId string, data *IMetadata, options *MetadataOptions, requestId *uint64) {
+func (this_ *IRtmStorage) RemoveUserMetadata(userId string, data *IMetadata, options *MetadataOptions) uint64 {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
@@ -603,12 +620,15 @@ func (this_ *IRtmStorage) RemoveUserMetadata(userId string, data *IMetadata, opt
 		}
 	}
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_remove_user_metadata(this_.rtmStorage,
 		cUserId,
 		cData,
 		cOptions,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -621,14 +641,17 @@ func (this_ *IRtmStorage) RemoveUserMetadata(userId string, data *IMetadata, opt
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) GetUserMetadata(userId string, requestId *uint64) {
+func (this_ *IRtmStorage) GetUserMetadata(userId string) uint64 {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_get_user_metadata(this_.rtmStorage,
 		cUserId,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -640,14 +663,17 @@ func (this_ *IRtmStorage) GetUserMetadata(userId string, requestId *uint64) {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) SubscribeUserMetadata(userId string, requestId *uint64) {
+func (this_ *IRtmStorage) SubscribeUserMetadata(userId string) uint64 {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
+	var requestId C.uint64_t
 	C.agora_rtm_storage_subscribe_user_metadata(this_.rtmStorage,
 		cUserId,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 /**
@@ -659,15 +685,17 @@ func (this_ *IRtmStorage) SubscribeUserMetadata(userId string, requestId *uint64
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmStorage) UnsubscribeUserMetadata(userId string) {
+func (this_ *IRtmStorage) UnsubscribeUserMetadata(userId string) uint64 {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
-	var requestId uint64
+	var requestId C.uint64_t
 	C.agora_rtm_storage_unsubscribe_user_metadata(this_.rtmStorage,
 		cUserId,
 		(*C.uint64_t)(&requestId),
 	)
+
+	return uint64(requestId)
 }
 
 // #endregion IRtmStorage

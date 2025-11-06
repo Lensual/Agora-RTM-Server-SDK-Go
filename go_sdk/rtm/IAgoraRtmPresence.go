@@ -36,7 +36,7 @@ type IRtmPresence struct {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) WhoNow(channelName string, channelType RtmChannelType, options *PresenceOptions, requestId *uint64) int {
+func (this_ *IRtmPresence) WhoNow(channelName string, channelType RtmChannelType, options *PresenceOptions) (int, uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -53,13 +53,14 @@ func (this_ *IRtmPresence) WhoNow(channelName string, channelType RtmChannelType
 		cOptions.page = nil
 	}
 
-	ret := int(C.agora_rtm_presence_who_now(this_.rtmPresence,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_presence_who_now(this_.rtmPresence,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cOptions,
-		(*C.uint64_t)(requestId),
-	))
-	return ret
+		(*C.uint64_t)(&requestId),
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -71,15 +72,16 @@ func (this_ *IRtmPresence) WhoNow(channelName string, channelType RtmChannelType
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) WhereNow(userId string, requestId *uint64) int {
+func (this_ *IRtmPresence) WhereNow(userId string) (int, uint64) {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
-	ret := int(C.agora_rtm_presence_where_now(this_.rtmPresence,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_presence_where_now(this_.rtmPresence,
 		cUserId,
-		(*C.uint64_t)(requestId),
-	))
-	return ret
+		(*C.uint64_t)(&requestId),
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -94,7 +96,7 @@ func (this_ *IRtmPresence) WhereNow(userId string, requestId *uint64) int {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) SetState(channelName string, channelType RtmChannelType, items []*StateItem, count uint, requestId *uint64) int {
+func (this_ *IRtmPresence) SetState(channelName string, channelType RtmChannelType, items []*StateItem, count uint) (int, uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -125,14 +127,15 @@ func (this_ *IRtmPresence) SetState(channelName string, channelType RtmChannelTy
 		}
 	}
 
-	ret := int(C.agora_rtm_presence_set_state(this_.rtmPresence,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_presence_set_state(this_.rtmPresence,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cItems,
 		C.size_t(actualCount),
-		(*C.uint64_t)(requestId),
-	))
-	return ret
+		(*C.uint64_t)(&requestId),
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -147,7 +150,7 @@ func (this_ *IRtmPresence) SetState(channelName string, channelType RtmChannelTy
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) RemoveState(channelName string, channelType RtmChannelType, keys []string, count uint, requestId *uint64) int {
+func (this_ *IRtmPresence) RemoveState(channelName string, channelType RtmChannelType, keys []string, count uint) (int, uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -165,14 +168,15 @@ func (this_ *IRtmPresence) RemoveState(channelName string, channelType RtmChanne
 		}
 	}
 
-	ret := int(C.agora_rtm_presence_remove_state(this_.rtmPresence,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_presence_remove_state(this_.rtmPresence,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		unsafe.SliceData(cKeysArr),
 		C.size_t(actualCount),
-		(*C.uint64_t)(requestId),
-	))
-	return ret
+		(*C.uint64_t)(&requestId),
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -186,21 +190,22 @@ func (this_ *IRtmPresence) RemoveState(channelName string, channelType RtmChanne
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) GetState(channelName string, channelType RtmChannelType, userId string, requestId *uint64) int {
+func (this_ *IRtmPresence) GetState(channelName string, channelType RtmChannelType, userId string) (int, uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
-	ret := int(C.agora_rtm_presence_get_state(this_.rtmPresence,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_presence_get_state(this_.rtmPresence,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cUserId,
-		(*C.uint64_t)(requestId),
-	))
+		(*C.uint64_t)(&requestId),
+	)
 
-	return ret
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -214,7 +219,7 @@ func (this_ *IRtmPresence) GetState(channelName string, channelType RtmChannelTy
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RtmChannelType, options *GetOnlineUsersOptions, requestId *uint64) int {
+func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RtmChannelType, options *GetOnlineUsersOptions) (int, uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -231,13 +236,14 @@ func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RtmCha
 		cOptions.page = nil
 	}
 
-	ret := int(C.agora_rtm_presence_get_online_users(this_.rtmPresence,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_presence_get_online_users(this_.rtmPresence,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cOptions,
-		(*C.uint64_t)(requestId),
-	))
-	return ret
+		(*C.uint64_t)(&requestId),
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -249,15 +255,16 @@ func (this_ *IRtmPresence) GetOnlineUsers(channelName string, channelType RtmCha
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmPresence) GetUserChannels(userId string, requestId *uint64) int {
+func (this_ *IRtmPresence) GetUserChannels(userId string) (int, uint64) {
 	cUserId := C.CString(userId)
 	defer C.free(unsafe.Pointer(cUserId))
 
-	ret := int(C.agora_rtm_presence_get_user_channels(this_.rtmPresence,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_presence_get_user_channels(this_.rtmPresence,
 		cUserId,
-		(*C.uint64_t)(requestId),
-	))
-	return ret
+		(*C.uint64_t)(&requestId),
+	)
+	return int(ret), uint64(requestId)
 }
 
 // #endregion IRtmPresence

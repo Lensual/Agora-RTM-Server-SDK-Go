@@ -98,7 +98,7 @@ func NewGetHistoryMessagesOptions() *GetHistoryMessagesOptions {
  * - 0: Success.
  * - < 0: Failure.
  */
-func (this_ *IRtmHistory) GetMessages(channelName string, channelType RtmChannelType, options *GetHistoryMessagesOptions, requestId *uint64) int {
+func (this_ *IRtmHistory) GetMessages(channelName string, channelType RtmChannelType, options *GetHistoryMessagesOptions) (int, uint64) {
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 
@@ -113,14 +113,15 @@ func (this_ *IRtmHistory) GetMessages(channelName string, channelType RtmChannel
 		cOptions.count = 100
 	}
 
+	var requestId C.uint64_t
 	ret := int(C.agora_rtm_history_get_messages(
 		this_.rtmHistory,
 		cChannelName,
 		C.enum_C_RTM_CHANNEL_TYPE(channelType),
 		cOptions,
-		(*C.uint64_t)(requestId),
+		(*C.uint64_t)(&requestId),
 	))
-	return ret
+	return ret, uint64(requestId)
 }
 
 // #endregion IRtmHistory

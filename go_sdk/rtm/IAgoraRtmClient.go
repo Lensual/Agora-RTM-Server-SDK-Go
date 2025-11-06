@@ -50,7 +50,7 @@ func NewRtmConfig() *RtmConfig {
 		Context:           nil,
 		UseStringUserId:   false,
 		Multipath:         false,
-		EventHandler: nil,
+		EventHandler:      nil,
 		LogConfig:         nil,
 		ProxyConfig:       nil,
 		EncryptionConfig:  nil,
@@ -101,11 +101,6 @@ func NewRtmConfig() *RtmConfig {
 //	        // handle login result
 //	    },
 //	}
-
-
-
-
-
 
 // #region MessageEvent
 type MessageEvent struct {
@@ -591,13 +586,13 @@ func (this_ *StorageEvent) fromC(cEvent *C.struct_C_StorageEvent) {
 }
 
 type IRtmClient struct {
-	rtmClient  unsafe.Pointer
-	handler     *RtmEventHandler
-	history    *IRtmHistory
-	presence   *IRtmPresence
-	lock       *IRtmLock
-	storage    *IRtmStorage
-	isLoggedIn bool
+	rtmClient     unsafe.Pointer
+	handler       *RtmEventHandler
+	history       *IRtmHistory
+	presence      *IRtmPresence
+	lock          *IRtmLock
+	storage       *IRtmStorage
+	isLoggedIn    bool
 	cEventHandler *C.struct_C_IRtmEventHandler
 }
 
@@ -678,7 +673,6 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 	}
 	defer freeRtmPrivateConfig(unsafe.Pointer(cPrivateConfig))
 
-	
 	var cEventHandler *C.struct_C_IRtmEventHandler = nil
 	if config.EventHandler != nil {
 		// allocate a c event handler, and keep it alive
@@ -690,18 +684,17 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 	}
 
 	client := &IRtmClient{
-		rtmClient:  nil,
-		handler:    config.EventHandler,
+		rtmClient:     nil,
+		handler:       config.EventHandler,
 		cEventHandler: cEventHandler,
-		history:    nil,
-		presence:   nil,
-		lock:       nil,
-		storage:    nil,
-		isLoggedIn: false,
+		history:       nil,
+		presence:      nil,
+		lock:          nil,
+		storage:       nil,
+		isLoggedIn:    false,
 	}
 
 	cEventHandler.userData = unsafe.Pointer(client)
-
 
 	var errorCode C.int
 	rtmClient := C.agora_rtm_client_create(cConfig, &errorCode)
@@ -714,8 +707,6 @@ func NewRtmClient(config *RtmConfig) *IRtmClient {
 
 	//note : cEventHandler.userData will be equal to client!!
 	// assign userdata
-	
-
 
 	// get storage
 	cStorage := C.agora_rtm_client_get_storage(client.rtmClient)
@@ -798,13 +789,13 @@ func (this_ *IRtmClient) Login(token string) (int, uint64) {
 	}
 
 	// do really login
-	var requestId uint64
+	var requestId C.uint64_t
 	cToken := C.CString(token)
 	defer C.free(unsafe.Pointer(cToken))
-	ret := int(C.agora_rtm_client_login(this_.rtmClient,
+	ret := C.agora_rtm_client_login(this_.rtmClient,
 		cToken,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
+	)
 
 	// update login status
 	if ret == 0 {
@@ -812,7 +803,7 @@ func (this_ *IRtmClient) Login(token string) (int, uint64) {
 	} else {
 		this_.isLoggedIn = false
 	}
-	return int(ret), requestId
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -830,16 +821,16 @@ func (this_ *IRtmClient) Logout() (int, uint64) {
 	if !this_.isLoggedIn {
 		return -10005, 0
 	}
-	var requestId uint64
-	ret := int(C.agora_rtm_client_logout(this_.rtmClient,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_client_logout(this_.rtmClient,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
+	)
 
 	// update login status
 	if ret == 0 {
 		this_.isLoggedIn = false
 	}
-	return ret, requestId
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -914,12 +905,12 @@ func (this_ *IRtmClient) RenewToken(token string) (int, uint64) {
 	// do really renew token
 	cToken := C.CString(token)
 	defer C.free(unsafe.Pointer(cToken))
-	var requestId uint64
-	ret := int(C.agora_rtm_client_renew_token(this_.rtmClient,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_client_renew_token(this_.rtmClient,
 		cToken,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
-	return int(ret), requestId
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -956,15 +947,15 @@ func (this_ *IRtmClient) Publish(channelName string, message []byte, option *Pub
 		defer freePublishOptions(cOption)
 	}
 
-	var requestId uint64
-	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_client_publish(this_.rtmClient,
 		cChannelName,
 		(*C.char)(cMessage),
 		C.size_t(length),
 		(*C.struct_C_PublishOptions)(cOption),
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
-	return ret, requestId
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -986,7 +977,6 @@ func (this_ *IRtmClient) SendChannelMessage(channelName string, message []byte) 
 
 	// do really send channel message
 	length := int(len(message))
-	var requestId uint64
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cMessage := C.CBytes(message)
@@ -998,14 +988,15 @@ func (this_ *IRtmClient) SendChannelMessage(channelName string, message []byte) 
 	cOption := opt.toC()
 	defer freePublishOptions(cOption)
 
-	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_client_publish(this_.rtmClient,
 		cChannelName,
 		(*C.char)(cMessage),
 		C.size_t(length),
 		(*C.struct_C_PublishOptions)(cOption),
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
-	return ret, requestId
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -1037,16 +1028,15 @@ func (this_ *IRtmClient) SendUserMessage(userId string, message []byte) (int, ui
 
 	cOption := opt.toC()
 	defer freePublishOptions(cOption)
-	var requestId uint64
-
-	ret := int(C.agora_rtm_client_publish(this_.rtmClient,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_client_publish(this_.rtmClient,
 		cUserId,
 		(*C.char)(cMessage),
 		C.size_t(length),
 		(*C.struct_C_PublishOptions)(cOption),
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
-	return ret, requestId
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -1069,13 +1059,13 @@ func (this_ *IRtmClient) Subscribe(channelName string, option *SubscribeOptions)
 	defer C.free(unsafe.Pointer(cChannelName))
 	cOption := option.toC()
 	defer freeSubscribeOptions(cOption)
-	var requestId uint64
-	ret := int(C.agora_rtm_client_subscribe(this_.rtmClient,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_client_subscribe(this_.rtmClient,
 		cChannelName,
 		(*C.struct_C_SubscribeOptions)(cOption),
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
-	return ret, requestId
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
@@ -1095,12 +1085,12 @@ func (this_ *IRtmClient) Unsubscribe(channelName string) (int, uint64) {
 	// do really unsubscribe
 	cChannelName := C.CString(channelName)
 	defer C.free(unsafe.Pointer(cChannelName))
-	var requestId uint64
-	ret := int(C.agora_rtm_client_unsubscribe(this_.rtmClient,
+	var requestId C.uint64_t
+	ret := C.agora_rtm_client_unsubscribe(this_.rtmClient,
 		cChannelName,
 		(*C.uint64_t)(unsafe.Pointer(&requestId)),
-	))
-	return int(ret), requestId
+	)
+	return int(ret), uint64(requestId)
 }
 
 /**
